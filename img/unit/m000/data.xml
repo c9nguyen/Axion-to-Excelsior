@@ -1,0 +1,36 @@
+<i>
+  <i image="move_0.png" delay="150" x="-90" y="-107"/>
+  <i image="move_1.png" delay="150" x="-90" y="-107"/>
+  <i image="move_2.png" delay="150" x="-90" y="-107"/>
+  <i image="move_3.png" delay="150" x="-90" y="-107"/>
+  <i image="attack1.info.hit_0.png" delay="90" x="-72" y="-77"/>
+  <i image="attack1.info.hit_1.png" delay="90" x="-72" y="-77"/>
+  <i image="attack1.info.hit_2.png" delay="90" x="-72" y="-77"/>
+  <i image="attack1.info.hit_3.png" delay="90" x="-72" y="-77"/>
+  <i image="attack1.info.hit_4.png" delay="120" x="-72" y="-77"/>
+  <i image="attack1.info.hit_5.png" delay="120" x="-72" y="-77"/>
+  <i image="attack1_0.png" delay="150" x="-326" y="-109"/>
+  <i image="attack1_1.png" delay="150" x="-326" y="-109"/>
+  <i image="attack1_2.png" delay="150" x="-326" y="-109"/>
+  <i image="attack1_3.png" delay="150" x="-326" y="-109"/>
+  <i image="attack1_4.png" delay="150" x="-326" y="-109"/>
+  <i image="attack1_5.png" delay="150" x="-326" y="-109"/>
+  <i image="attack1_6.png" delay="150" x="-326" y="-109"/>
+  <i image="attack1_7.png" delay="150" x="-326" y="-109"/>
+  <i image="stand_0.png" delay="150" x="-90" y="-105"/>
+  <i image="stand_1.png" delay="150" x="-90" y="-105"/>
+  <i image="stand_2.png" delay="150" x="-90" y="-105"/>
+  <i image="stand_3.png" delay="150" x="-90" y="-105"/>
+  <i image="hit1_0.png" delay="600" x="-78" y="-116"/>
+  <i image="die1_0.png" delay="150" x="-89" y="-181"/>
+  <i image="die1_1.png" delay="150" x="-89" y="-181"/>
+  <i image="die1_2.png" delay="150" x="-89" y="-181"/>
+  <i image="die1_3.png" delay="150" x="-89" y="-181"/>
+  <i image="die1_4.png" delay="150" x="-89" y="-181"/>
+  <i image="die1_5.png" delay="150" x="-89" y="-181"/>
+  <i image="die1_6.png" delay="150" x="-89" y="-181"/>
+  <i image="die1_7.png" delay="150" x="-89" y="-181"/>
+  <i image="die1_8.png" delay="150" x="-89" y="-181"/>
+  <i image="die1_9.png" delay="150" x="-89" y="-181"/>
+  <i image="die1_10.png" delay="150" x="-89" y="-181"/>
+</i>
