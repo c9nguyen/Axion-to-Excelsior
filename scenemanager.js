@@ -1,10 +1,34 @@
 var State = function() {
     this.name ; // Just to identify the State
     this.entities = [];
-    this.update  = function (){};
-    this.render  = function (){};
+    this.update  = function (){
+	    for (var i = 0; i < this.entities.length; i++) {
+	        //If this enetity will be removed
+	        if (this.entities[i].removeFromWorld)
+	             this.entities.splice(i, 1);
+	        else {        
+	            var entity = this.entities[i];
+
+	            //applying gravity
+	            if (entity.gravity) entity.yVelocity += this.clockTick * 1800;
+	            else entity.yVelocity = 0;      //Will be changed
+	            entity.y += this.clockTick * entity.yVelocity;
+
+	            entity.update();
+	        }
+	    }
+    };
+    this.render  = function (ctx){
+	    for (var i = 0; i < this.entities.length; i++) {
+	        this.entities[i].draw(ctx);
+	    }
+    };
     this.onEnter = function (){};
     this.onExit  = function (){};
+	this.addEntity = function (entity) {
+	//   console.log('added entity');
+    	this.entities.push(entity);
+	};
 
     // Optional but useful
     this.onPause = function (){};
