@@ -232,7 +232,7 @@ function Action(game, unit, spritesheet,
     this.cooldownClock = 0;
     this.groundPoints = groundPoints; //List of standing point for each frame.
     this.collisionBoxes = collisionBoxes; //List of collision boxes
-    this.collisionBox = {};  //The current collisionBox
+    this.collisionBox = this.collisionBoxes[0];  //The current collisionBox
     var x = this.unit.x - this.groundPoints[0].x;
     var y = this.unit.y - this.groundPoints[0].y;
 
@@ -292,10 +292,8 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
     this.y = this.unit.y - groundPoint.y;
     //Updating collisionBox
     var collisionBox = this.collisionBoxes[frame];
-    this.collisionBox.x = this.x + collisionBox.x;
-    this.collisionBox.y = this.y + collisionBox.y;
-    this.collisionBox.width = collisionBox.width;
-    this.collisionBox.height = collisionBox.height;
+    this.collisionBox.x = this.unit.x - collisionBox.x;
+    this.collisionBox.y = this.unit.y - collisionBox.y;
     var effect = this.effects[frame]; //Callback the effect
     if (effect !== undefined && typeof effect === "function") this.effects[frame](this); 
     AnimatedObject.prototype.update.call(this);
@@ -462,10 +460,8 @@ Unit.prototype.draw = function() {
     this.currentAction.draw();
 
     //For testing
-    var box = this.getCollisionBox();
     //this.game.ctx.fillRect(this.x, this.y, this.width, this.height);
-   // this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
-    //this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
 }
 
 /*===============================================================*/
