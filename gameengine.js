@@ -9,13 +9,19 @@ window.requestAnimFrame = (function () {
             };
 })();
 
+const NEUTRAL = 0;
+const PLAYER = 1;
+const ENEMY = -1;
+
+const GRAVITY = 900; //can change this to make gravity better
+
 function GameEngine() {
     this.entities = [];
     this.collisionBox = {
         ground: [],
-        player: [],
-        ai: []
     };
+    this.playerList = [];
+    this.enemyList = [];
     
     this.portals = [];  // will be removed
     this.food = []; // will be removed
@@ -126,6 +132,8 @@ GameEngine.prototype.startInput = function () {
 
 GameEngine.prototype.addEntity = function (entity) {
  //   console.log('added entity');
+    if (entity.side === PLAYER) this.playerList.push(entity);
+    else if (entity.side === ENEMY) this.enemyList.push(entity);
     this.entities.push(entity);
 }
 
@@ -147,9 +155,9 @@ GameEngine.prototype.update = function () {
             var entity = this.entities[i];
 
             //applying gravity
-            if (entity.gravity) entity.yVelocity += this.clockTick * 1800;
-            else entity.yVelocity = 0;      //Will be changed
-            entity.y += this.clockTick * entity.yVelocity;
+            // if (entity.gravity) entity.yVelocity += this.clockTick * 1800;
+            // else entity.yVelocity = 0;      //Will be changed
+            // entity.y += this.clockTick * entity.yVelocity;
 
             entity.update();
         }
@@ -178,17 +186,21 @@ Timer.prototype.tick = function () {
     return gameDelta;
 }
 
-function Entity(game, x, y) {
+function Entity(game, x, y, side = NEUTRAL) {
     this.game = game;
     this.x = x;
     this.y = y;
     this.gravity = false;
     this.velocity = {x: 0, y:0};
     this.yVelocity = 0; //will be removed
+    this.side = side;
     this.removeFromWorld = false;
 }
 
 Entity.prototype.update = function () {
+    if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
+    this.y += this.game.clockTick * this.velocity.y;
+    this.x += this.game.clockTick * this.velocity.x;
 }
 
 Entity.prototype.draw = function (ctx) {
