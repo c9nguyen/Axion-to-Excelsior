@@ -287,18 +287,48 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
     if (this.cooldownClock >= this.cooldown) this.cooldownClock = 0;
     if (!this.loop && this.isDone()) this.end(); // perform ending action
     var frame = this.currentFrame();
-    var groundPoint = this.groundPoints[frame]; 
+    //Updating ground point
+    var groundPoint = this.getFrameGroundPoint(frame); 
     this.x = this.unit.x - groundPoint.x;
     this.y = this.unit.y - groundPoint.y;
     //Updating collisionBox
-    var collisionBox = this.collisionBoxes[frame];
+    var collisionBox = this.getFrameHitbox(frame);
     this.collisionBox.x = this.x + collisionBox.x;
     this.collisionBox.y = this.y + collisionBox.y;
     this.collisionBox.width = collisionBox.width;
     this.collisionBox.height = collisionBox.height;
+
     var effect = this.effects[frame]; //Callback the effect
     if (effect !== undefined && typeof effect === "function") this.effects[frame](this); 
     AnimatedObject.prototype.update.call(this);
+}
+
+/**
+ * Get ground point of a frame, if no ground point for that frame, use the previous one
+ */
+Action.prototype.getFrameGroundPoint = function(frame) {
+    var groundPoint;
+    if (this.groundPoints[frame] === undefined && this.previousGroundPoint !== undefined)
+        groundPoint = this.previousGroundPoint;
+    else
+        groundPoint = this.groundPoints[frame];
+
+    this.previousGroundPoint = groundPoint;
+    return groundPoint;
+}
+
+/**
+ * Get ground point of a frame, if no ground point for that frame, use the previous one
+ */
+Action.prototype.getFrameHitbox = function(frame) {
+    var hitbox;
+    if (this.collisionBoxes[frame] === undefined && this.previousHitbox !== undefined)
+        hitbox = this.previousHitbox;
+    else
+        hitbox = this.collisionBoxes[frame];
+
+    this.previousHitbox = hitbox;
+    return hitbox;
 }
 
 Action.prototype.draw = function() {
@@ -328,8 +358,10 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.data = unitData[unitcode];
     this.width =  this.data.groundWidth;
     this.height = this.data.groundHeight;
+
     var range = this.data.range;
     this.rangeBox = {x: x + range.x, y: y + range.y, width: range.width, height: range.height}; 
+    
     this.flying = this.data.flying;
     this.health = this.data.health;
     this.speedPercent = 1;
@@ -466,222 +498,6 @@ Unit.prototype.draw = function() {
     //this.game.ctx.fillRect(this.x, this.y, this.width, this.height);
    // this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
     //this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
-}
-
-/*===============================================================*/
-//This class will be changed to be more generic unit
-function Person(game, spritesheets, x = 0, y = 0, //spritesheet = -1 will random a character
-                scale = 1, side) { //default orignal size
-    this.status = STAND;
-    this.previousStatus = this.status;
-    this.life = 15;
-    this.speed = 0;
-    this.frameInfo = characterFrameInfo[this.status];
-    this.personSpriteSheetDirections = spritesheets;
-    this.personSpritesheet = this.personSpriteSheetDirections.right;
-    
-    //calculating frames since each character has different frame dimension
-    var frameWith = this.personSpritesheet[this.status].width / this.frameInfo.sheetWidth;
-    var frameHeight = this.personSpritesheet[this.status].height / Math.ceil(this.frameInfo.frames / this.frameInfo.sheetWidth);
-
-    AnimatedObject.call(this, game, this.personSpritesheet[this.status], x, y,
-                        frameWith, frameHeight,
-                        this.frameInfo.sheetWidth, 0.1, this.frameInfo.frames, true, 
-                        scale, side, frameWith, frameHeight); 
-    
-    //gravity default true
-    this.gravity = true;
-
-    this.previousX = this.x;
-    this.previousY = this.y;
-};
-
-Person.prototype = Object.create(AnimatedObject.prototype);
-Person.prototype.constructor = Person;
-
-/**
- * Set stats for unit
- */
-Person.prototype.setStats = function(health, movementspeed, attackspeed) {  //3 stats for now
-    this.health = health;
-    this.movementspeed = movementspeed;
-    this.attackspeed = attackspeed;
-}
-
-/**
- * Tell unit to move to a direction: -1 left, 1 right
- */
-Person.prototype.move = function(direction) {   //shouldn't use in prototype. 
-    this.direction = direction;
-}
-
-/**
- * Change status action of character
- */
-Person.prototype.changeStatus = function (status) {
-    if (characterFrameInfo[status] !== undefined && this.status !== status) {
-        this.previousStatus = this.status;
-        this.status = status;
-        this.frameInfo = characterFrameInfo[this.status];
-        
-        var oldHeight = this.animation.frameHeight;
-        var spritesheet = this.personSpritesheet[this.status];
-        var frameWith = spritesheet.width / this.frameInfo.sheetWidth;
-        var frameHeight = this.personSpritesheet[this.status].height / Math.ceil(this.frameInfo.frames / this.frameInfo.sheetWidth);
-        var frameDuration;
-
-        //Frame duration depends on the action unit performing
-        this.speed = 0;
-        if (status === WALK){ 
-            frameDuration = 20/this.movementspeed;
-            this.speed = this.movementspeed;
-        } else if (status === ATTACK) frameDuration = this.attackspeed;
-        else frameDuration = 0.1;
-
-        this.y += oldHeight - frameHeight;
-        this.updateFrameStat(spritesheet, frameWith, frameHeight,
-                        this.frameInfo.sheetWidth, frameDuration, this.frameInfo.frames, true);
-    }
-}
-
-/**
- * Turn arround
- * don't use this for now. SAve time and resources from making action for 2 directions.
- */
-// Person.prototype.flip = function () {
-//     if (this.direction === 1) {
-//         this.personSpritesheet = this.personSpriteSheetDirections.left;
-//         this.direction = -1;       
-//     } else {
-//         this.personSpritesheet = this.personSpriteSheetDirections.right;
-//         this.direction = 1;
-//     }
-//     this.animation.spriteSheet = this.personSpritesheet[this.status];
-// }
-
-/**
- * Set range hit box for unit. If enemy collise with this box, the unit attacks
- */
-Person.prototype.setRangeBox = function(x, y, width, height) {
-    this.rangeHitBox = {x: x, y: y, width: width, height: height};
-}
-
-Person.prototype.update = function () {
-    AnimatedObject.prototype.update.call(this);
-    // if (this.life > 0) this.life -= this.game.clockTick;
-    // if (this.life < 0) {
-    //     this.removeFromWorld = true; //die
-    //     this.game.addEntity(new Tomb(this.game, this.x, this.y));
-    // } 
-    //hit box
-    this.groundHitBox = {x: this.x, y: this.y + this.height - 5, width: this.width, height: 7};
-    this.colliseBox = {x: this.x, y: this.y, width: this.width, height: this.height};
-    if (this.rangeHitBox !== undefined) {
-        this.rangeHitBox.x += this.x - this.previousX;
-        this.rangeHitBox.y += this.y - this.previousY;
-    }
-
-
-    var groundCollisionBox = this.game.collisionBox.ground;
-    this.gravity = true;
-    if (this.yVelocity >= 0) {
-        for (var box in groundCollisionBox) {
-            if (collise(this.groundHitBox, groundCollisionBox[box])) {
-                this.y = groundCollisionBox[box].y - this.height;
-                this.gravity = false;
-            }
-        }
-    }
-
-    if (this.gravity) this.changeStatus(JUMP);
-    else if (this.status !== ATTACK) {
-        var emenyList = this.side === PLAYER ? this.game.enemyList : this.game.playerList;               
-        for (var i in emenyList) {
-            if (collise(this.rangeHitBox, emenyList[i].colliseBox)) {
-                this.changeStatus(ATTACK);
-                break;
-            }
-        }
-
-        if (this.status !== ATTACK) this.changeStatus(WALK);
-    } 
-
-
-
-
-    this.previousX = this.x;
-    this.previousY = this.y;
-}
-
-Person.prototype.draw = function() {
-    AnimatedObject.prototype.draw.call(this);
-  //  this.ctx.fillRect(this.colliseBox.x, this.colliseBox.y, this.colliseBox.width, this.colliseBox.height);
-    this.ctx.fillRect(this.groundHitBox.x, this.groundHitBox.y, this.groundHitBox.width, this.groundHitBox.height);
-  //      this.ctx.fillRect(this.rangeHitBox.x, this.rangeHitBox.y, this.rangeHitBox.width, this.rangeHitBox.height);
-}
-
-/*===============================================================*/
-
-function Portal(game, spritesheet, x = 0, y = 0, //spritesheet = -1 will random a character
-                sheetWidth, frameDuration, frames, loop, scale = 1) { //default orignal size
-    
-    //calculating frames since each character has different frame dimension
-    var frameWith = spritesheet.width / sheetWidth;
-    var frameHeight = spritesheet.height / Math.ceil(frames/sheetWidth);
-
-    AnimatedObject.call(this, game, spritesheet, x, y,
-                        frameWith, frameHeight,
-                        sheetWidth, frameDuration, frames, loop, 
-                        scale, frameWith, frameHeight); 
-    // console.log(y);
-    // console.log(frameHeight / 2 + y);
-    
-    this.colliseBox = {x: frameWith / 3 + x, y: frameHeight / 1.5 + y, width: frameWith / 4, height: frameHeight / 3}; 
-};
-
-Portal.prototype = Object.create(AnimatedObject.prototype);
-Portal.prototype.constructor = Portal;
-
-Portal.prototype.draw = function() {
-    AnimatedObject.prototype.draw.call(this);
-//    this.ctx.fillRect(this.colliseBox.x, this.colliseBox.y, this.colliseBox.width, this.colliseBox.height);
-}
-
-/*===============================================================*/
-
-function Food(game, x, y) {
-    this.active = true;
-    this.cooldown = 0;
-    Entity.call(this, game, x, y);
-
-    this.activate();
-    this.colliseBox = {x: x, y: y, width: 30, height: 30};
-}
-
-Food.prototype = Object.create(Entity.prototype);
-Food.prototype.constructor = Food;
-
-Food.prototype.activate = function() {
-    this.active = true;
-    var ran = Math.floor(Math.random() * 4);
-
-    this.nonAnimatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/food/spritesheet.png"), this.x, this.y,
-                                                    33, 34, 4, 4, -1, 1);
-}
-
-Food.prototype.deactivate = function() {
-    this.active = false;
-    this.cooldown = 5;
-}
-
-Food.prototype.draw = function() {
-    if (this.active) this.nonAnimatedObject.draw();
-}
-
-Food.prototype.update = function() {
-    if (this.cooldown > 0) this.cooldown -= this.game.clockTick;
-    if (this.cooldown < 0)  this.cooldown = 0;
-    if (this.cooldown <= 0 && !this.active) this.activate();
 }
 
 /*===============================================================*/
