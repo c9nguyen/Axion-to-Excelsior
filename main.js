@@ -54,6 +54,9 @@ function spawn(game) {
     person.setSpeed(200, 1);
     person.yVelocity = Math.floor(Math.random() * -1500);
     game.addEntity(person);
+    for (var i = 0; i < game.entities.length; i++) {
+        game.entities[i].x += -100;
+    }
 }
 
 AM.downloadAll(function () {
