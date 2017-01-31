@@ -17,29 +17,24 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
     switch (unitcode) {
         case "h000":
             unit = new Unit(game, x, y, unitcode, side);
-            var groundPoints = [{x: 50, y: 95},
-                                {x: 50, y: 95},
-                                {x: 50, y: 95},
-                                {x: 50, y: 95}];
-            var collisionBox = [{x: 40, y: 20, width: 50, height: 75},
-                                {x: 40, y: 20, width: 50, height: 75},
-                                {x: 40, y: 20, width: 50, height: 75},
-                                {x: 40, y: 20, width: 50, height: 75},];
+            var groundPoints = [{x: 50, y: 95}];
+            var collisionBox = [{x: 40, y: 20, width: 50, height: 75}];
             var walk = new Action(game, unit, AM.getAsset("./img/unit/h000/walk_right.png"),
                                     2, 0.1, 4, true, groundPoints, collisionBox);
             walk.startEffect = function() {this.unit.velocity.x = this.unit.movementspeed};
             walk.endEffect = function() {this.unit.velocity.x = 0};
 
+            groundPoints = [];
+            collisionBox = [];
             groundPoints = [{x: 50, y: 95}];
             collisionBox = [{x: 40, y: 20, width: 50, height: 75}];
             var jump = new Action(game, unit, AM.getAsset("./img/unit/h000/jump_right.png"),
                                     1, 0.1, 1, true, groundPoints, collisionBox);
-            groundPoints = [{x: 15, y: 95},
-                                {x: 15, y: 95},
-                                {x: 15, y: 95}];
-            collisionBox = [{x: 20, y: 20, width: 60, height: 70},
-                                {x: 20, y: 20, width: 60, height: 70},
-                                {x: 20, y: 20, width: 60, height: 70}];
+
+            groundPoints = [];
+            collisionBox = [];                   
+            groundPoints = [{x: 15, y: 95}];
+            collisionBox = [{x: 20, y: 20, width: 60, height: 70}];
             var attack = new Action(game, unit, AM.getAsset("./img/unit/h000/stab_right.png"),
                                     3, 0.1, 3, true, groundPoints, collisionBox);
             unit.actions["walk"] = walk;
@@ -52,39 +47,28 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             break;
         case "m000":
             unit = new Unit(game, x, y, unitcode, side);
-            var groundPoints = [{x: 50, y: 105},
-                                {x: 50, y: 105},
-                                {x: 50, y: 105},
-                                {x: 50, y: 105}];
-            var collisionBox = [{x: 50, y: 20, width: 70, height: 85},
-                                {x: 50, y: 20, width: 70, height: 85},
-                                {x: 50, y: 20, width: 70, height: 85},
-                                {x: 50, y: 20, width: 70, height: 85},];
+            var groundPoints = [{x: 50, y: 105}];
+            var collisionBox = [{x: 50, y: 20, width: 70, height: 85}];
             var walk = new Action(game, unit, AM.getAsset("./img/unit/m000/walk_left.png"),
                                     2, 0.1, 4, true, groundPoints, collisionBox);
             walk.startEffect = function() {this.unit.velocity.x = this.unit.movementspeed};
             walk.endEffect = function() {this.unit.velocity.x = 0};
                     
+            groundPoints = [];
+            collisionBox = [];
             groundPoints = [{x: 50, y: 105}];
             collisionBox = [{x: 50, y: 20, width: 70, height: 85}];
             var jump = new Action(game, unit, AM.getAsset("./img/unit/m000/jump_left.png"),
                                     1, 0.1, 1, true, groundPoints, collisionBox);
-            groundPoints = [{x: 300, y: 109},
-                            {x: 300, y: 109},
-                            {x: 300, y: 109},
-                            {x: 300, y: 109},
-                            {x: 300, y: 109},
-                            {x: 300, y: 109},
-                            {x: 300, y: 109},
-                            {x: 300, y: 109}];
-            collisionBox = [{x: 283, y: 25, width: 70, height: 85},
-                                {x: 283, y: 25, width: 70, height: 85},
-                                {x: 283, y: 25, width: 70, height: 85},
-                                {x: 283, y: 25, width: 70, height: 85},
-                                {x: 253, y: 25, width: 90, height: 85},
-                                {x: 260, y: 25, width: 90, height: 85},
-                                {x: 280, y: 25, width: 80, height: 85},
-                                {x: 283, y: 25, width: 60, height: 85}];
+
+            groundPoints = [];
+            collisionBox = [];
+            groundPoints = [{x: 300, y: 109}];
+            collisionBox[0] = {x: 283, y: 25, width: 70, height: 85};
+            collisionBox[4] = {x: 253, y: 25, width: 90, height: 85};
+            collisionBox[5] = {x: 260, y: 25, width: 90, height: 85};
+            collisionBox[6] = {x: 280, y: 25, width: 80, height: 85};
+            collisionBox[7] = {x: 283, y: 25, width: 60, height: 85};
             var attack = new Action(game, unit, AM.getAsset("./img/unit/m000/attack_left.png"),
                                     8, 0.1, 8, true, groundPoints, collisionBox);
             unit.actions["walk"] = walk;
