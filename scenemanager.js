@@ -1,34 +1,41 @@
 var State = function() {
     this.name ; // Just to identify the State
     this.entities = [];
-    this.update  = function (){
-	    for (var i = 0; i < this.entities.length; i++) {
+    //updates everything in the current state
+    that = this;
+    this.update  = function (clockTick){
+	    for (var i = 0; i < that.entities.length; i++) {
 	        //If this enetity will be removed
-	        if (this.entities[i].removeFromWorld)
-	             this.entities.splice(i, 1);
-	        else {        
-	            var entity = this.entities[i];
+	        if (that.entities[i].removeFromWorld)
+	             that.entities.splice(i, 1);
+	        else {
+	            var entity = that.entities[i];
 
 	            //applying gravity
-	            if (entity.gravity) entity.yVelocity += this.clockTick * 1800;
+	            if (entity.gravity) entity.yVelocity += clockTick * 1800;
 	            else entity.yVelocity = 0;      //Will be changed
-	            entity.y += this.clockTick * entity.yVelocity;
+	            entity.y += clockTick * entity.yVelocity;
 
 	            entity.update();
 	        }
 	    }
     };
+
+    // renders everythin in the current state
     this.render  = function (ctx){
-	    for (var i = 0; i < this.entities.length; i++) {
-	        this.entities[i].draw(ctx);
+	    for (var i = 0; i < that.entities.length; i++) {
+	        that.entities[i].draw(ctx);
 	    }
     };
+
     this.onEnter = function (){};
     this.onExit  = function (){};
-	this.addEntity = function (entity) {
-	//   console.log('added entity');
-    	this.entities.push(entity);
-	};
+
+    //add an entity
+    this.addEntity = function (entity) {
+    //   console.log('added entity');
+      	that.entities.push(entity);
+  	};
 
     // Optional but useful
     this.onPause = function (){};
@@ -51,16 +58,16 @@ var StateList = function (){
 var StateStack = function () {
     var states = new StateList();
     states.push(new State());
-    this.update = function (){
+    this.update = function (clockTick){
             var state = states.top();
             if (state){
-                    state.update();
+                    state.update(clockTick);
             }
     };
-    this.render = function (){
+    this.render = function (ctx){
             var state = states.top();
             if (state){
-                    state.render();
+                    state.render(ctx);
             }
     };
     this.push = function (state) {
@@ -85,5 +92,9 @@ var StateStack = function () {
             if (state.onResume){
                     state.onResume();
             }
+    };
+    this.addEntity = function (entity) {
+    //   console.log('added entity');
+        states.top().addEntity(entity);
     };
 };

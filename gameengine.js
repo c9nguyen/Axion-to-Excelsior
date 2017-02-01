@@ -11,12 +11,13 @@ window.requestAnimFrame = (function () {
 
 function GameEngine() {
     this.entities = [];
+    this.stack = new StateStack();
     this.collisionBox = {
         ground: [],
         player: [],
         ai: []
     };
-    
+
     this.portals = [];  // will be removed
     this.food = []; // will be removed
     this.ctx = null;
@@ -72,7 +73,7 @@ GameEngine.prototype.startInput = function () {
 
     this.ctx.canvas.addEventListener("mousedown", function (e) {
         if (e.which === 1)
-            that.mouse.pressed = true; 
+            that.mouse.pressed = true;
     }, false);
 
     this.ctx.canvas.addEventListener("click", function (e) {
@@ -126,40 +127,46 @@ GameEngine.prototype.startInput = function () {
 
 GameEngine.prototype.addEntity = function (entity) {
  //   console.log('added entity');
-    this.entities.push(entity);
+//  this.entities.push(entity);
+  this.stack.addEntity(entity);
 }
 
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
     this.ctx.save();
-    for (var i = 0; i < this.entities.length; i++) {
-        this.entities[i].draw(this.ctx);
-    }
+    // for (var i = 0; i < this.entities.length; i++) {
+    //     this.entities[i].draw(this.ctx);
+    // }
+    this.stack.render(this.ctx);
     this.ctx.restore();
 }
 
 GameEngine.prototype.update = function () {
-    for (var i = 0; i < this.entities.length; i++) {
-        //If this enetity will be removed
-        if (this.entities[i].removeFromWorld)
-             this.entities.splice(i, 1);
-        else {        
-            var entity = this.entities[i];
-
-            //applying gravity
-            if (entity.gravity) entity.yVelocity += this.clockTick * 1800;
-            else entity.yVelocity = 0;      //Will be changed
-            entity.y += this.clockTick * entity.yVelocity;
-
-            entity.update();
-        }
-    }
+    // for (var i = 0; i < this.entities.length; i++) {
+    //     //If this enetity will be removed
+    //     if (this.entities[i].removeFromWorld)
+    //          this.entities.splice(i, 1);
+    //     else {
+    //         var entity = this.entities[i];
+    //
+    //         //applying gravity
+    //         if (entity.gravity) entity.yVelocity += this.clockTick * 1800;
+    //         else entity.yVelocity = 0;      //Will be changed
+    //         entity.y += this.clockTick * entity.yVelocity;
+    //
+    //         entity.update();
+    //     }
+    // }
+    this.stack.update(this.clockTick);
 }
 
 GameEngine.prototype.loop = function () {
     this.clockTick = this.timer.tick();
     this.update();
     this.draw();
+}
+GameEngine.prototype.removeScene = function () {
+    this.stack.pop();
 }
 
 function Timer() {
@@ -177,6 +184,11 @@ Timer.prototype.tick = function () {
     this.gameTime += gameDelta;
     return gameDelta;
 }
+
+
+
+
+
 
 function Entity(game, x, y) {
     this.game = game;
@@ -225,5 +237,5 @@ function collise(box1, box2) {
     return (box1.x < box2.x + box2.width &&
             box1.x + box1.width > box2.x &&
             box1.y < box2.y + box2.height &&
-            box1.height + box1.y > box2.y) 
+            box1.height + box1.y > box2.y)
 }

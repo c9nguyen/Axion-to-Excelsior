@@ -407,6 +407,7 @@ Button.prototype.update = function() {
     if (collise(this.colliseBox, this.game.mouse)) {
         if (this.game.mouse.click) {
             spawn(this.game);
+            this.game.removeScene();
             this.game.mouse.click = false;
         } else if (this.game.mouse.pressed) this.status = this.PRESS;
         else this.status = this.MOUSEOVER;
