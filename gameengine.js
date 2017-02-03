@@ -16,7 +16,7 @@ const ENEMY = -1;
 const GRAVITY = 900; //can change this to make gravity better
 
 function GameEngine() {
-    this.entities = [];
+    this.sceneManager = new SceneManager(this);
     this.collisionBox = {
         ground: [],
     };
@@ -134,25 +134,27 @@ GameEngine.prototype.addEntity = function (entity) {
  //   console.log('added entity');
     if (entity.side === PLAYER) this.playerList.push(entity);
     else if (entity.side === ENEMY) this.enemyList.push(entity);
-    this.entities.push(entity);
+    this.sceneManager.addEntityToScene(entity);
 }
 
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
     this.ctx.save();
-    for (var i = 0; i < this.entities.length; i++) {
-        this.entities[i].draw(this.ctx);
+    var entities = this.sceneManager.getCurrentEntities();
+    for (var i = 0; i < entities.length; i++) {
+        entities[i].draw(this.ctx);
     }
     this.ctx.restore();
 }
 
 GameEngine.prototype.update = function () {
-    for (var i = 0; i < this.entities.length; i++) {
+    var entities = this.sceneManager.getCurrentEntities();
+    for (var i = 0; i < entities.length; i++) {
         //If this enetity will be removed
-        if (this.entities[i].removeFromWorld)
-             this.entities.splice(i, 1);
+        if (entities[i].removeFromWorld)
+             entities.splice(i, 1);
         else {        
-            var entity = this.entities[i];
+            var entity = entities[i];
 
             //applying gravity
             // if (entity.gravity) entity.yVelocity += this.clockTick * 1800;

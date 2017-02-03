@@ -2,6 +2,7 @@ function SceneManager(game)
 {
   this.game = game
   this.currentScene = null;
+  this.currentSceneKey = null;
   this.scenes = {};
 }
 
@@ -30,7 +31,7 @@ SceneManager.prototype.addScene = function (key, scene) {
 
 
 SceneManager.prototype.startScene = function (key) {
-  this.currentScene = scenes[key];
+  this.pendingSceneKey = key;
 };
 
 
@@ -44,6 +45,11 @@ SceneManager.prototype.getScene = function (key) {
   } else return this.currentScene;
 };
 
+SceneManager.prototype.preupdate = function(time) {
+  if(this.pendingSceneKey){
+    this.currentScene = this.scenes[this.pendingSceneKey];
+  }
+};
 
 function Scene(game)
 {
@@ -56,7 +62,7 @@ Scene.prototype.init = function () {
 Scene.prototype.preload = function () {
 
 };
-Scene.prototype.preloadUpdate = function () {
+Scene.prototype.loadUpdate = function () {
 
 };
 Scene.prototype.create = function () {
