@@ -13,25 +13,25 @@ SceneManager.prototype.addEntityToScene = function (entity) {
 SceneManager.prototype.addScene = function (key, scene) {
   if (typeof scene === 'object'){
     scene.game = this.game;
-    scene.entities = [];
 
-    scene.addEntity = function (entity) {
-      scene.entities.push(entity);
-    };
-
-    scene.getEntities = function(){
-      return scene.entities;
-    };
 
   } else if(typeof scene === 'function') {
     scene = new scene(this.game);
   }
+
+  scene.entities = [];
+  scene.addEntity = function (entity) {
+    scene.entities.push(entity);
+  };
+  scene.getEntities = function(){
+    return scene.entities;
+  };
   this.scenes[key] = scene;
 };
 
 
 SceneManager.prototype.startScene = function (key) {
-  this.pendingSceneKey = key;
+  this._pendingSceneKey = key;
 };
 
 
@@ -45,11 +45,37 @@ SceneManager.prototype.getScene = function (key) {
   } else return this.currentScene;
 };
 
-SceneManager.prototype.preupdate = function(time) {
-  if(this.pendingSceneKey){
-    this.currentScene = this.scenes[this.pendingSceneKey];
+SceneManager.prototype.preUpdate = function(time) {
+  if(this._pendingSceneKey){
+
+
+    this.clearCurrentScene();
+    this.setCurrentScene(this._pendingSceneKey);
+
+    this._pendingSceneKey = null;
+    if(this.currentScene.create){
+      this.currentScene.create();
+    }
+    // this.currentScene = this.scenes[this._pendingSceneKey];
+    // this._pendingSceneKey = null;
+    // this.currentScene.create();
   }
 };
+SceneManager.prototype.clearCurrentScene = function() {
+  if(this.currentScene){
+    if(this.currentScene.shutdown){
+      this.currentScene.shutdown();  
+    }
+  }
+};
+SceneManager.prototype.setCurrentScene = function(key) {
+  this.currentSceneKey = key;
+  this.currentScene = this.scenes[key];
+  if(this.currentScene.init){ 
+    this.currentScene.init();
+  }
+};
+
 
 function Scene(game)
 {

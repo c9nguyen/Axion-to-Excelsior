@@ -58,6 +58,7 @@ GameEngine.prototype.start = function () {
     console.log("starting game");
     var that = this;
     (function gameLoop() {
+        that.sceneManager.preUpdate();
         that.loop();
         requestAnimFrame(gameLoop, that.ctx.canvas);
     })();

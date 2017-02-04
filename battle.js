@@ -4,14 +4,15 @@ function Battle(game)
 }
 
 Battle.prototype.create = function() {
+    console.log('battle created');
 	this.loadCharacter();
     this.buildingBackground();
     this.buildTiles();
-    var button = new Button(gameEngine, {normal: AM.getAsset("./img/ui/start_button_disable.png"),
+    var button = new Button(this.game, {normal: AM.getAsset("./img/ui/start_button_disable.png"),
                                     press: AM.getAsset("./img/ui/start_button_pressed.png"),
                                     mouseover: AM.getAsset("./img/ui/start_button_mouseover.png")},
                                     500, 500);
-    gameEngine.addEntity(button);
+    this.game.addEntity(button);
 };
 
 Battle.prototype.update = function() {
@@ -59,13 +60,14 @@ Battle.prototype.loadCharacter = function(){
 };
 
 Battle.prototype.buildTiles = function() {
-	var canvasHeight = this.game.ctx.canvas.clientHeight;
-	var canvasWidth = this.game.ctx.canvas.clentWidth;
-    var groundCollisionBox = this.game.collisionBox.ground;
 
+	var canvasHeight = this.game.ctx.canvas.clientHeight;
+	var canvasWidth = this.game.ctx.canvas.clientWidth;
+    var groundCollisionBox = this.game.collisionBox.ground;
 
     var numOfTile = Math.ceil(canvasWidth / 90) + 2;
     var groundX = -97;
+
     
     for (var i = 0; i < numOfTile; i++) {
         //Building the bottom ground

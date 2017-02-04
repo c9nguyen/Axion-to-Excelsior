@@ -70,8 +70,11 @@ AM.downloadAll(function () {
     var ctx = canvas.getContext("2d");
     var gameEngine = new GameEngine();
     gameEngine.init(ctx);
+    gameEngine.sceneManager.addScene('battle',Battle);
     gameEngine.start();
+    gameEngine.sceneManager.startScene('battle');
 });
+
 
 
 
