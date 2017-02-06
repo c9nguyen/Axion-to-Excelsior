@@ -20,7 +20,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var groundPoints = [{x: 50, y: 95}];
             var collisionBox = [{x: 40, y: 20, width: 50, height: 75}];
             var walk = new Action(game, unit, AM.getAsset("./img/unit/h000/walk_right.png"),
-                                    2, 0.1, 4, true, groundPoints, collisionBox);
+                                    2, 0.1, 4, groundPoints, collisionBox);
             walk.startEffect = function() {this.unit.velocity.x = this.unit.movementspeed};
             walk.endEffect = function() {this.unit.velocity.x = 0};
 
@@ -29,17 +29,19 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 50, y: 95}];
             collisionBox = [{x: 40, y: 20, width: 50, height: 75}];
             var jump = new Action(game, unit, AM.getAsset("./img/unit/h000/jump_right.png"),
-                                    1, 0.1, 1, true, groundPoints, collisionBox);
+                                    1, 0.1, 1, groundPoints, collisionBox);
 
             groundPoints = [];
             collisionBox = [];                   
             groundPoints = [{x: 15, y: 95}];
             collisionBox = [{x: 20, y: 20, width: 60, height: 70}];
             var attack = new Action(game, unit, AM.getAsset("./img/unit/h000/stab_right.png"),
-                                    3, 0.1, 3, true, groundPoints, collisionBox);
+                                    3, 0.1, 3, groundPoints, collisionBox);
+            attack.startEffect = function() {this.unit.velocity.y = -800; this.unit.velocity.x = -200};
             unit.actions["walk"] = walk;
             unit.actions["jump"] = jump;
             unit.actions["attack"] = attack;
+            unit.defaultAction = walk;
             unit.setCollisionReacts(function() { this.changeAction("walk");
                                                 this.velocity.x = this.movementspeed; }, 
                                     function() { this.changeAction("jump"); }, 
@@ -50,7 +52,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var groundPoints = [{x: 50, y: 105}];
             var collisionBox = [{x: 50, y: 20, width: 70, height: 85}];
             var walk = new Action(game, unit, AM.getAsset("./img/unit/m000/walk_left.png"),
-                                    2, 0.1, 4, true, groundPoints, collisionBox);
+                                    2, 0.1, 4, groundPoints, collisionBox);
             walk.startEffect = function() {this.unit.velocity.x = this.unit.movementspeed};
             walk.endEffect = function() {this.unit.velocity.x = 0};
                     
@@ -59,7 +61,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 50, y: 105}];
             collisionBox = [{x: 50, y: 20, width: 70, height: 85}];
             var jump = new Action(game, unit, AM.getAsset("./img/unit/m000/jump_left.png"),
-                                    1, 0.1, 1, true, groundPoints, collisionBox);
+                                    1, 0.1, 1, groundPoints, collisionBox);
 
             groundPoints = [];
             collisionBox = [];
@@ -70,10 +72,12 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             collisionBox[6] = {x: 280, y: 25, width: 80, height: 85};
             collisionBox[7] = {x: 283, y: 25, width: 60, height: 85};
             var attack = new Action(game, unit, AM.getAsset("./img/unit/m000/attack_left.png"),
-                                    8, 0.1, 8, true, groundPoints, collisionBox);
+                                    8, 0.1, 8, groundPoints, collisionBox);
+            attack.startEffect = function() {this.unit.velocity.y = -800; this.unit.velocity.x = 200};
             unit.actions["walk"] = walk;
             unit.actions["jump"] = jump;
             unit.actions["attack"] = attack;
+            unit.defaultAction = walk;
             unit.setCollisionReacts(function() { this.changeAction("walk");}, 
                                     function() { this.changeAction("jump");}, 
                                     function() { this.changeAction("attack"); });

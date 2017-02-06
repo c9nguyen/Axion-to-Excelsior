@@ -3,20 +3,20 @@ var canvasHeight = 0;
 var characters = [];
 var food = [];
 
-function spawn(game) {
-    var person = new Person(game, -1, 400, 400, 0.1, 1);
-    person.changeStatus(WALK);
-    person.setSpeed(200, 1);
-    person.yVelocity = Math.floor(Math.random() * -1500);
-    game.addEntity(person);
-}
+// function spawn(game) {
+//     var person = new Person(game, -1, 400, 400, 0.1, 1);
+//     person.changeStatus(WALK);
+//     person.setSpeed(200, 1);
+//     person.yVelocity = Math.floor(Math.random() * -1500);
+//     game.addEntity(person);
+// }
 
-const characterFrameInfo = [
-    {sheetWidth: 5, frames: 5},    //stand
-    {sheetWidth: 1, frames: 1},    //jump
-    {sheetWidth: 2, frames: 4},    //walk
-    {sheetWidth: 3, frames: 3}    //Attack
-]
+// const characterFrameInfo = [
+//     {sheetWidth: 5, frames: 5},    //stand
+//     {sheetWidth: 1, frames: 1},    //jump
+//     {sheetWidth: 2, frames: 4},    //walk
+//     {sheetWidth: 3, frames: 3}    //Attack
+// ]
 
 function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
     this.spriteSheet = spriteSheet;
@@ -219,7 +219,7 @@ AnimatedObject.prototype.isDone = function () {
  */
 
 function Action(game, unit, spritesheet,
-                sheetWidth, frameDuration, frames, loop, 
+                sheetWidth, frameDuration, frames, 
                 groundPoints, collisionBoxes, cooldown = 0,
                 scale = 1, frameWidth = spritesheet.width / sheetWidth , 
                 frameHeight = spritesheet.height / Math.ceil(frames / sheetWidth),
@@ -243,12 +243,21 @@ function Action(game, unit, spritesheet,
 
     AnimatedObject.call(this, game, spritesheet, x, y,
                         frameWidth, frameHeight,
-                        sheetWidth, frameDuration, frames, loop, 
+                        sheetWidth, frameDuration, frames, cooldown === 0, 
                         scale = 1, width, height);
 }
 
 Action.prototype = Object.create(AnimatedObject);
 Action.prototype.constructor = Action;
+
+/**
+ * Check if the action is still on cooldown
+ * return true if action can be excecuted
+ */
+Action.prototype.checkCooldown = function() {
+    var offCooldown = true;
+    return (this.timeLastStart === undefined || this.game.timer.gameTime - this.timeLastStart >= this.cooldown);
+}
 
 /**
  * Add the effect that will hapen at index of the frame
@@ -263,6 +272,7 @@ Action.prototype.addEffect = function(callback, index) {
  */
 Action.prototype.start = function() {
     this.elapsedTime = 0;
+    this.timeLastStart = this.game.timer.gameTime;
     this.startEffect();
 }
 
@@ -282,9 +292,16 @@ Action.prototype.end = function() {
 
 
 Action.prototype.update = function() {//Updating the coordinate for the unit in the frame
+    //If this action is still on cooldown, call default action
+    if (!this.checkCooldown() && this.isDone()) {
+        this.end(); 
+        this.unit.currentAction = this.unit.defaultAction;
+        this.unit.currentAction.start();
+        this.unit.currentAction.update();
+        return;
+    } 
     this.during();
     this.cooldownClock += this.game.clockTick;
-    if (this.cooldownClock >= this.cooldown) this.cooldownClock = 0;
     if (!this.loop && this.isDone()) this.end(); // perform ending action
     var frame = this.currentFrame();
     //Updating ground point
@@ -367,6 +384,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.speedPercent = 1;
     this.movementspeed = this.data.movementspeed;
     this.actions = {}; //contains all actions this unit can perform (walk, stand, attack)
+    this.defaultAction;
     this.collisionReacts = {};  //Not used yet
     this.currentAction;
 }
@@ -399,11 +417,16 @@ Unit.prototype.setCollisionReacts = function(ground = function() {},
 
 Unit.prototype.changeAction = function(actionName) {
     var action = this.actions[actionName];
-    if (action !== undefined && this.currentAction !== action) {    //If action is defined and not performing
+    if (action !== undefined && this.currentAction !== action && action.checkCooldown()) {    //If action is defined and not performing
         if (this.currentAction !== undefined) this.currentAction.end();
         this.currentAction = action;
         this.currentAction.start();
-    }
+    } 
+        
+}
+
+Unit.prototype.takeDamage = function(damage) {
+    this.health -= damage;
 }
 
 Unit.prototype.update = function() {
@@ -420,22 +443,19 @@ Unit.prototype.update = function() {
 
 
         if (!this.flying) { //if the unit is not flying unit, check gravity (flying is different from jumping)
-            if (this.velocity.y >= 0) { //Only check for ground collision when the unit falling down or standing
-                this.gravity = true;
-               
-                // var groundHitBox = {x: this.x, y: this.y, 
-                //                     width: this.groundCollisionWidth, height: this.groundCollisionHeight};
+            var groundCollised = false;
+            if (this.velocity.y >= 0) { //Only check for ground collision when the unit falling down or standing           
                 //Improving performace by checking if still standing on the previous platform                    
                 if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
                     this.y = this.previousPlatform.y;
-                    this.gravity = false;
+                    groundCollised = true;
                 } else {
                     var groundCollisionBox = this.game.collisionBox.ground;
                     for (var box in groundCollisionBox) {
                         if (collise(this, groundCollisionBox[box])) {
                             this.y = groundCollisionBox[box].y;
                             this.velocity.y = 0;
-                            this.gravity = false;
+                            groundCollised = true;
                             this.previousPlatform = groundCollisionBox[box];    //Save this to check again
                             break;
                         }
@@ -444,21 +464,23 @@ Unit.prototype.update = function() {
       
             }
 
+            this.gravity = !groundCollised;
+
             if (!this.gravity) {     //On the ground reaction
                 var enemy = this.side === PLAYER ? this.game.enemyList : this.game.playerList;
                 //var collisionBox = this.getCollisionBox();
-                var collisedEnemy = false;
+                var collisedEnemy;
                 for (var i in enemy) {
                     var otherCollisionBox = enemy[i].getCollisionBox();
                     if (collise(this.rangeBox, otherCollisionBox)) {
-                        collisedEnemy = true;
+                        collisedEnemy = enemy[i];
                         break;
                     }
                 }
 
-                if (collisedEnemy) 
+                if (collisedEnemy !== undefined) 
                     //reaction when an enemy gets in range
-                    this.rangeReact();
+                    this.rangeReact(collisedEnemy);
                 else 
                     this.groundReact();
 
@@ -473,14 +495,14 @@ Unit.prototype.update = function() {
                 for (var i in enemy) {
                     var otherCollisionBox = enemy[i].getCollisionBox();
                     if (collise(collisionBox, otherCollisionBox)) {
-                        collisedEnemy = true;
+                        collisedEnemy;
                         break;
                     }
                 }
 
-                if (collisedEnemy) 
+                if (collisedEnemy !== undefined) 
                     //reaction when an enemy gets in range
-                    this.rangeReact();
+                    this.rangeReact(collisedEnemy);
                 else 
                     this.airReact();
         }
@@ -498,6 +520,16 @@ Unit.prototype.draw = function() {
     //this.game.ctx.fillRect(this.x, this.y, this.width, this.height);
    // this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
     //this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+}
+
+/*===============================================================*/
+
+/**
+ * Skill effect
+ * 
+ */
+function Effect(game, x, y, unit, aoe = false) {
+
 }
 
 /*===============================================================*/
@@ -573,7 +605,7 @@ Button.prototype.update = function() {
         if (this.game.mouse.click) {
          //   spawn(this.game);
             spawnUnit(this.game, 100, 100, "h000", PLAYER);
-            spawnUnit(this.game, 800, 100, "m000", ENEMY);
+            spawnUnit(this.game, 900, 100, "m000", ENEMY);
             this.game.mouse.click = false;
         } else if (this.game.mouse.pressed) this.status = this.PRESS;
         else this.status = this.MOUSEOVER;
