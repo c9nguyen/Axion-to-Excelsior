@@ -531,6 +531,7 @@ Unit.prototype.update = function() {
 }
 
 Unit.prototype.draw = function() {
+    if(this.currentAction)
     this.currentAction.draw();
 
     //For testing
