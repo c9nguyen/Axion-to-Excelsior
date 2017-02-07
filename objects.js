@@ -741,7 +741,13 @@ Button.prototype.update = function() {
             spawnUnit(this.game, 100, 100, "h000", PLAYER);
             spawnUnit(this.game, 900, 100, "m000", ENEMY);
             this.game.mouse.click = false;
+            // for (var i = 0; i < this.game.entities.length; i++) {
+            //     this.game.entities[i].x -= 5;
+            //     //this.game.entities[i].y -= 5;
+            // }   
         } else if (this.game.mouse.pressed) this.status = this.PRESS;
         else this.status = this.MOUSEOVER;
     } else this.status = this.NORMAL;
 }
+
+/*=========================================================================*/

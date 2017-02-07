@@ -75,7 +75,9 @@ AM.downloadAll(function () {
     gameEngine.sceneManager.addScene('battle',Battle);
     gameEngine.start();
 
+    
     gameEngine.sceneManager.startScene('battle');
+    
 
 });
 

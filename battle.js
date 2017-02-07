@@ -13,6 +13,10 @@ Battle.prototype.create = function() {
                                     mouseover: AM.getAsset("./img/ui/start_button_mouseover.png")},
                                     500, 500);
     this.game.addEntity(button);
+
+    var map = new ScreenScroller(this.game, 800, 550, 400, 50); 
+    this.game.addEntity(map);
+
 };
 
 Battle.prototype.update = function() {
