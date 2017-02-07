@@ -575,7 +575,72 @@ Button.prototype.update = function() {
             spawnUnit(this.game, 100, 100, "h000", PLAYER);
             spawnUnit(this.game, 800, 100, "m000", ENEMY);
             this.game.mouse.click = false;
+            // for (var i = 0; i < this.game.entities.length; i++) {
+            //     this.game.entities[i].x -= 5;
+            //     //this.game.entities[i].y -= 5;
+            // }   
         } else if (this.game.mouse.pressed) this.status = this.PRESS;
         else this.status = this.MOUSEOVER;
     } else this.status = this.NORMAL;
 }
+
+/*=========================================================================*/
+
+// vinh added
+function ScreenScroller(game, x, y, boxX, boxY, scale = 1){
+    this.NORMAL = 0;
+    this.PRESS = 1;
+    this.MOUSEOVER = 2;
+    Entity.call(this, game, x, y);
+    this.movable = false;
+    this.status = this.NORMAL;
+    this.screenLocation = 0;
+
+    this.colliseBox = {x: x, y: y, width: boxX, height: boxY};
+}
+
+ScreenScroller.prototype = Object.create (Entity.prototype);
+ScreenScroller.prototype.constructor = ScreenScroller;
+
+ScreenScroller.prototype.draw = function(){
+    this.game.ctx.beginPath();
+    this.game.ctx.lineWidth="4";
+    this.game.ctx.strokeStyle="green";
+    this.game.ctx.rect(this.x, this.y, this.colliseBox.width, this.colliseBox.height);
+    this.game.ctx.stroke();
+}
+
+ScreenScroller.prototype.update = function(){
+    if(collise(this.colliseBox, this.game.mouse)){
+        if (this.game.mouse.click) {
+            //console.log("Clicked  x: " + (this.game.mouse.x - this.x) + " y: " + (this.game.mouse.y - this.y));
+            tempx = this.game.mouse.x - this.x;
+            tempy = this.game.mouse.y - this.y;
+
+            mapSize = 2400;
+            untouched = 50;
+            endPoint = this.colliseBox.width - untouched;
+            originalScreen = this.screenLocation;
+            if(tempx < 50){
+                this.screenLocation = 0;
+            } else if(tempx > endPoint){
+                this.screenLocation = 1200;
+            } else /*if(tempx > 50 && tempx < endPoint)*/{
+                moveRange = mapSize / 2;
+                numberFactor = moveRange / (endPoint - untouched);
+                this.screenLocation = (tempx - untouched) * numberFactor; 
+            }
+            // Move Everything
+            tempEntities = this.game.entities;
+            movedAmount = originalScreen - this.screenLocation;
+            console.log("moved: " + movedAmount);
+            for(var i = 0; i < tempEntities.length; i++){
+                if(tempEntities[i].movable){
+                    tempEntities[i].x += movedAmount;
+                }
+            }
+            this.game.mouse.click = false;
+        }
+    }
+}
+// end vinh added

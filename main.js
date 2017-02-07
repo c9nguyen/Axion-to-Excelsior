@@ -125,12 +125,18 @@ AM.downloadAll(function () {
     // gameEngine.food.push(food);
 
     // placePortals(gameEngine);
+// vinh added
+    var map = new ScreenScroller(gameEngine, 800, 550, 400, 50); 
+    gameEngine.addEntity(map);
+// end vinh added
 
     var button = new Button(gameEngine, {normal: AM.getAsset("./img/ui/start_button_disable.png"),
                                         press: AM.getAsset("./img/ui/start_button_pressed.png"),
                                         mouseover: AM.getAsset("./img/ui/start_button_mouseover.png")},
                                         500, 500);
     gameEngine.addEntity(button);
+
+
 });
 
 function buildingBackground(gameEngine) {

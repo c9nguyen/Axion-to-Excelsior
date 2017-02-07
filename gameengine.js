@@ -190,6 +190,10 @@ function Entity(game, x, y, side = NEUTRAL) {
     this.game = game;
     this.x = x;
     this.y = y;
+    // vinh added
+
+    this.movable = true;
+    //end vinh added
     this.gravity = false;
     this.velocity = {x: 0, y:0};
     this.yVelocity = 0; //will be removed
