@@ -36,8 +36,13 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 15, y: 95}];
             collisionBox = [{x: 20, y: 20, width: 60, height: 70}];
             var attack = new Action(game, unit, AM.getAsset("./img/unit/h000/stab_right.png"),
-                                    3, 0.1, 3, groundPoints, collisionBox);
-            attack.startEffect = function() {this.unit.velocity.y = -800; this.unit.velocity.x = -200};
+                                    3, 0.2, 3, groundPoints, collisionBox);
+            attack.effects[2] = function(that) {
+                castSkill(that.game, that.x + 70, that.y + 47, that.unit, 00000);};
+            // attack.addEffect(function() {
+            //     console.log(this);
+            //     castSkill(this.game, this.x + 70, this.y + 47, this, 00000)}, 2);
+           // attack.startEffect = function() {this.unit.velocity.y = -800; this.unit.velocity.x = -200};
             unit.actions["walk"] = walk;
             unit.actions["jump"] = jump;
             unit.actions["attack"] = attack;
@@ -73,7 +78,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             collisionBox[7] = {x: 283, y: 25, width: 60, height: 85};
             var attack = new Action(game, unit, AM.getAsset("./img/unit/m000/attack_left.png"),
                                     8, 0.1, 8, groundPoints, collisionBox);
-            attack.startEffect = function() {this.unit.velocity.y = -800; this.unit.velocity.x = 200};
+            //attack.startEffect = function() {this.unit.velocity.y = -800; this.unit.velocity.x = 200};
             unit.actions["walk"] = walk;
             unit.actions["jump"] = jump;
             unit.actions["attack"] = attack;

@@ -93,11 +93,15 @@ NonAnimatedObject.prototype.setSize = function(width, height) {
 }
 
 NonAnimatedObject.prototype.draw = function() {
-    this.ctx.drawImage(this.spritesheet,
-                 this.xindex * this.frameWidth, this.yindex * this.frameHeight,  // source from sheet
-                 this.frameWidth, this.frameHeight,
-                 this.x, this.y,
-                 this.width * this.scale, this.height * this.scale);
+    try {
+        this.ctx.drawImage(this.spritesheet,
+                    this.xindex * this.frameWidth, this.yindex * this.frameHeight,  // source from sheet
+                    this.frameWidth, this.frameHeight,
+                    this.x, this.y,
+                    this.width * this.scale, this.height * this.scale);
+    } catch (e) {
+
+    }
 }
 
 NonAnimatedObject.prototype.update = function () {
@@ -158,7 +162,7 @@ AnimatedObject.prototype.setSize = function(width, height) {
 // }
 
 AnimatedObject.prototype.draw = function () {
-    this.elapsedTime += this.game.clockTick;
+    
     if (this.isDone()) {
         if (this.loop) this.elapsedTime = 0;
     }
@@ -167,6 +171,7 @@ AnimatedObject.prototype.draw = function () {
     var yindex = 0;
     this.xindex = frame % this.sheetWidth;
     this.yindex = Math.floor(frame / this.sheetWidth);
+    this.elapsedTime += this.game.clockTick;
     NonAnimatedObject.prototype.draw.call(this);
     // this.game.ctx.drawImage(this.spriteSheet,
     //              xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
@@ -228,6 +233,7 @@ function Action(game, unit, spritesheet,
     
     this.unit = unit;
     this.effects = [];
+    this.effectCasted = new Set(); //Keep track what effect already at a frame so wont recast
     this.cooldown = cooldown;
     this.cooldownClock = 0;
     this.groundPoints = groundPoints; //List of standing point for each frame.
@@ -255,7 +261,7 @@ Action.prototype.constructor = Action;
  * return true if action can be excecuted
  */
 Action.prototype.checkCooldown = function() {
-    var offCooldown = true;
+   // var offCooldown = true;
     return (this.timeLastStart === undefined || this.game.timer.gameTime - this.timeLastStart >= this.cooldown);
 }
 
@@ -292,14 +298,17 @@ Action.prototype.end = function() {
 
 
 Action.prototype.update = function() {//Updating the coordinate for the unit in the frame
-    //If this action is still on cooldown, call default action
-    if (!this.checkCooldown() && this.isDone()) {
-        this.end(); 
-        this.unit.currentAction = this.unit.defaultAction;
-        this.unit.currentAction.start();
-        this.unit.currentAction.update();
-        return;
-    } 
+    //If this action is still on cooldown, call default 
+    if (this.isDone()) {
+        if (!this.checkCooldown()) {
+            this.end(); 
+            this.unit.currentAction = this.unit.defaultAction;
+            this.unit.currentAction.start();
+            this.unit.currentAction.update();
+            return;
+        }
+        this.effectCasted = new Set();
+    }
     this.during();
     this.cooldownClock += this.game.clockTick;
     if (!this.loop && this.isDone()) this.end(); // perform ending action
@@ -316,7 +325,13 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
     this.collisionBox.height = collisionBox.height;
 
     var effect = this.effects[frame]; //Callback the effect
-    if (effect !== undefined && typeof effect === "function") this.effects[frame](this); 
+    if (effect !== undefined && typeof effect === "function" && !this.effectCasted.has(frame)) {
+        effect(this);
+        this.effectCasted.add(frame);
+    }
+        
+ 
+
     AnimatedObject.prototype.update.call(this);
 }
 
@@ -378,11 +393,14 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
 
     var range = this.data.range;
     this.rangeBox = {x: x + range.x, y: y + range.y, width: range.width, height: range.height}; 
-    
+    this.speedPercent = 1;  
     this.flying = this.data.flying;
+    
+    //Stats
     this.health = this.data.health;
-    this.speedPercent = 1;
     this.movementspeed = this.data.movementspeed;
+    this.att = this.data.att;
+
     this.actions = {}; //contains all actions this unit can perform (walk, stand, attack)
     this.defaultAction;
     this.collisionReacts = {};  //Not used yet
@@ -429,9 +447,26 @@ Unit.prototype.takeDamage = function(damage) {
     this.health -= damage;
 }
 
+Unit.prototype.checkEnemyInRange = function() {
+    var enemy = this.side === PLAYER ? this.game.enemyList : this.game.playerList;
+                //var collisionBox = this.getCollisionBox();
+    for (var i in enemy) {
+        if (enemy[i].removeFromWorld){
+            enemy.splice(i, 1);
+            i--;
+        } else {
+            var otherCollisionBox = enemy[i].getCollisionBox();
+            if (collise(this.rangeBox, otherCollisionBox)) {
+                return enemy[i];
+            }
+        }
+    } 
+}
+
 Unit.prototype.update = function() {
    // console.log(this.gravity);
-    if (this.health <= 0 || this.y > canvasHeight * 2) this.removeFromWorld = true;
+    if (this.health <= 0 || this.y > canvasHeight * 2) 
+        this.removeFromWorld = true;
     else {
         Entity.prototype.update.call(this);
         //Will be added: effect on this unit (poison, movement locked,..)
@@ -467,16 +502,8 @@ Unit.prototype.update = function() {
             this.gravity = !groundCollised;
 
             if (!this.gravity) {     //On the ground reaction
-                var enemy = this.side === PLAYER ? this.game.enemyList : this.game.playerList;
                 //var collisionBox = this.getCollisionBox();
-                var collisedEnemy;
-                for (var i in enemy) {
-                    var otherCollisionBox = enemy[i].getCollisionBox();
-                    if (collise(this.rangeBox, otherCollisionBox)) {
-                        collisedEnemy = enemy[i];
-                        break;
-                    }
-                }
+                var collisedEnemy = this.checkEnemyInRange();
 
                 if (collisedEnemy !== undefined) 
                     //reaction when an enemy gets in range
@@ -489,16 +516,7 @@ Unit.prototype.update = function() {
                 this.airReact();
 
         } else {    //Fyling unit
-                var enemy = this.game.enemyList;
-                var collisionBox = this.getCollisionBox();
-                var collisedEnemy = false;
-                for (var i in enemy) {
-                    var otherCollisionBox = enemy[i].getCollisionBox();
-                    if (collise(collisionBox, otherCollisionBox)) {
-                        collisedEnemy;
-                        break;
-                    }
-                }
+                var collisedEnemy = this.checkEnemyInRange();
 
                 if (collisedEnemy !== undefined) 
                     //reaction when an enemy gets in range
@@ -528,9 +546,124 @@ Unit.prototype.draw = function() {
  * Skill effect
  * 
  */
-function Effect(game, x, y, unit, aoe = false) {
+function Effect(game, x, y, unit, spritesheet,
+                sheetWidth, frameDuration, frames, 
+                collisionBoxes, collisingAction, percent, aoe = false, numOfLoop = 1) {
 
+    this.unit = unit;
+    this.subEffects = [];   //What happen at certain frame
+    this.collisionBoxes = collisionBoxes; //List of collision boxes
+    this.collisionBox = {};  //The current collisionBox
+    this.loopCounter = 0;
+    this.numOfLoop = numOfLoop;
+    this.collisingAction = collisingAction;   //What happen the effect collises with a unit
+    var frameWidth = spritesheet.width / sheetWidth;
+    var frameHeight = spritesheet.height / Math.ceil(frames / sheetWidth);
+    AnimatedObject.call(this, game, spritesheet, x, y,
+                        frameWidth, frameHeight,
+                        sheetWidth, frameDuration, frames, false, 
+                        scale = 1);
+    //Effect percent based on unit's stat. Exp: If unit has 100 att and this effect has 0.5%. This effect will deal 50 damage
+    this.percent = percent;
+    this.aoe = aoe;
+    this.positive = false;
+    this.hit = false;
+    this.hitList = new Set();   //A set of unit that already hit. So the effect won't hit again
 }
+
+Effect.prototype = Object.create(AnimatedObject.prototype);
+Effect.prototype.constructor = Effect;
+
+/**
+ * Change this effect to positive effect. 
+ * The collision box will detect allies instead
+ */
+Effect.prototype.setPositive = function() {
+    this.positive = true;
+}
+
+/**
+ * Add the sub effect that will hapen at index of the frame
+ */
+Effect.prototype.addEffect = function(callback, index) {
+    this.effects[index] = callback;
+}
+
+
+Effect.prototype.update = function() {//Updating the coordinate for the unit in the frame
+
+    if (this.isDone()) {
+        this.numOfLoop--;
+        if (this.numOfLoop <= 0) {
+            this.removeFromWorld = true;
+        } else {
+            console.log("I did");
+            this.elapsedTime = 0;
+            this.hitList = new Set();
+        }
+  
+    } 
+    if (!this.hit) {  //If this effect already hit the opponent, skip below statements
+        var frame = this.currentFrame();
+        //Updating collisionBox
+        var collisionBox = this.getFrameHitbox(frame);
+        this.collisionBox.x = this.x + collisionBox.x;
+        this.collisionBox.y = this.y + collisionBox.y;
+        this.collisionBox.width = collisionBox.width;
+        this.collisionBox.height = collisionBox.height;
+
+        var side = this.unit.side === PLAYER;
+        side = this.positive ? !side : side;    //switch to positive
+        var opponent = side ? this.game.enemyList : this.game.playerList;
+        for (var i in opponent) {
+            if (!this.hitList.has(opponent[i])) {
+                var otherCollisionBox = opponent[i].getCollisionBox();
+                if (collise(this.collisionBox, otherCollisionBox)) {
+                    this.collisingAction(opponent[i]);  //What happen to the opponent when collised this effect
+                    if (!this.aoe) {
+                        this.hit = true;
+                        break;   //stop searching if this effect is not aoe
+                    } else {
+                        this.hitList.add(opponent[i]);
+                    }
+                }
+            }
+        }
+    }
+    var effect = this.subEffects[frame]; //Callback the effect
+    if (effect !== undefined && typeof effect === "function") effect(this); 
+    AnimatedObject.prototype.update.call(this);
+}
+
+/**
+ * Get ground point of a frame, if no ground point for that frame, use the previous one
+ */
+Effect.prototype.getFrameHitbox = function(frame) {
+    var hitbox;
+    if (this.collisionBoxes[frame] === undefined && this.previousHitbox !== undefined)
+        hitbox = this.previousHitbox;
+    else
+        hitbox = this.collisionBoxes[frame];
+
+    this.previousHitbox = hitbox;
+    return hitbox;
+}
+
+Effect.prototype.draw = function() {
+    if (this.spritesheet != undefined)
+        AnimatedObject.prototype.draw.call(this);
+}
+
+Effect.prototype.currentFrame = function () {
+    return Math.floor(this.elapsedTime / this.frameDuration * this.unit.speedPercent);
+}
+
+Effect.prototype.isDone = function () {
+    this.totalTime = this.frameDuration * this.frames * this.unit.speedPercent;
+    return (this.elapsedTime >= this.totalTime);
+}
+
+
 
 /*===============================================================*/
 
@@ -547,7 +680,7 @@ function Tomb(game, x, y) {
 }
 
 Tomb.prototype = Object.create(NonAnimatedObject.prototype);
-Tomb.prototype = Tomb;
+Tomb.prototype.constructor = Tomb;
 
 Tomb.prototype.update = function() {
     if (this.gravity === true) {

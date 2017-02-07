@@ -63,6 +63,8 @@ AM.queueDownload("./img/ui/start_button_disable.png");
 AM.queueDownload("./img/ui/start_button_pressed.png");
 AM.queueDownload("./img/ui/start_button_mouseover.png");
 
+AM.queueDownload("./img/effect/00000/stab.png");
+
 
 
 AM.downloadAll(function () {
@@ -77,6 +79,7 @@ AM.downloadAll(function () {
     gameEngine.init(ctx);
     gameEngine.start();
     loadCharacter();
+
 
     buildingBackground(gameEngine);
     buildTiles(gameEngine);
