@@ -77,7 +77,9 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             collisionBox[6] = {x: 280, y: 25, width: 80, height: 85};
             collisionBox[7] = {x: 283, y: 25, width: 60, height: 85};
             var attack = new Action(game, unit, AM.getAsset("./img/unit/m000/attack_left.png"),
-                                    8, 0.1, 8, groundPoints, collisionBox);
+                                    8, 0.15, 8, groundPoints, collisionBox);
+            attack.effects[4] = function(that) {
+                castSkill(that.game, that.x + 0, that.y + 50, that.unit, 10000);};
             //attack.startEffect = function() {this.unit.velocity.y = -800; this.unit.velocity.x = 200};
             unit.actions["walk"] = walk;
             unit.actions["jump"] = jump;
@@ -86,33 +88,6 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             unit.setCollisionReacts(function() { this.changeAction("walk");}, 
                                     function() { this.changeAction("jump");}, 
                                     function() { this.changeAction("attack"); });
-        //     var spritesheet = {
-        //         left:[
-        //             AM.getAsset("./img/character/warrior/stand_right.png"),
-        //             AM.getAsset("./img/character/warrior/jump_right.png"),
-        //             AM.getAsset("./img/character/warrior/wak_right.png"),
-        //             AM.getAsset("./img/character/warrior/swing_right.png"),
-        //         ], 
-        //         right:[
-        //             AM.getAsset("./img/character/warrior/stand_right.png"),
-        //             AM.getAsset("./img/character/warrior/jump_right.png"),
-        //             AM.getAsset("./img/character/warrior/walk_right.png"),
-        //             AM.getAsset("./img/character/warrior/swing_right.png"),          
-        //         ]
-        //     };
-
-        //     unit = new Person(game, spritesheet, x, y, 1, side);
-        //     unit.setStats(0,200, 0.2);
-        //     //console.log(x + " " + y);
-        //     unit.setRangeBox(x, y, 100,100);
-        //    // unit.move(1);
-            
-        //     break;
-        // case 0001:
-        //     unit = new Person(game, -1, x, y, 0.1, 1);
-        //     unit.changeStatus(WALK);
-        //     unit.setSpeed(200, 1);
-        //     unit.yVelocity = Math.floor(Math.random() * -1500);
             break;
     }
 
