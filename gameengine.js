@@ -13,7 +13,7 @@ const NEUTRAL = 0;
 const PLAYER = 1;
 const ENEMY = -1;
 
-const GRAVITY = 900; //can change this to make gravity better
+const GRAVITY = 1800; //can change this to make gravity better
 
 function GameEngine() {
     this.sceneManager = new SceneManager(this);
@@ -38,7 +38,7 @@ function GameEngine() {
                     pressed: false,
                     reset: function() {
                         this.click = false;
-                        this.pressed = false;
+                      //  this.pressed = false;
                     }};
     this.events = {
 
@@ -165,6 +165,7 @@ GameEngine.prototype.update = function () {
             entity.update();
         }
     }
+    this.mouse.reset();
 }
 
 GameEngine.prototype.loop = function () {

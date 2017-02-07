@@ -3,20 +3,20 @@ var canvasHeight = 0;
 var characters = [];
 var food = [];
 
-function spawn(game) {
-    var person = new Person(game, -1, 400, 400, 0.1, 1);
-    person.changeStatus(WALK);
-    person.setSpeed(200, 1);
-    person.yVelocity = Math.floor(Math.random() * -1500);
-    game.addEntity(person);
-}
+// function spawn(game) {
+//     var person = new Person(game, -1, 400, 400, 0.1, 1);
+//     person.changeStatus(WALK);
+//     person.setSpeed(200, 1);
+//     person.yVelocity = Math.floor(Math.random() * -1500);
+//     game.addEntity(person);
+// }
 
-const characterFrameInfo = [
-    {sheetWidth: 5, frames: 5},    //stand
-    {sheetWidth: 1, frames: 1},    //jump
-    {sheetWidth: 2, frames: 4},    //walk
-    {sheetWidth: 3, frames: 3}    //Attack
-]
+// const characterFrameInfo = [
+//     {sheetWidth: 5, frames: 5},    //stand
+//     {sheetWidth: 1, frames: 1},    //jump
+//     {sheetWidth: 2, frames: 4},    //walk
+//     {sheetWidth: 3, frames: 3}    //Attack
+// ]
 
 function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
     this.spriteSheet = spriteSheet;
@@ -93,11 +93,15 @@ NonAnimatedObject.prototype.setSize = function(width, height) {
 }
 
 NonAnimatedObject.prototype.draw = function() {
-    this.ctx.drawImage(this.spritesheet,
-                 this.xindex * this.frameWidth, this.yindex * this.frameHeight,  // source from sheet
-                 this.frameWidth, this.frameHeight,
-                 this.x, this.y,
-                 this.width * this.scale, this.height * this.scale);
+    try {
+        this.ctx.drawImage(this.spritesheet,
+                    this.xindex * this.frameWidth, this.yindex * this.frameHeight,  // source from sheet
+                    this.frameWidth, this.frameHeight,
+                    this.x, this.y,
+                    this.width * this.scale, this.height * this.scale);
+    } catch (e) {
+
+    }
 }
 
 NonAnimatedObject.prototype.update = function () {
@@ -158,7 +162,7 @@ AnimatedObject.prototype.setSize = function(width, height) {
 // }
 
 AnimatedObject.prototype.draw = function () {
-    this.elapsedTime += this.game.clockTick;
+    
     if (this.isDone()) {
         if (this.loop) this.elapsedTime = 0;
     }
@@ -167,6 +171,7 @@ AnimatedObject.prototype.draw = function () {
     var yindex = 0;
     this.xindex = frame % this.sheetWidth;
     this.yindex = Math.floor(frame / this.sheetWidth);
+    this.elapsedTime += this.game.clockTick;
     NonAnimatedObject.prototype.draw.call(this);
     // this.game.ctx.drawImage(this.spriteSheet,
     //              xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
@@ -219,7 +224,7 @@ AnimatedObject.prototype.isDone = function () {
  */
 
 function Action(game, unit, spritesheet,
-                sheetWidth, frameDuration, frames, loop, 
+                sheetWidth, frameDuration, frames, 
                 groundPoints, collisionBoxes, cooldown = 0,
                 scale = 1, frameWidth = spritesheet.width / sheetWidth , 
                 frameHeight = spritesheet.height / Math.ceil(frames / sheetWidth),
@@ -228,6 +233,7 @@ function Action(game, unit, spritesheet,
     
     this.unit = unit;
     this.effects = [];
+    this.effectCasted = new Set(); //Keep track what effect already at a frame so wont recast
     this.cooldown = cooldown;
     this.cooldownClock = 0;
     this.groundPoints = groundPoints; //List of standing point for each frame.
@@ -243,12 +249,21 @@ function Action(game, unit, spritesheet,
 
     AnimatedObject.call(this, game, spritesheet, x, y,
                         frameWidth, frameHeight,
-                        sheetWidth, frameDuration, frames, loop, 
+                        sheetWidth, frameDuration, frames, cooldown === 0, 
                         scale = 1, width, height);
 }
 
 Action.prototype = Object.create(AnimatedObject);
 Action.prototype.constructor = Action;
+
+/**
+ * Check if the action is still on cooldown
+ * return true if action can be excecuted
+ */
+Action.prototype.checkCooldown = function() {
+   // var offCooldown = true;
+    return (this.timeLastStart === undefined || this.game.timer.gameTime - this.timeLastStart >= this.cooldown);
+}
 
 /**
  * Add the effect that will hapen at index of the frame
@@ -263,6 +278,7 @@ Action.prototype.addEffect = function(callback, index) {
  */
 Action.prototype.start = function() {
     this.elapsedTime = 0;
+    this.timeLastStart = this.game.timer.gameTime;
     this.startEffect();
 }
 
@@ -282,9 +298,19 @@ Action.prototype.end = function() {
 
 
 Action.prototype.update = function() {//Updating the coordinate for the unit in the frame
+    //If this action is still on cooldown, call default 
+    if (this.isDone()) {
+        if (!this.checkCooldown()) {
+            this.end(); 
+            this.unit.currentAction = this.unit.defaultAction;
+            this.unit.currentAction.start();
+            this.unit.currentAction.update();
+            return;
+        }
+        this.effectCasted = new Set();
+    }
     this.during();
     this.cooldownClock += this.game.clockTick;
-    if (this.cooldownClock >= this.cooldown) this.cooldownClock = 0;
     if (!this.loop && this.isDone()) this.end(); // perform ending action
     var frame = this.currentFrame();
     //Updating ground point
@@ -299,7 +325,13 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
     this.collisionBox.height = collisionBox.height;
 
     var effect = this.effects[frame]; //Callback the effect
-    if (effect !== undefined && typeof effect === "function") this.effects[frame](this); 
+    if (effect !== undefined && typeof effect === "function" && !this.effectCasted.has(frame)) {
+        effect(this);
+        this.effectCasted.add(frame);
+    }
+        
+ 
+
     AnimatedObject.prototype.update.call(this);
 }
 
@@ -361,12 +393,16 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
 
     var range = this.data.range;
     this.rangeBox = {x: x + range.x, y: y + range.y, width: range.width, height: range.height}; 
-    
+    this.speedPercent = 1;  
     this.flying = this.data.flying;
+    
+    //Stats
     this.health = this.data.health;
-    this.speedPercent = 1;
     this.movementspeed = this.data.movementspeed;
+    this.att = this.data.att;
+
     this.actions = {}; //contains all actions this unit can perform (walk, stand, attack)
+    this.defaultAction;
     this.collisionReacts = {};  //Not used yet
     this.currentAction;
 }
@@ -399,16 +435,38 @@ Unit.prototype.setCollisionReacts = function(ground = function() {},
 
 Unit.prototype.changeAction = function(actionName) {
     var action = this.actions[actionName];
-    if (action !== undefined && this.currentAction !== action) {    //If action is defined and not performing
+    if (action !== undefined && this.currentAction !== action && action.checkCooldown()) {    //If action is defined and not performing
         if (this.currentAction !== undefined) this.currentAction.end();
         this.currentAction = action;
         this.currentAction.start();
-    }
+    } 
+        
+}
+
+Unit.prototype.takeDamage = function(damage) {
+    this.health -= damage;
+}
+
+Unit.prototype.checkEnemyInRange = function() {
+    var enemy = this.side === PLAYER ? this.game.enemyList : this.game.playerList;
+                //var collisionBox = this.getCollisionBox();
+    for (var i in enemy) {
+        if (enemy[i].removeFromWorld){
+            enemy.splice(i, 1);
+            i--;
+        } else {
+            var otherCollisionBox = enemy[i].getCollisionBox();
+            if (collise(this.rangeBox, otherCollisionBox)) {
+                return enemy[i];
+            }
+        }
+    } 
 }
 
 Unit.prototype.update = function() {
    // console.log(this.gravity);
-    if (this.health <= 0 || this.y > canvasHeight * 2) this.removeFromWorld = true;
+    if (this.health <= 0 || this.y > canvasHeight * 2) 
+        this.removeFromWorld = true;
     else {
         Entity.prototype.update.call(this);
         //Will be added: effect on this unit (poison, movement locked,..)
@@ -420,22 +478,19 @@ Unit.prototype.update = function() {
 
 
         if (!this.flying) { //if the unit is not flying unit, check gravity (flying is different from jumping)
-            if (this.velocity.y >= 0) { //Only check for ground collision when the unit falling down or standing
-                this.gravity = true;
-               
-                // var groundHitBox = {x: this.x, y: this.y, 
-                //                     width: this.groundCollisionWidth, height: this.groundCollisionHeight};
+            var groundCollised = false;
+            if (this.velocity.y >= 0) { //Only check for ground collision when the unit falling down or standing           
                 //Improving performace by checking if still standing on the previous platform                    
                 if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
                     this.y = this.previousPlatform.y;
-                    this.gravity = false;
+                    groundCollised = true;
                 } else {
                     var groundCollisionBox = this.game.collisionBox.ground;
                     for (var box in groundCollisionBox) {
                         if (collise(this, groundCollisionBox[box])) {
                             this.y = groundCollisionBox[box].y;
                             this.velocity.y = 0;
-                            this.gravity = false;
+                            groundCollised = true;
                             this.previousPlatform = groundCollisionBox[box];    //Save this to check again
                             break;
                         }
@@ -444,21 +499,15 @@ Unit.prototype.update = function() {
       
             }
 
-            if (!this.gravity) {     //On the ground reaction
-                var enemy = this.side === PLAYER ? this.game.enemyList : this.game.playerList;
-                //var collisionBox = this.getCollisionBox();
-                var collisedEnemy = false;
-                for (var i in enemy) {
-                    var otherCollisionBox = enemy[i].getCollisionBox();
-                    if (collise(this.rangeBox, otherCollisionBox)) {
-                        collisedEnemy = true;
-                        break;
-                    }
-                }
+            this.gravity = !groundCollised;
 
-                if (collisedEnemy) 
+            if (!this.gravity) {     //On the ground reaction
+                //var collisionBox = this.getCollisionBox();
+                var collisedEnemy = this.checkEnemyInRange();
+
+                if (collisedEnemy !== undefined) 
                     //reaction when an enemy gets in range
-                    this.rangeReact();
+                    this.rangeReact(collisedEnemy);
                 else 
                     this.groundReact();
 
@@ -467,20 +516,11 @@ Unit.prototype.update = function() {
                 this.airReact();
 
         } else {    //Fyling unit
-                var enemy = this.game.enemyList;
-                var collisionBox = this.getCollisionBox();
-                var collisedEnemy = false;
-                for (var i in enemy) {
-                    var otherCollisionBox = enemy[i].getCollisionBox();
-                    if (collise(collisionBox, otherCollisionBox)) {
-                        collisedEnemy = true;
-                        break;
-                    }
-                }
+                var collisedEnemy = this.checkEnemyInRange();
 
-                if (collisedEnemy) 
+                if (collisedEnemy !== undefined) 
                     //reaction when an enemy gets in range
-                    this.rangeReact();
+                    this.rangeReact(collisedEnemy);
                 else 
                     this.airReact();
         }
@@ -503,6 +543,131 @@ Unit.prototype.draw = function() {
 
 /*===============================================================*/
 
+/**
+ * Skill effect
+ * 
+ */
+function Effect(game, x, y, unit, spritesheet,
+                sheetWidth, frameDuration, frames, 
+                collisionBoxes, collisingAction, percent, aoe = false, numOfLoop = 1) {
+
+    this.unit = unit;
+    this.subEffects = [];   //What happen at certain frame
+    this.collisionBoxes = collisionBoxes; //List of collision boxes
+    this.collisionBox = {};  //The current collisionBox
+    this.loopCounter = 0;
+    this.numOfLoop = numOfLoop;
+    this.collisingAction = collisingAction;   //What happen the effect collises with a unit
+    var frameWidth = spritesheet.width / sheetWidth;
+    var frameHeight = spritesheet.height / Math.ceil(frames / sheetWidth);
+    AnimatedObject.call(this, game, spritesheet, x, y,
+                        frameWidth, frameHeight,
+                        sheetWidth, frameDuration, frames, false, 
+                        scale = 1);
+    //Effect percent based on unit's stat. Exp: If unit has 100 att and this effect has 0.5%. This effect will deal 50 damage
+    this.percent = percent;
+    this.aoe = aoe;
+    this.positive = false;
+    this.hit = false;
+    this.hitList = new Set();   //A set of unit that already hit. So the effect won't hit again
+}
+
+Effect.prototype = Object.create(AnimatedObject.prototype);
+Effect.prototype.constructor = Effect;
+
+/**
+ * Change this effect to positive effect. 
+ * The collision box will detect allies instead
+ */
+Effect.prototype.setPositive = function() {
+    this.positive = true;
+}
+
+/**
+ * Add the sub effect that will hapen at index of the frame
+ */
+Effect.prototype.addEffect = function(callback, index) {
+    this.effects[index] = callback;
+}
+
+
+Effect.prototype.update = function() {//Updating the coordinate for the unit in the frame
+
+    if (this.isDone()) {
+        this.numOfLoop--;
+        if (this.numOfLoop <= 0) {
+            this.removeFromWorld = true;
+        } else {
+            console.log("I did");
+            this.elapsedTime = 0;
+            this.hitList = new Set();
+        }
+  
+    } 
+    if (!this.hit) {  //If this effect already hit the opponent, skip below statements
+        var frame = this.currentFrame();
+        //Updating collisionBox
+        var collisionBox = this.getFrameHitbox(frame);
+        this.collisionBox.x = this.x + collisionBox.x;
+        this.collisionBox.y = this.y + collisionBox.y;
+        this.collisionBox.width = collisionBox.width;
+        this.collisionBox.height = collisionBox.height;
+
+        var side = this.unit.side === PLAYER;
+        side = this.positive ? !side : side;    //switch to positive
+        var opponent = side ? this.game.enemyList : this.game.playerList;
+        for (var i in opponent) {
+            if (!this.hitList.has(opponent[i])) {
+                var otherCollisionBox = opponent[i].getCollisionBox();
+                if (collise(this.collisionBox, otherCollisionBox)) {
+                    this.collisingAction(opponent[i]);  //What happen to the opponent when collised this effect
+                    if (!this.aoe) {
+                        this.hit = true;
+                        break;   //stop searching if this effect is not aoe
+                    } else {
+                        this.hitList.add(opponent[i]);
+                    }
+                }
+            }
+        }
+    }
+    var effect = this.subEffects[frame]; //Callback the effect
+    if (effect !== undefined && typeof effect === "function") effect(this); 
+    AnimatedObject.prototype.update.call(this);
+}
+
+/**
+ * Get ground point of a frame, if no ground point for that frame, use the previous one
+ */
+Effect.prototype.getFrameHitbox = function(frame) {
+    var hitbox;
+    if (this.collisionBoxes[frame] === undefined && this.previousHitbox !== undefined)
+        hitbox = this.previousHitbox;
+    else
+        hitbox = this.collisionBoxes[frame];
+
+    this.previousHitbox = hitbox;
+    return hitbox;
+}
+
+Effect.prototype.draw = function() {
+    if (this.spritesheet != undefined)
+        AnimatedObject.prototype.draw.call(this);
+}
+
+Effect.prototype.currentFrame = function () {
+    return Math.floor(this.elapsedTime / this.frameDuration * this.unit.speedPercent);
+}
+
+Effect.prototype.isDone = function () {
+    this.totalTime = this.frameDuration * this.frames * this.unit.speedPercent;
+    return (this.elapsedTime >= this.totalTime);
+}
+
+
+
+/*===============================================================*/
+
 function Tomb(game, x, y) {
     var a = AM.getAsset("./img/tomb.png");
 
@@ -516,7 +681,7 @@ function Tomb(game, x, y) {
 }
 
 Tomb.prototype = Object.create(NonAnimatedObject.prototype);
-Tomb.prototype = Tomb;
+Tomb.prototype.constructor = Tomb;
 
 Tomb.prototype.update = function() {
     if (this.gravity === true) {
@@ -574,7 +739,7 @@ Button.prototype.update = function() {
         if (this.game.mouse.click) {
          //   spawn(this.game);
             spawnUnit(this.game, 100, 100, "h000", PLAYER);
-            spawnUnit(this.game, 800, 100, "m000", ENEMY);
+            spawnUnit(this.game, 900, 100, "m000", ENEMY);
             this.game.mouse.click = false;
         } else if (this.game.mouse.pressed) this.status = this.PRESS;
         else this.status = this.MOUSEOVER;
