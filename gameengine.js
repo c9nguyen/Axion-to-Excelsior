@@ -154,9 +154,6 @@ GameEngine.prototype.update = function () {
     var entities = this.sceneManager.getCurrentEntities();
     for (var i = 0; i < entities.length; i++) {
         //If this enetity will be removed
-        if (entities[i].removeFromWorld)
-             entities.splice(i, 1);
-        else {        
             var entity = entities[i];
 
             //applying gravity
@@ -165,7 +162,10 @@ GameEngine.prototype.update = function () {
             // entity.y += this.clockTick * entity.yVelocity;
 
             entity.update();
-        }
+            if (entities[i].removeFromWorld) {
+                entities.splice(i, 1);
+                i--;
+            }
     }
     this.mouse.reset();
 }
@@ -209,6 +209,7 @@ Entity.prototype.update = function () {
     if(this.movable){
         this.x += this.game.movedAmount;
     }
+    if (this.health < 0) console.log(this.gravity);
     if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
     this.y += this.game.clockTick * this.velocity.y;
     this.x += this.game.clockTick * this.velocity.x;
