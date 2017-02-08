@@ -38,35 +38,39 @@ ScreenScroller.prototype.draw = function(){
 }
 
 ScreenScroller.prototype.update = function(){
+    var movedAmount = 0;
     if(collise(this.colliseBox, this.game.mouse)){
         if (this.game.mouse.click) {
             //console.log("Clicked  x: " + (this.game.mouse.x - this.x) + " y: " + (this.game.mouse.y - this.y));
-            tempx = this.game.mouse.x - this.x;
-            tempy = this.game.mouse.y - this.y;
+            var tempx = this.game.mouse.x - this.x;
+            var tempy = this.game.mouse.y - this.y;
 
-            endPoint = this.colliseBox.width - this.returnPoint;
-            originalScreen = this.screenLocation;
+            var endPoint = this.colliseBox.width - this.returnPoint;
+            var originalScreen = this.screenLocation;
             if(tempx < this.returnPoint){
                 this.screenLocation = 0;
             } else if(tempx > endPoint){
-                this.screenLocation = 1200;
+                this.screenLocation = this.mapSize / 2;
             } else /*if(tempx > returnPoint && tempx < endPoint)*/{
-                moveRange = this.mapSize / 2;
-                numberFactor = moveRange / (endPoint - this.returnPoint);
+                var moveRange = this.mapSize / 2;
+                var numberFactor = moveRange / (endPoint - this.returnPoint);
                 this.screenLocation = (tempx - this.returnPoint) * numberFactor; 
             }
-            // Move Everything
-            // Getting entities
-            tempEntities = this.game.sceneManager.getCurrentEntities();
+            // tempEntities = this.game.sceneManager.getCurrentEntities();
 
             movedAmount = originalScreen - this.screenLocation;
-            console.log("moved: " + movedAmount);
-            for(var i = 0; i < tempEntities.length; i++){
-                if(tempEntities[i].movable){
-                    tempEntities[i].x += movedAmount;
-                }
-            }
+            // console.log("moved: " + movedAmount);
+            // for(var i = 0; i < tempEntities.length; i++){
+            //     if(tempEntities[i].movable){
+            //         tempEntities[i].x += movedAmount;
+            //     }
+            // }
             this.game.mouse.click = false;
         }
     }
+    this.moveScreen(movedAmount);
+}
+
+ScreenScroller.prototype.moveScreen = function(moveNumber){
+    this.game.movedAmount = moveNumber;
 }
