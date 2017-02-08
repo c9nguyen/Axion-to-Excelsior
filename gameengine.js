@@ -206,6 +206,9 @@ function Entity(game, x, y, side = NEUTRAL) {
 
 Entity.prototype.update = function () {
     // adding screen scroll
+    // if (this.side === ENEMY) {
+    //     console.log(this.velocity.y);
+    // }
     if(this.movable){
         this.x += this.game.movedAmount;
     }

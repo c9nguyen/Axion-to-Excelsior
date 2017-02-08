@@ -1,8 +1,22 @@
-function castSkill(game, x, y, unit, skillCode) {
+function castSkill(game, x, y, unit, skillCode, //You mostly need this
+                    width, height, durationTime, percentAtt = 1, effect) {  //this for customized effect
     var skill;
     var nonAnimationSheet = {width: 0, height: 0};
     switch (skillCode) {
-        case 00000:
+        case 00000: //non animation case, need width and height for collision box
+            var collisionBox = [{x: 0, y: 0, width: width, height: height}];
+            var action;
+            if (effect !== undefined) action = effect;
+            else {
+                action = function(unit) {
+                    var damage = percentAtt * this.unit.att;
+                    unit.takeDamage(damage);
+                };
+            }
+            skill = new Effect(game, x, y, unit, nonAnimationSheet,
+                                1, durationTime, 1, collisionBox, action, 1, true);
+            break;
+        case 00001:
             var collisionBox = [{x: 0, y: 0, width: 93, height: 45}];
             var action = function(unit) {
                 var damage = this.percent * this.unit.att;
