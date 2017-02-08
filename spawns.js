@@ -33,7 +33,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
 
             groundPoints = [];
             collisionBox = [];                   
-            groundPoints = [{x: 15, y: 95}];
+            groundPoints = [{x: 15, y: 90}];
             collisionBox = [{x: 20, y: 20, width: 60, height: 70}];
             var attack = new Action(game, unit, AM.getAsset("./img/unit/h000/stab_right.png"),
                                     3, 0.2, 3, groundPoints, collisionBox);

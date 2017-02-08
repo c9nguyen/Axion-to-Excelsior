@@ -206,6 +206,7 @@ Entity.prototype.update = function () {
     if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
     this.y += this.game.clockTick * this.velocity.y;
     this.x += this.game.clockTick * this.velocity.x;
+   // console.log(this.game.moveAmount);
 }
 
 Entity.prototype.draw = function (ctx) {

@@ -230,7 +230,6 @@ function Action(game, unit, spritesheet,
                 frameHeight = spritesheet.height / Math.ceil(frames / sheetWidth),
                 width = frameWidth, height = frameHeight) { //default orignal size
 
-    
     this.unit = unit;
     this.effects = [];
     this.effectCasted = new Set(); //Keep track what effect already at a frame so wont recast
@@ -300,14 +299,17 @@ Action.prototype.end = function() {
 Action.prototype.update = function() {//Updating the coordinate for the unit in the frame
     //If this action is still on cooldown, call default 
     if (this.isDone()) {
+        this.effectCasted = new Set();
         if (!this.checkCooldown()) {
             this.end(); 
             this.unit.currentAction = this.unit.defaultAction;
             this.unit.currentAction.start();
             this.unit.currentAction.update();
             return;
-        }
-        this.effectCasted = new Set();
+         } //else{
+        //     this.start();
+        //}
+     //   this.effectCasted = new Set();
     }
     this.during();
     this.cooldownClock += this.game.clockTick;
@@ -508,7 +510,7 @@ Unit.prototype.update = function() {
                 if (collisedEnemy !== undefined) 
                     //reaction when an enemy gets in range
                     this.rangeReact(collisedEnemy);
-                else 
+                else if (this.currentAction.isDone())
                     this.groundReact();
 
 
@@ -531,14 +533,25 @@ Unit.prototype.update = function() {
 }
 
 Unit.prototype.draw = function() {
-    if(this.currentAction)
-    this.currentAction.draw();
+    if(this.currentAction !== undefined)
+        this.currentAction.draw();
 
     //For testing
-    var box = this.getCollisionBox();
-    //this.game.ctx.fillRect(this.x, this.y, this.width, this.height);
+    var ctx = this.game.ctx;
+    var healthPercent = this.health / this.data.health;
+    var height = this.height / 2;
+    //var healthBar = {x: this.x, y: this.y, width: this.width * healthPercent, height: height};
+    this.game
+    ctx.fillStyle = 'red';
+    ctx.fillRect(this.x, this.y, this.width, height);
+    ctx.fillStyle = 'green';
+    ctx.fillRect(this.x, this.y, this.width * healthPercent, height);
+    ctx.strokeStyle = 'black';
+    ctx.rect(this.x, this.y, this.width, height);
+    ctx.stroke();
    // this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
     //this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    
 }
 
 /*===============================================================*/
@@ -663,6 +676,9 @@ Effect.prototype.isDone = function () {
     this.totalTime = this.frameDuration * this.frames * this.unit.speedPercent;
     return (this.elapsedTime >= this.totalTime);
 }
+
+/*===============================================================*/
+
 
 
 
