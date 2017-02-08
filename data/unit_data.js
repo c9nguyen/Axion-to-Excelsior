@@ -7,7 +7,7 @@
 
 var unitData = {
     h000: {
-        groundWidth: 60,
+        groundWidth: 50,
         groundHeight: 10,
         health: 100,
         movementspeed: 200,

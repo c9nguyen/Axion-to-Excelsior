@@ -29,6 +29,8 @@ function GameEngine() {
     this.surfaceWidth = null;
     this.surfaceHeight = null;
 
+    this.movedAmount = 0;
+
     //events
     this.mouse = {click: false,
                     x: undefined,
@@ -152,9 +154,6 @@ GameEngine.prototype.update = function () {
     var entities = this.sceneManager.getCurrentEntities();
     for (var i = 0; i < entities.length; i++) {
         //If this enetity will be removed
-        if (entities[i].removeFromWorld)
-             entities.splice(i, 1);
-        else {        
             var entity = entities[i];
 
             //applying gravity
@@ -163,7 +162,10 @@ GameEngine.prototype.update = function () {
             // entity.y += this.clockTick * entity.yVelocity;
 
             entity.update();
-        }
+            if (entities[i].removeFromWorld) {
+                entities.splice(i, 1);
+                i--;
+            }
     }
     this.mouse.reset();
 }
@@ -203,9 +205,15 @@ function Entity(game, x, y, side = NEUTRAL) {
 }
 
 Entity.prototype.update = function () {
+    // adding screen scroll
+    if(this.movable){
+        this.x += this.game.movedAmount;
+    }
+    if (this.health < 0) console.log(this.gravity);
     if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
     this.y += this.game.clockTick * this.velocity.y;
     this.x += this.game.clockTick * this.velocity.x;
+   // console.log(this.game.moveAmount);
 }
 
 Entity.prototype.draw = function (ctx) {
