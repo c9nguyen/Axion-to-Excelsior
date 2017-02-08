@@ -29,6 +29,8 @@ function GameEngine() {
     this.surfaceWidth = null;
     this.surfaceHeight = null;
 
+    this.movedAmount = 0;
+
     //events
     this.mouse = {click: false,
                     x: undefined,
@@ -203,6 +205,10 @@ function Entity(game, x, y, side = NEUTRAL) {
 }
 
 Entity.prototype.update = function () {
+    // adding screen scroll
+    if(this.movable){
+        this.x += this.game.movedAmount;
+    }
     if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
     this.y += this.game.clockTick * this.velocity.y;
     this.x += this.game.clockTick * this.velocity.x;
