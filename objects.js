@@ -1,7 +1,7 @@
 var canvasWidth = 0;
 var canvasHeight = 0;
-var characters = [];
-var food = [];
+// var characters = [];
+// var food = [];
 
 // function spawn(game) {
 //     var person = new Person(game, -1, 400, 400, 0.1, 1);
@@ -300,11 +300,12 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
     //If this action is still on cooldown, call default 
     if (this.isDone()) {
         this.effectCasted = new Set();
-        if (!this.checkCooldown()) {
-            this.end(); 
+        if (!this.checkCooldown() || !this.loop) {
+            this.end();
+            console.log(this.unit.gravity);
             this.unit.currentAction = this.unit.defaultAction;
-            this.unit.currentAction.start();
-            this.unit.currentAction.update();
+  //          this.unit.currentAction.start();
+   //         this.unit.currentAction.update();
             return;
          } //else{
         //     this.start();
@@ -331,9 +332,7 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         effect(this);
         this.effectCasted.add(frame);
     }
-        
- 
-
+    
     AnimatedObject.prototype.update.call(this);
 }
 
@@ -467,10 +466,11 @@ Unit.prototype.checkEnemyInRange = function() {
 
 Unit.prototype.update = function() {
    // console.log(this.gravity);
+   Entity.prototype.update.call(this);
     if (this.health <= 0 || this.y > canvasHeight * 2) 
-        this.removeFromWorld = true;
+        this.changeAction("die");
     else {
-        Entity.prototype.update.call(this);
+        
         //Will be added: effect on this unit (poison, movement locked,..)
 
         //Updating range box
@@ -528,8 +528,10 @@ Unit.prototype.update = function() {
         }
 
         //update the current action
-        if (this.currentAction !== undefined) this.currentAction.update();
+
     }
+    
+    if (this.currentAction !== undefined) this.currentAction.update();
 }
 
 Unit.prototype.draw = function() {

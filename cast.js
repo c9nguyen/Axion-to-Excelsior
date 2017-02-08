@@ -3,7 +3,7 @@ function castSkill(game, x, y, unit, skillCode) {
     var nonAnimationSheet = {width: 0, height: 0};
     switch (skillCode) {
         case 00000:
-            var collisionBox = [{x: 0, y: 0, width: 73, height: 45}];
+            var collisionBox = [{x: 0, y: 0, width: 93, height: 45}];
             var action = function(unit) {
                 var damage = this.percent * this.unit.att;
                 unit.takeDamage(damage);
@@ -12,7 +12,7 @@ function castSkill(game, x, y, unit, skillCode) {
                                 1, 0.1, 1, collisionBox, action, 1);
             break;
        case 10000:
-            var collisionBox = [{x: 0, y: 0, width: 260, height: 60}];
+            var collisionBox = [{x: 0, y: 0, width: 280, height: 60}];
             var action = function(unit) {
                 var damage = this.percent * this.unit.att;
                 unit.takeDamage(damage);
