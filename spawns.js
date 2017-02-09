@@ -35,7 +35,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             collisionBox = [{x: 40, y: 20, width: 50, height: 75}];
             var jump = new Action(game, unit, AM.getAsset("./img/unit/h000/jump_right.png"),
                                     1, 0.1, 1, groundPoints, collisionBox, true);
-              
+
             groundPoints = [{x: 15, y: 90}];
             collisionBox = [{x: 20, y: 20, width: 60, height: 70}];
             var attack = new Action(game, unit, AM.getAsset("./img/unit/h000/stab_right.png"),
@@ -72,14 +72,11 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             walk.startEffect = function() {this.unit.velocity.x = this.unit.movementspeed};
             walk.endEffect = function() {this.unit.velocity.x = 0};
                     
-            groundPoints = [];
-            collisionBox = [];
             groundPoints = [{x: 50, y: 105}];
             collisionBox = [{x: 50, y: 20, width: 70, height: 85}];
             var jump = new Action(game, unit, AM.getAsset("./img/unit/m000/jump_left.png"),
                                     1, 0.1, 1, groundPoints, collisionBox, true);
 
-            groundPoints = [];
             collisionBox = [];
             groundPoints = [{x: 300, y: 109}];
             collisionBox[0] = {x: 283, y: 25, width: 70, height: 85};
@@ -90,9 +87,11 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var attack = new Action(game, unit, AM.getAsset("./img/unit/m000/attack_left.png"),
                                     8, 0.15, 8, groundPoints, collisionBox, false);
             attack.effects[4] = function(that) {
-                                    castSkill(that.game, that.x + 0, that.y + 50, that.unit, 00000,
+                                    castSkill(that.game, that.x + 0, that.y + 50, that.unit, 00000, undefined,
                                              300, 60, 0.3)};
 
+            groundPoints = [];
+            collisionBox = [];
             groundPoints = [{x: 66, y: 181}];
             var die = new Action(game, unit, AM.getAsset("./img/unit/m000/die_left.png"),
                                     10, 0.1, 10, groundPoints, collisionBox, false, -1);
@@ -119,12 +118,12 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                                     3, 0.2, 6, groundPoints, collisionBox, true);
             walk.startEffect = function() {this.unit.velocity.x = this.unit.movementspeed};
             walk.endEffect = function() {this.unit.velocity.x = 0};
-                    
+
             groundPoints = [{x: 0, y: 130}];
             collisionBox = [{x:10, y: 10, width: 120, height: 120}];
             var jump = new Action(game, unit, AM.getAsset("./img/unit/m010/jump.png"),
                                     1, 0.1, 1, groundPoints, collisionBox, true);
-
+            
             groundPoints = [{x: 50, y: 140}];
             collisionBox[0] = {x: 50, y: 20, width: 120, height: 120};
 

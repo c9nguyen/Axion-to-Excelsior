@@ -8,11 +8,20 @@ Battle.prototype.create = function() {
 	this.loadCharacter();
     this.buildingBackground();
     this.buildTiles();
-    var button = new Button(this.game, {normal: AM.getAsset("./img/ui/start_button_disable.png"),
-                                    press: AM.getAsset("./img/ui/start_button_pressed.png"),
-                                    mouseover: AM.getAsset("./img/ui/start_button_mouseover.png")},
-                                    500, 500);
+
+    var button = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 200, 500);
+    button.addSheet(AM.getAsset("./img/ui/start_button_pressed.png"), "click");
+    button.addSheet(AM.getAsset("./img/ui/start_button_mouseover.png"), "mouseover");
+    button.addEventListener("click", function() { spawnUnit(this.game, 100, 100, "h000", PLAYER); })
     this.game.addEntity(button);
+
+    var button2 = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 600, 500);
+    button2.addSheet(AM.getAsset("./img/ui/start_button_pressed.png"), "click");
+    button2.addSheet(AM.getAsset("./img/ui/start_button_mouseover.png"), "mouseover");
+    button2.addEventListener("click", function() { spawnUnit(this.game, 800, 100, "m000", ENEMY); })
+    this.game.addEntity(button2);
+
+    spawnUnit(this.game, 900, 100, "m010", ENEMY);
 
     var map = new ScreenScroller(this.game, 800, 550, 400, 50); 
     this.game.addEntity(map);

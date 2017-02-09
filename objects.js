@@ -1,61 +1,45 @@
 var canvasWidth = 0;
 var canvasHeight = 0;
-// var characters = [];
-// var food = [];
 
-// function spawn(game) {
-//     var person = new Person(game, -1, 400, 400, 0.1, 1);
-//     person.changeStatus(WALK);
-//     person.setSpeed(200, 1);
-//     person.yVelocity = Math.floor(Math.random() * -1500);
-//     game.addEntity(person);
+
+// function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
+//     this.spriteSheet = spriteSheet;
+//     this.frameWidth = frameWidth;
+//     this.frameDuration = frameDuration;
+//     this.frameHeight = frameHeight;
+//     this.sheetWidth = sheetWidth;
+//     this.frames = frames;
+//     this.totalTime = frameDuration * frames;
+//     this.elapsedTime = 0;
+//     this.loop = loop;
+//     this.scale = scale;
 // }
 
-// const characterFrameInfo = [
-//     {sheetWidth: 5, frames: 5},    //stand
-//     {sheetWidth: 1, frames: 1},    //jump
-//     {sheetWidth: 2, frames: 4},    //walk
-//     {sheetWidth: 3, frames: 3}    //Attack
-// ]
+// Animation.prototype.drawFrame = function (tick, ctx, x, y) {
+//     this.elapsedTime += tick;
+//     if (this.isDone()) {
+//         if (this.loop) this.elapsedTime = 0;
+//     }
+//     var frame = this.currentFrame();
+//     var xindex = 0;
+//     var yindex = 0;
+//     xindex = frame % this.sheetWidth;
+//     yindex = Math.floor(frame / this.sheetWidth);
+//     ctx.drawImage(this.spriteSheet,
+//                  xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
+//                  this.frameWidth, this.frameHeight,
+//                  x, y,
+//                  this.frameWidth * this.scale,
+//                  this.frameHeight * this.scale);
+// }
 
-function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
-    this.spriteSheet = spriteSheet;
-    this.frameWidth = frameWidth;
-    this.frameDuration = frameDuration;
-    this.frameHeight = frameHeight;
-    this.sheetWidth = sheetWidth;
-    this.frames = frames;
-    this.totalTime = frameDuration * frames;
-    this.elapsedTime = 0;
-    this.loop = loop;
-    this.scale = scale;
-}
+// Animation.prototype.currentFrame = function () {
+//     return Math.floor(this.elapsedTime / this.frameDuration);
+// }
 
-Animation.prototype.drawFrame = function (tick, ctx, x, y) {
-    this.elapsedTime += tick;
-    if (this.isDone()) {
-        if (this.loop) this.elapsedTime = 0;
-    }
-    var frame = this.currentFrame();
-    var xindex = 0;
-    var yindex = 0;
-    xindex = frame % this.sheetWidth;
-    yindex = Math.floor(frame / this.sheetWidth);
-    ctx.drawImage(this.spriteSheet,
-                 xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
-                 this.frameWidth, this.frameHeight,
-                 x, y,
-                 this.frameWidth * this.scale,
-                 this.frameHeight * this.scale);
-}
-
-Animation.prototype.currentFrame = function () {
-    return Math.floor(this.elapsedTime / this.frameDuration);
-}
-
-Animation.prototype.isDone = function () {
-    return (this.elapsedTime >= this.totalTime);
-}
+// Animation.prototype.isDone = function () {
+//     return (this.elapsedTime >= this.totalTime);
+// }
 
 /*===============================================================*/
 
@@ -321,11 +305,14 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
     this.x = this.unit.x - groundPoint.x;
     this.y = this.unit.y - groundPoint.y;
     //Updating collisionBox
-    var collisionBox = this.getFrameHitbox(frame);
-    this.collisionBox.x = this.x + collisionBox.x;
-    this.collisionBox.y = this.y + collisionBox.y;
-    this.collisionBox.width = collisionBox.width;
-    this.collisionBox.height = collisionBox.height;
+    if (this.unit.health > 0) {
+        var collisionBox = this.getFrameHitbox(frame);
+        this.collisionBox.x = this.x + collisionBox.x;
+        this.collisionBox.y = this.y + collisionBox.y;
+        this.collisionBox.width = collisionBox.width;
+        this.collisionBox.height = collisionBox.height;
+    }
+
 
     var effect = this.effects[frame]; //Callback the effect
     if (effect !== undefined && typeof effect === "function" && !this.effectCasted.has(frame)) {
@@ -467,9 +454,10 @@ Unit.prototype.checkEnemyInRange = function() {
 Unit.prototype.update = function() {
    // console.log(this.gravity);
    Entity.prototype.update.call(this);
-    if (this.health <= 0 || this.y > canvasHeight * 2) 
-        this.changeAction("die");
-    else {
+    if (this.health <= 0 || this.y > canvasHeight * 2) {
+         this.changeAction("die");
+         this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
+    } else {
         
         //Will be added: effect on this unit (poison, movement locked,..)
 
@@ -702,45 +690,6 @@ Effect.prototype.isDone = function () {
 
 
 
-
-/*===============================================================*/
-
-function Tomb(game, x, y) {
-    var a = AM.getAsset("./img/tomb.png");
-
-    a.onclick = function() {
-        console.log("Clicked");
-    }
-    NonAnimatedObject.call(this, game, a, x, y);
-    this.gravity = true;
-    this.yVelocity = -400;
-    this.colliseBox = {x: x, y: y + 33, width: 40, height: 10}; 
-}
-
-Tomb.prototype = Object.create(NonAnimatedObject.prototype);
-Tomb.prototype.constructor = Tomb;
-
-Tomb.prototype.update = function() {
-    if (this.gravity === true) {
-        this.colliseBox = {x: this.x, y: this.y + 33, width: 40, height: 5};
-
-        if (this.yVelocity >= 0) {
-            for (var box in this.game.collisionBox.ground) {
-                if (collise(this.colliseBox, this.game.collisionBox.ground[box])) {
-                    this.y = this.game.collisionBox.ground[box].y - this.height;
-                    this.gravity = false;
-                    return;
-                }
-            }
-        }
-    }
-
-}
-
-Tomb.prototype.draw = function() {
-    NonAnimatedObject.prototype.draw.call(this);
-}
-
 /*===============================================================*/
 
 function Button(game, spritesheet, x, y, scale = 1) {
@@ -751,15 +700,38 @@ function Button(game, spritesheet, x, y, scale = 1) {
     Entity.call(this, game, x, y);
 
     this.status = this.NORMAL;
-    this.normal = new NonAnimatedObject(game, spritesheet.normal, x, y);
-    this.press = new NonAnimatedObject(game, spritesheet.press, x, y);
-    this.mouseover = new NonAnimatedObject(game, spritesheet.mouseover, x, y);
+    this.normal = new NonAnimatedObject(game, spritesheet, x, y);
+    this.press = new NonAnimatedObject(game, spritesheet, x, y);
+    this.mouseover = new NonAnimatedObject(game, spritesheet, x, y);
 
     this.colliseBox = {x: x, y: y, width: this.normal.width, height: this.normal.height};
+
+    this.clickAction = function() {};
+    this.pressAction = function() {};
 }
 
 Button.prototype = Object.create (Entity.prototype);
 Button.prototype.constructor = Button;
+
+Button.prototype.addSheet = function(spritesheet, sheetType) {
+    switch (sheetType) {
+        case "click":
+        case "press":
+            this.press = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            break;
+        case "mouseover":
+            this.mouseover = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            break;
+        case "normal":
+            this.normal = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            break;
+    }
+}
+
+Button.prototype.addEventListener = function(eventType, action) {
+    if (eventType === "click") this.clickAction = action;
+    else if (eventType === "press") this.pressAction = action;
+}
 
 Button.prototype.draw = function() {
     if (this.status === this.NORMAL) {
@@ -773,17 +745,13 @@ Button.prototype.draw = function() {
 
 Button.prototype.update = function() {
     if (collise(this.colliseBox, this.game.mouse)) {
-        if (this.game.mouse.click) {
-         //   spawn(this.game);
-            spawnUnit(this.game, 100, 100, "h000", PLAYER);
-            spawnUnit(this.game, 900, 100, "m010", ENEMY);
+        if (this.game.mouse.click) {      
+            this.clickAction(this);
             this.game.mouse.click = false;
-            // for (var i = 0; i < this.game.entities.length; i++) {
-            //     this.game.entities[i].x -= 5;
-            //     //this.game.entities[i].y -= 5;
-            // }   
-        } else if (this.game.mouse.pressed) this.status = this.PRESS;
-        else this.status = this.MOUSEOVER;
+        } else if (this.game.mouse.pressed) {
+            this.status = this.PRESS;
+            this.pressAction(this);
+        } else this.status = this.MOUSEOVER;
     } else this.status = this.NORMAL;
 }
 

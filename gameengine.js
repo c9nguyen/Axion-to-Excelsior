@@ -212,7 +212,7 @@ Entity.prototype.update = function () {
     if(this.movable){
         this.x += this.game.movedAmount;
     }
-    if (this.health < 0) console.log(this.gravity);
+
     if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
     this.y += this.game.clockTick * this.velocity.y;
     this.x += this.game.clockTick * this.velocity.x;
