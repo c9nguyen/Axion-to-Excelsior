@@ -225,7 +225,7 @@ AnimatedObject.prototype.isDone = function () {
 
 function Action(game, unit, spritesheet,
                 sheetWidth, frameDuration, frames, 
-                groundPoints, collisionBoxes, cooldown = 0,
+                groundPoints, collisionBoxes, interruptible = true, cooldown = 0,
                 scale = 1, frameWidth = spritesheet.width / sheetWidth , 
                 frameHeight = spritesheet.height / Math.ceil(frames / sheetWidth),
                 width = frameWidth, height = frameHeight) { //default orignal size
@@ -234,6 +234,7 @@ function Action(game, unit, spritesheet,
     this.effects = [];
     this.effectCasted = new Set(); //Keep track what effect already at a frame so wont recast
     this.cooldown = cooldown;
+    this.interruptible = interruptible;
     this.cooldownClock = 0;
     this.groundPoints = groundPoints; //List of standing point for each frame.
     this.collisionBoxes = collisionBoxes; //List of collision boxes
@@ -302,7 +303,6 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         this.effectCasted = new Set();
         if (!this.checkCooldown() || !this.loop) {
             this.end();
-            console.log(this.unit.gravity);
             this.unit.currentAction = this.unit.defaultAction;
   //          this.unit.currentAction.start();
    //         this.unit.currentAction.update();
@@ -484,13 +484,14 @@ Unit.prototype.update = function() {
             if (this.velocity.y >= 0) { //Only check for ground collision when the unit falling down or standing           
                 //Improving performace by checking if still standing on the previous platform                    
                 if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
-                    this.y = this.previousPlatform.y;
+                    this.y = this.previousPlatform.y + 10;
+                    this.velocity.y = 0;
                     groundCollised = true;
                 } else {
                     var groundCollisionBox = this.game.collisionBox.ground;
                     for (var box in groundCollisionBox) {
                         if (collise(this, groundCollisionBox[box])) {
-                            this.y = groundCollisionBox[box].y;
+                            this.y = groundCollisionBox[box].y + 10;
                             this.velocity.y = 0;
                             groundCollised = true;
                             this.previousPlatform = groundCollisionBox[box];    //Save this to check again
@@ -505,14 +506,15 @@ Unit.prototype.update = function() {
 
             if (!this.gravity) {     //On the ground reaction
                 //var collisionBox = this.getCollisionBox();
-                var collisedEnemy = this.checkEnemyInRange();
-
-                if (collisedEnemy !== undefined) 
-                    //reaction when an enemy gets in range
-                    this.rangeReact(collisedEnemy);
-                else if (this.currentAction.isDone())
-                    this.groundReact();
-
+                if (this.currentAction.interruptible || this.currentAction.isDone()) {
+                    var collisedEnemy = this.checkEnemyInRange();
+                    
+                    if (collisedEnemy !== undefined) 
+                        //reaction when an enemy gets in range
+                        this.rangeReact(collisedEnemy);
+                    else
+                        this.groundReact();
+                }
 
             } else if (this.gravity)  //In the air action
                 this.airReact();
@@ -541,6 +543,7 @@ Unit.prototype.draw = function() {
     //For testing
     var ctx = this.game.ctx;
     var healthPercent = this.health / this.data.health;
+    healthPercent = Math.max(healthPercent, 0);
     var height = this.height / 2;
     //var healthBar = {x: this.x, y: this.y, width: this.width * healthPercent, height: height};
     this.game
@@ -551,8 +554,20 @@ Unit.prototype.draw = function() {
     ctx.strokeStyle = 'black';
     ctx.rect(this.x, this.y, this.width, height);
     ctx.stroke();
-   // this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
-    //this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    ctx.fillStyle = 'black';
+
+
+    // // collisionBox
+    // var action = this.currentAction;
+    // var box = {};
+    // var collisionBox = action.getFrameHitbox(action.currentFrame());
+    // box.x = action.x + collisionBox.x;
+    // box.y = action.y + collisionBox.y;
+    // box.width = collisionBox.width;
+    // box.height = collisionBox.height;
+
+    // //this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
+    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
     
 }
 
@@ -668,6 +683,10 @@ Effect.prototype.getFrameHitbox = function(frame) {
 Effect.prototype.draw = function() {
     if (this.spritesheet != undefined)
         AnimatedObject.prototype.draw.call(this);
+//For testing skill hit box
+    // var box = this.getFrameHitbox(this.currentFrame());
+    // this.game.ctx.fillStyle = 'red';
+    // this.game.ctx.fillRect(box.x + this.x, box.y + this.y, box.width, box.height);
 }
 
 Effect.prototype.currentFrame = function () {
@@ -757,7 +776,7 @@ Button.prototype.update = function() {
         if (this.game.mouse.click) {
          //   spawn(this.game);
             spawnUnit(this.game, 100, 100, "h000", PLAYER);
-            spawnUnit(this.game, 900, 100, "m000", ENEMY);
+            spawnUnit(this.game, 900, 100, "m010", ENEMY);
             this.game.mouse.click = false;
             // for (var i = 0; i < this.game.entities.length; i++) {
             //     this.game.entities[i].x -= 5;
