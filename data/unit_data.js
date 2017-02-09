@@ -27,13 +27,13 @@ var unitData = {
         range: {x: -50, y: -90, width: 100, height: 100},
     },
     m010: {
-        groundWidth: 138,
+        groundWidth: 120,
         groundHeight: 10,
         health: 300,
         movementspeed: -100,
         att: 40,
         flying: false,
         //Attacking with x and y are offset from unit's ground hit box
-        range: {x: -50, y: -138, width: 140, height: 100},
+        range: {x: -40, y: -120, width: 140, height: 120},
     }
 }

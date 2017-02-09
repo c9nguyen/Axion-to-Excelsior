@@ -1,4 +1,12 @@
-function castSkill(game, x, y, unit, skillCode, //You mostly need this
+
+/**
+ * For customized effect
+ * width and height: are dimenson of hit box
+ * additionalEffect: is the effect after the effect of the skill
+ * effect: overwriting the effect of the skill
+ */
+function castSkill(game, x, y, unit, skillCode,//You mostly need this
+                    additionalEffect = function() {}, // little addion
                     width, height, durationTime, percentAtt = 1, effect) {  //this for customized effect
     var skill;
     var nonAnimationSheet = {width: 0, height: 0};
@@ -11,6 +19,7 @@ function castSkill(game, x, y, unit, skillCode, //You mostly need this
                 action = function(unit) {
                     var damage = percentAtt * this.unit.att;
                     unit.takeDamage(damage);
+                    additionalEffect(unit);
                 };
             }
             skill = new Effect(game, x, y, unit, nonAnimationSheet,
@@ -21,6 +30,7 @@ function castSkill(game, x, y, unit, skillCode, //You mostly need this
             var action = function(unit) {
                 var damage = this.percent * this.unit.att;
                 unit.takeDamage(damage);
+                additionalEffect(unit);
             };
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/00000/stab.png"),
                                 1, 0.1, 1, collisionBox, action, 1);
@@ -30,6 +40,7 @@ function castSkill(game, x, y, unit, skillCode, //You mostly need this
             var action = function(unit) {
                 var damage = this.percent * this.unit.att;
                 unit.takeDamage(damage);
+                additionalEffect(unit);
             };
             skill = new Effect(game, x, y, unit, nonAnimationSheet,
                                 1, 0.3, 1, collisionBox, action, 1, true);
