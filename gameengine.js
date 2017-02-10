@@ -31,6 +31,8 @@ function GameEngine() {
 
     this.movedAmount = 0;
 
+    this.right = null;
+    this.left = null;
     //events
     this.mouse = {click: false,
                     x: undefined,
@@ -123,6 +125,12 @@ GameEngine.prototype.startInput = function () {
     //     console.log(e);
     //     console.log("Key Pressed Event - Char " + e.charCode + " Code " + e.keyCode);
     // }, false);
+    
+    // vinh
+    // left = 37, up = 38, right = 39, down = 40
+    this.right = new KeyBoard(this.ctx, "ArrowRight");
+    this.left = new KeyBoard(this.ctx, "ArrowLeft");
+    //end vinh
 
     // this.ctx.canvas.addEventListener("keyup", function (e) {
     //     console.log(e);

@@ -14,8 +14,12 @@ Battle.prototype.create = function() {
                                     500, 500);
     this.game.addEntity(button);
 
-    var map = new ScreenScroller(this.game, 800, 550, 400, 50); 
+    var screenmove = new ScreenMover(this.game);
+    this.game.addEntity(screenmove);
+    var map = new ScreenScroller(this.game, screenmove, 800, 550, 400, 50); 
     this.game.addEntity(map);
+    var rightAndLeftKey = new ScreenMoveArrow(this.game, screenmove);
+    this.game.addEntity(rightAndLeftKey);
 
 };
 
