@@ -206,10 +206,13 @@ function Entity(game, x, y, side = NEUTRAL) {
 
 Entity.prototype.update = function () {
     // adding screen scroll
+    // if (this.side === ENEMY) {
+    //     console.log(this.velocity.y);
+    // }
     if(this.movable){
         this.x += this.game.movedAmount;
     }
-    if (this.health < 0) console.log(this.gravity);
+
     if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
     this.y += this.game.clockTick * this.velocity.y;
     this.x += this.game.clockTick * this.velocity.x;

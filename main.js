@@ -16,6 +16,7 @@ AM.queueDownload("./img/unit/h000/stand_right.png");
 AM.queueDownload("./img/unit/h000/walk_right.png");
 AM.queueDownload("./img/unit/h000/jump_right.png");
 AM.queueDownload("./img/unit/h000/stab_right.png");
+AM.queueDownload("./img/unit/h000/jumpattack_right.png");
 AM.queueDownload("./img/unit/h000/die_right.png");
 
 AM.queueDownload("./img/unit/m000/stand_left.png");
@@ -23,6 +24,12 @@ AM.queueDownload("./img/unit/m000/walk_left.png");
 AM.queueDownload("./img/unit/m000/jump_left.png");
 AM.queueDownload("./img/unit/m000/attack_left.png");
 AM.queueDownload("./img/unit/m000/die_left.png");
+
+AM.queueDownload("./img/unit/m010/stand.png");
+AM.queueDownload("./img/unit/m010/walk.png");
+AM.queueDownload("./img/unit/m010/jump.png");
+AM.queueDownload("./img/unit/m010/attack.png");
+AM.queueDownload("./img/unit/m010/die.png");
 
 AM.queueDownload("./img/character/warrior/stand_right.png");
 AM.queueDownload("./img/character/warrior/walk_right.png");
