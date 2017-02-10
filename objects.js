@@ -252,7 +252,7 @@ Action.prototype.checkCooldown = function() {
 /**
  * Add the effect that will hapen at index of the frame
  */
-Action.prototype.addEffect = function(callback, index) {
+Action.prototype.addEffect = function(index, callback) {
     this.effects[index] = callback;
 }
 
@@ -263,6 +263,7 @@ Action.prototype.addEffect = function(callback, index) {
 Action.prototype.start = function() {
     this.elapsedTime = 0;
     this.timeLastStart = this.game.timer.gameTime;
+    this.effectCasted = new Set();
     this.startEffect();
 }
 
@@ -288,8 +289,8 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         if (!this.checkCooldown() || !this.loop) {
             this.end();
             this.unit.currentAction = this.unit.defaultAction;
-  //          this.unit.currentAction.start();
-   //         this.unit.currentAction.update();
+            this.unit.currentAction.start();
+            this.unit.currentAction.update();
             return;
          } //else{
         //     this.start();
@@ -379,8 +380,8 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.width =  this.data.groundWidth;
     this.height = this.data.groundHeight;
 
-    var range = this.data.range;
-    this.rangeBox = {x: x + range.x, y: y + range.y, width: range.width, height: range.height}; 
+    //var range = this.data.range;
+    this.rangeBox = this.data.range; 
     this.speedPercent = 1;  
     this.flying = this.data.flying;
     
@@ -393,6 +394,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.defaultAction;
     this.collisionReacts = {};  //Not used yet
     this.currentAction;
+    this.lockedTarget;  //The enemy that the unit targetting. 
 }
 
 Unit.prototype = Object.create(Entity.prototype);
@@ -421,6 +423,9 @@ Unit.prototype.setCollisionReacts = function(ground = function() {},
     this.hitReact = hit;
 }
 
+/**
+ * Change the action of unit
+ */
 Unit.prototype.changeAction = function(actionName) {
     var action = this.actions[actionName];
     if (action !== undefined && this.currentAction !== action && action.checkCooldown()) {    //If action is defined and not performing
@@ -431,12 +436,15 @@ Unit.prototype.changeAction = function(actionName) {
         
 }
 
+
+
 Unit.prototype.takeDamage = function(damage) {
     this.health -= damage;
 }
 
 Unit.prototype.checkEnemyInRange = function() {
     var enemy = this.side === PLAYER ? this.game.enemyList : this.game.playerList;
+    var rangeIndex = -1;
                 //var collisionBox = this.getCollisionBox();
     for (var i in enemy) {
         if (enemy[i].removeFromWorld){
@@ -444,27 +452,35 @@ Unit.prototype.checkEnemyInRange = function() {
             i--;
         } else {
             var otherCollisionBox = enemy[i].getCollisionBox();
-            if (collise(this.rangeBox, otherCollisionBox)) {
-                return enemy[i];
+            for (var j = 0; j < this.rangeBox.length; j++) {  //Check all range box and return which box hit
+                var range = this.rangeBox[j];
+                var tempRange = {x: this.x + range.x, y: this.y + range.y,
+                                width: range.width, height: range.height};
+                if (collise(tempRange, otherCollisionBox)) {
+                    this.lockedTarget = enemy[i];
+                    return j;
+                } 
             }
         }
     } 
+
+    return rangeIndex;
 }
 
 Unit.prototype.update = function() {
-   // console.log(this.gravity);
    Entity.prototype.update.call(this);
-    if (this.health <= 0 || this.y > canvasHeight * 2) {
+    if (this.y > canvasHeight * 2) this.health = -1;
+    if (this.health <= 0) {
          this.changeAction("die");
          this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
     } else {
         
         //Will be added: effect on this unit (poison, movement locked,..)
 
-        //Updating range box
-        var range = this.data.range;
-        this.rangeBox.x = range.x + this.x;
-        this.rangeBox.y = range.y + this.y;
+        // //Updating range box
+        // var range = this.data.range;
+        // this.rangeBox.x = range.x + this.x;
+        // this.rangeBox.y = range.y + this.y;
 
 
         if (!this.flying) { //if the unit is not flying unit, check gravity (flying is different from jumping)
@@ -497,10 +513,10 @@ Unit.prototype.update = function() {
                 if (this.currentAction.interruptible || this.currentAction.isDone()) {
                     var collisedEnemy = this.checkEnemyInRange();
                     
-                    if (collisedEnemy !== undefined) 
+                    if (collisedEnemy >= 0) {
                         //reaction when an enemy gets in range
                         this.rangeReact(collisedEnemy);
-                    else
+                }else
                         this.groundReact();
                 }
 
@@ -510,7 +526,7 @@ Unit.prototype.update = function() {
         } else {    //Fyling unit
                 var collisedEnemy = this.checkEnemyInRange();
 
-                if (collisedEnemy !== undefined) 
+                if (collisedEnemy >= 0) 
                     //reaction when an enemy gets in range
                     this.rangeReact(collisedEnemy);
                 else 
@@ -616,7 +632,7 @@ Effect.prototype.update = function() {//Updating the coordinate for the unit in 
         if (this.numOfLoop <= 0) {
             this.removeFromWorld = true;
         } else {
-            console.log("I did");
+
             this.elapsedTime = 0;
             this.hitList = new Set();
         }

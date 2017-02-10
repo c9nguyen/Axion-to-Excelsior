@@ -16,6 +16,7 @@ AM.queueDownload("./img/unit/h000/stand_right.png");
 AM.queueDownload("./img/unit/h000/walk_right.png");
 AM.queueDownload("./img/unit/h000/jump_right.png");
 AM.queueDownload("./img/unit/h000/stab_right.png");
+AM.queueDownload("./img/unit/h000/jumpattack_right.png");
 AM.queueDownload("./img/unit/h000/die_right.png");
 
 AM.queueDownload("./img/unit/m000/stand_left.png");

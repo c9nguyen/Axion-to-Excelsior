@@ -33,7 +33,7 @@ function castSkill(game, x, y, unit, skillCode,//You mostly need this
                 additionalEffect(unit);
             };
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/00000/stab.png"),
-                                1, 0.1, 1, collisionBox, action, 1);
+                                1, 0.05, 1, collisionBox, action, 1);
             break;
        case 10000:
             var collisionBox = [{x: 0, y: 0, width: 280, height: 60}];
