@@ -1,9 +1,9 @@
 function ScreenMover(game){
     Entity.call(this, game, 0, 0); 
-    this.moveVerlocity = 0;
+    this.moveVelocity = 0;
     this.moveAmount = 0;
-    this.maxVerlocity = 100;
-    this.verlocityPercentage = 0.005;
+    this.maxVelocity = 100;
+    this.VelocityPercentage = 0.005;
     // TODO ADJUST
     this.mapSize = 2400;
     this.screenSize = 1200;
@@ -22,27 +22,27 @@ ScreenMover.prototype.update = function(){
 
     // Pick Speed and Increase Speed
     if(this.moveAmount != 0){
-        if(Math.abs(this.moveVerlocity) < this.maxVerlocity){
-            this.moveVerlocity += this.verlocityPercentage * this.moveAmount;
+        if(Math.abs(this.moveVelocity) < this.maxVelocity){
+            this.moveVelocity += this.VelocityPercentage * this.moveAmount;
         }
     } else {
-        this.moveVerlocity = 0;
+        this.moveVelocity = 0;
     }
 
-    // Make sure verlocity not exceed over move amount
-    if(this.moveAmount > 0 && this.moveVerlocity > 0
-                    && this.moveAmount < this.moveVerlocity){
-        this.moveVerlocity = this.moveAmount;
-    } else if(this.moveAmount < 0 && this.moveVerlocity < 0
-                && this.moveAmount > this.moveVerlocity) {
-        this.moveVerlocity = this.moveAmount;
+    // Make sure Velocity not exceed over move amount
+    if(this.moveAmount > 0 && this.moveVelocity > 0
+                    && this.moveAmount < this.moveVelocity){
+        this.moveVelocity = this.moveAmount;
+    } else if(this.moveAmount < 0 && this.moveVelocity < 0
+                && this.moveAmount > this.moveVelocity) {
+        this.moveVelocity = this.moveAmount;
     }
 
     // Move the gameboard
-    if(this.moveVerlocity != 0){
-        this.game.movedAmount = this.moveVerlocity;
-        this.moveAmount -= this.moveVerlocity;
-        this.x += this.moveVerlocity;
+    if(this.moveVelocity != 0){
+        this.game.movedAmount = this.moveVelocity;
+        this.moveAmount -= this.moveVelocity;
+        this.x += this.moveVelocity;
     } else {
         this.game.movedAmount = 0;
     }
@@ -51,8 +51,12 @@ ScreenMover.prototype.update = function(){
 ScreenMover.prototype.draw = function(){
 }
 
+ScreenMover.prototype.checkBoundaries() = function(){
+
+}
+
 ScreenMover.prototype.rebootScreen = function(){
     this.x = 0;
-    this.moveVerlocity = 0;
+    this.moveVelocity = 0;
     this.moveAmount = 0;
 }
