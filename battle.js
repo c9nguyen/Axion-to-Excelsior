@@ -8,15 +8,25 @@ Battle.prototype.create = function() {
 	this.loadCharacter();
     this.buildingBackground();
     this.buildTiles();
-    var button = new Button(this.game, {normal: AM.getAsset("./img/ui/start_button_disable.png"),
-                                    press: AM.getAsset("./img/ui/start_button_pressed.png"),
-                                    mouseover: AM.getAsset("./img/ui/start_button_mouseover.png")},
-                                    500, 500);
+
+    var button = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 200, 500);
+    button.addSheet(AM.getAsset("./img/ui/start_button_pressed.png"), "click");
+    button.addSheet(AM.getAsset("./img/ui/start_button_mouseover.png"), "mouseover");
+    button.addEventListener("click", function() { spawnUnit(this.game, 100, 100, "h000", PLAYER); })
     this.game.addEntity(button);
+
+
+    var button2 = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 600, 500);
+    button2.addSheet(AM.getAsset("./img/ui/start_button_pressed.png"), "click");
+    button2.addSheet(AM.getAsset("./img/ui/start_button_mouseover.png"), "mouseover");
+    button2.addEventListener("click", function() { spawnUnit(this.game, 800, 100, "m000", ENEMY); })
+    this.game.addEntity(button2);
+
+    spawnUnit(this.game, 900, 100, "m010", ENEMY);
 
     var screenmove = new ScreenMover(this.game);
     this.game.addEntity(screenmove);
-    var map = new ScreenScroller(this.game, screenmove, 800, 550, 400, 50); 
+    var map = new ScreenScroller(this.game, 800, 550, 400, 50); 
     this.game.addEntity(map);
     var rightAndLeftKey = new ScreenMoveArrow(this.game, screenmove);
     this.game.addEntity(rightAndLeftKey);
@@ -76,63 +86,8 @@ Battle.prototype.buildTiles = function() {
     var numOfTile = Math.ceil(canvasWidth / 90) + 2;
     var groundX = -97;
 
-
-    for (var i = 0; i < numOfTile; i++) {
-        //Building the bottom ground
-        groundCollisionBox.push({x: groundX, y: canvasHeight - 87, width: 90, height: 40});
-        this.game.addEntity(new NonAnimatedObject(this.game, AM.getAsset("./img/tiles/en_spritesheet.png"),
-                                                    groundX, canvasHeight - 97,
-                                                    90, 37, 2, 3, -1, 1));
-        this.game.addEntity(new NonAnimatedObject(this.game, AM.getAsset("./img/tiles/bsc_spritesheet.png"),
-                                                    groundX, canvasHeight - 60,
-                                                     90, 60, 2, 6, -1, 1));
-
-        // //Building second floor
-        // if (i !== 1 && i !== numOfTile / 2 && i !== numOfTile / 2 - 1 && i < numOfTile - 3) {
-        //     groundCollisionBox.push({x: groundX, y: canvasHeight - 222, width: 90, height: 20});
-        //     this.game.addEntity(new NonAnimatedObject(this.game, AM.getAsset("./img/tiles/en_spritesheet.png"),
-        //                                                 groundX, canvasHeight - 232,
-        //                                                 90, 37, 2, 3, -1, 1));
-        //     this.game.addEntity(new NonAnimatedObject(this.game, AM.getAsset("./img/tiles/en1_spritesheet.png"),
-        //                                                 groundX, canvasHeight - 200,
-        //                                                 90, 32, 2, 3, -1, 1));
-        // }
-
-        // //Building third floor
-        // if ((i < numOfTile / 2 - 3) || (i === numOfTile / 2) || (i === numOfTile / 2 - 1) || (i > numOfTile / 2 + 2))  {
-        //     groundCollisionBox.push({x: groundX, y: canvasHeight - 342, width: 90, height: 20});
-        //     this.game.addEntity(new NonAnimatedObject(this.game, AM.getAsset("./img/tiles/en_spritesheet.png"),
-        //                                                 groundX, canvasHeight - 352,
-        //                                                 90, 37, 2, 3, -1, 1));
-        //     this.game.addEntity(new NonAnimatedObject(this.game, AM.getAsset("./img/tiles/en1_spritesheet.png"),
-        //                                                 groundX, canvasHeight - 320,
-        //                                                 90, 32, 2, 3, -1, 1));
-        // }
-
-        // //Building fourth floor
-        // if (i !== 1 && i !== numOfTile / 2 && i !== numOfTile / 2 - 1 && i < numOfTile - 2) {
-        //     groundCollisionBox.push({x: groundX, y: canvasHeight - 462, width: 90, height: 20});
-        //     this.game.addEntity(new NonAnimatedObject(this.game, AM.getAsset("./img/tiles/en_spritesheet.png"),
-        //                                                 groundX, canvasHeight - 472,
-        //                                                 90, 37, 2, 3, -1, 1));
-        //     this.game.addEntity(new NonAnimatedObject(this.game, AM.getAsset("./img/tiles/en1_spritesheet.png"),
-        //                                                 groundX, canvasHeight - 440,
-        //                                                 90, 32, 2, 3, -1, 1));
-        // }
-
-        // //Building fifth floor
-        // if (i < numOfTile / 2 + 3 && i > numOfTile / 2 - 4) {
-        //     groundCollisionBox.push({x: groundX, y: canvasHeight - 582, width: 90, height: 20});
-        //     this.game.addEntity(new NonAnimatedObject(this.game, AM.getAsset("./img/tiles/en_spritesheet.png"),
-        //                                                 groundX, canvasHeight - 592,
-        //                                                 90, 37, 2, 3, -1, 1));
-        //     this.game.addEntity(new NonAnimatedObject(this.game, AM.getAsset("./img/tiles/en1_spritesheet.png"),
-        //                                                 groundX, canvasHeight - 560,
-        //                                                 90, 32, 2, 3, -1, 1));
-        //}
-
-        groundX += 90;
-    }
+    var tile = new Tile(this.game, groundX, canvasHeight - 100, numOfTile, "greenGrass");
+    this.game.addEntity(tile);
 };
 
 Battle.prototype.placePortals = function() {

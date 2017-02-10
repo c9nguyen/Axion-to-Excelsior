@@ -1,61 +1,45 @@
 var canvasWidth = 0;
 var canvasHeight = 0;
-var characters = [];
-var food = [];
 
-// function spawn(game) {
-//     var person = new Person(game, -1, 400, 400, 0.1, 1);
-//     person.changeStatus(WALK);
-//     person.setSpeed(200, 1);
-//     person.yVelocity = Math.floor(Math.random() * -1500);
-//     game.addEntity(person);
+
+// function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
+//     this.spriteSheet = spriteSheet;
+//     this.frameWidth = frameWidth;
+//     this.frameDuration = frameDuration;
+//     this.frameHeight = frameHeight;
+//     this.sheetWidth = sheetWidth;
+//     this.frames = frames;
+//     this.totalTime = frameDuration * frames;
+//     this.elapsedTime = 0;
+//     this.loop = loop;
+//     this.scale = scale;
 // }
 
-// const characterFrameInfo = [
-//     {sheetWidth: 5, frames: 5},    //stand
-//     {sheetWidth: 1, frames: 1},    //jump
-//     {sheetWidth: 2, frames: 4},    //walk
-//     {sheetWidth: 3, frames: 3}    //Attack
-// ]
+// Animation.prototype.drawFrame = function (tick, ctx, x, y) {
+//     this.elapsedTime += tick;
+//     if (this.isDone()) {
+//         if (this.loop) this.elapsedTime = 0;
+//     }
+//     var frame = this.currentFrame();
+//     var xindex = 0;
+//     var yindex = 0;
+//     xindex = frame % this.sheetWidth;
+//     yindex = Math.floor(frame / this.sheetWidth);
+//     ctx.drawImage(this.spriteSheet,
+//                  xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
+//                  this.frameWidth, this.frameHeight,
+//                  x, y,
+//                  this.frameWidth * this.scale,
+//                  this.frameHeight * this.scale);
+// }
 
-function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
-    this.spriteSheet = spriteSheet;
-    this.frameWidth = frameWidth;
-    this.frameDuration = frameDuration;
-    this.frameHeight = frameHeight;
-    this.sheetWidth = sheetWidth;
-    this.frames = frames;
-    this.totalTime = frameDuration * frames;
-    this.elapsedTime = 0;
-    this.loop = loop;
-    this.scale = scale;
-}
+// Animation.prototype.currentFrame = function () {
+//     return Math.floor(this.elapsedTime / this.frameDuration);
+// }
 
-Animation.prototype.drawFrame = function (tick, ctx, x, y) {
-    this.elapsedTime += tick;
-    if (this.isDone()) {
-        if (this.loop) this.elapsedTime = 0;
-    }
-    var frame = this.currentFrame();
-    var xindex = 0;
-    var yindex = 0;
-    xindex = frame % this.sheetWidth;
-    yindex = Math.floor(frame / this.sheetWidth);
-    ctx.drawImage(this.spriteSheet,
-                 xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
-                 this.frameWidth, this.frameHeight,
-                 x, y,
-                 this.frameWidth * this.scale,
-                 this.frameHeight * this.scale);
-}
-
-Animation.prototype.currentFrame = function () {
-    return Math.floor(this.elapsedTime / this.frameDuration);
-}
-
-Animation.prototype.isDone = function () {
-    return (this.elapsedTime >= this.totalTime);
-}
+// Animation.prototype.isDone = function () {
+//     return (this.elapsedTime >= this.totalTime);
+// }
 
 /*===============================================================*/
 
@@ -225,16 +209,16 @@ AnimatedObject.prototype.isDone = function () {
 
 function Action(game, unit, spritesheet,
                 sheetWidth, frameDuration, frames, 
-                groundPoints, collisionBoxes, cooldown = 0,
+                groundPoints, collisionBoxes, interruptible = true, cooldown = 0,
                 scale = 1, frameWidth = spritesheet.width / sheetWidth , 
                 frameHeight = spritesheet.height / Math.ceil(frames / sheetWidth),
                 width = frameWidth, height = frameHeight) { //default orignal size
 
-    
     this.unit = unit;
     this.effects = [];
     this.effectCasted = new Set(); //Keep track what effect already at a frame so wont recast
     this.cooldown = cooldown;
+    this.interruptible = interruptible;
     this.cooldownClock = 0;
     this.groundPoints = groundPoints; //List of standing point for each frame.
     this.collisionBoxes = collisionBoxes; //List of collision boxes
@@ -268,7 +252,7 @@ Action.prototype.checkCooldown = function() {
 /**
  * Add the effect that will hapen at index of the frame
  */
-Action.prototype.addEffect = function(callback, index) {
+Action.prototype.addEffect = function(index, callback) {
     this.effects[index] = callback;
 }
 
@@ -279,6 +263,7 @@ Action.prototype.addEffect = function(callback, index) {
 Action.prototype.start = function() {
     this.elapsedTime = 0;
     this.timeLastStart = this.game.timer.gameTime;
+    this.effectCasted = new Set();
     this.startEffect();
 }
 
@@ -300,14 +285,17 @@ Action.prototype.end = function() {
 Action.prototype.update = function() {//Updating the coordinate for the unit in the frame
     //If this action is still on cooldown, call default 
     if (this.isDone()) {
-        if (!this.checkCooldown()) {
-            this.end(); 
+        this.effectCasted = new Set();
+        if (!this.checkCooldown() || !this.loop) {
+            this.end();
             this.unit.currentAction = this.unit.defaultAction;
             this.unit.currentAction.start();
             this.unit.currentAction.update();
             return;
-        }
-        this.effectCasted = new Set();
+         } //else{
+        //     this.start();
+        //}
+     //   this.effectCasted = new Set();
     }
     this.during();
     this.cooldownClock += this.game.clockTick;
@@ -318,20 +306,21 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
     this.x = this.unit.x - groundPoint.x;
     this.y = this.unit.y - groundPoint.y;
     //Updating collisionBox
-    var collisionBox = this.getFrameHitbox(frame);
-    this.collisionBox.x = this.x + collisionBox.x;
-    this.collisionBox.y = this.y + collisionBox.y;
-    this.collisionBox.width = collisionBox.width;
-    this.collisionBox.height = collisionBox.height;
+    if (this.unit.health > 0) {
+        var collisionBox = this.getFrameHitbox(frame);
+        this.collisionBox.x = this.x + collisionBox.x;
+        this.collisionBox.y = this.y + collisionBox.y;
+        this.collisionBox.width = collisionBox.width;
+        this.collisionBox.height = collisionBox.height;
+    }
+
 
     var effect = this.effects[frame]; //Callback the effect
     if (effect !== undefined && typeof effect === "function" && !this.effectCasted.has(frame)) {
         effect(this);
         this.effectCasted.add(frame);
     }
-        
- 
-
+    
     AnimatedObject.prototype.update.call(this);
 }
 
@@ -391,8 +380,8 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.width =  this.data.groundWidth;
     this.height = this.data.groundHeight;
 
-    var range = this.data.range;
-    this.rangeBox = {x: x + range.x, y: y + range.y, width: range.width, height: range.height}; 
+    //var range = this.data.range;
+    this.rangeBox = this.data.range; 
     this.speedPercent = 1;  
     this.flying = this.data.flying;
     
@@ -405,6 +394,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.defaultAction;
     this.collisionReacts = {};  //Not used yet
     this.currentAction;
+    this.lockedTarget;  //The enemy that the unit targetting. 
 }
 
 Unit.prototype = Object.create(Entity.prototype);
@@ -433,6 +423,9 @@ Unit.prototype.setCollisionReacts = function(ground = function() {},
     this.hitReact = hit;
 }
 
+/**
+ * Change the action of unit
+ */
 Unit.prototype.changeAction = function(actionName) {
     var action = this.actions[actionName];
     if (action !== undefined && this.currentAction !== action && action.checkCooldown()) {    //If action is defined and not performing
@@ -443,12 +436,15 @@ Unit.prototype.changeAction = function(actionName) {
         
 }
 
+
+
 Unit.prototype.takeDamage = function(damage) {
     this.health -= damage;
 }
 
 Unit.prototype.checkEnemyInRange = function() {
     var enemy = this.side === PLAYER ? this.game.enemyList : this.game.playerList;
+    var rangeIndex = -1;
                 //var collisionBox = this.getCollisionBox();
     for (var i in enemy) {
         if (enemy[i].removeFromWorld){
@@ -456,25 +452,35 @@ Unit.prototype.checkEnemyInRange = function() {
             i--;
         } else {
             var otherCollisionBox = enemy[i].getCollisionBox();
-            if (collise(this.rangeBox, otherCollisionBox)) {
-                return enemy[i];
+            for (var j = 0; j < this.rangeBox.length; j++) {  //Check all range box and return which box hit
+                var range = this.rangeBox[j];
+                var tempRange = {x: this.x + range.x, y: this.y + range.y,
+                                width: range.width, height: range.height};
+                if (collise(tempRange, otherCollisionBox)) {
+                    this.lockedTarget = enemy[i];
+                    return j;
+                } 
             }
         }
     } 
+
+    return rangeIndex;
 }
 
 Unit.prototype.update = function() {
-   // console.log(this.gravity);
-    if (this.health <= 0 || this.y > canvasHeight * 2) 
-        this.removeFromWorld = true;
-    else {
-        Entity.prototype.update.call(this);
+   Entity.prototype.update.call(this);
+    if (this.y > canvasHeight * 2) this.health = -1;
+    if (this.health <= 0) {
+         this.changeAction("die");
+         this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
+    } else {
+        
         //Will be added: effect on this unit (poison, movement locked,..)
 
-        //Updating range box
-        var range = this.data.range;
-        this.rangeBox.x = range.x + this.x;
-        this.rangeBox.y = range.y + this.y;
+        // //Updating range box
+        // var range = this.data.range;
+        // this.rangeBox.x = range.x + this.x;
+        // this.rangeBox.y = range.y + this.y;
 
 
         if (!this.flying) { //if the unit is not flying unit, check gravity (flying is different from jumping)
@@ -482,13 +488,14 @@ Unit.prototype.update = function() {
             if (this.velocity.y >= 0) { //Only check for ground collision when the unit falling down or standing           
                 //Improving performace by checking if still standing on the previous platform                    
                 if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
-                    this.y = this.previousPlatform.y;
+                    this.y = this.previousPlatform.y + 10;
+                    this.velocity.y = 0;
                     groundCollised = true;
                 } else {
                     var groundCollisionBox = this.game.collisionBox.ground;
                     for (var box in groundCollisionBox) {
                         if (collise(this, groundCollisionBox[box])) {
-                            this.y = groundCollisionBox[box].y;
+                            this.y = groundCollisionBox[box].y + 10;
                             this.velocity.y = 0;
                             groundCollised = true;
                             this.previousPlatform = groundCollisionBox[box];    //Save this to check again
@@ -503,14 +510,15 @@ Unit.prototype.update = function() {
 
             if (!this.gravity) {     //On the ground reaction
                 //var collisionBox = this.getCollisionBox();
-                var collisedEnemy = this.checkEnemyInRange();
-
-                if (collisedEnemy !== undefined) 
-                    //reaction when an enemy gets in range
-                    this.rangeReact(collisedEnemy);
-                else 
-                    this.groundReact();
-
+                if (this.currentAction.interruptible || this.currentAction.isDone()) {
+                    var collisedEnemy = this.checkEnemyInRange();
+                    
+                    if (collisedEnemy >= 0) {
+                        //reaction when an enemy gets in range
+                        this.rangeReact(collisedEnemy);
+                }else
+                        this.groundReact();
+                }
 
             } else if (this.gravity)  //In the air action
                 this.airReact();
@@ -518,7 +526,7 @@ Unit.prototype.update = function() {
         } else {    //Fyling unit
                 var collisedEnemy = this.checkEnemyInRange();
 
-                if (collisedEnemy !== undefined) 
+                if (collisedEnemy >= 0) 
                     //reaction when an enemy gets in range
                     this.rangeReact(collisedEnemy);
                 else 
@@ -526,19 +534,45 @@ Unit.prototype.update = function() {
         }
 
         //update the current action
-        if (this.currentAction !== undefined) this.currentAction.update();
+
     }
+    
+    if (this.currentAction !== undefined) this.currentAction.update();
 }
 
 Unit.prototype.draw = function() {
-    if(this.currentAction)
-    this.currentAction.draw();
+    if(this.currentAction !== undefined)
+        this.currentAction.draw();
 
     //For testing
-    var box = this.getCollisionBox();
-    //this.game.ctx.fillRect(this.x, this.y, this.width, this.height);
-   // this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
-    //this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    var ctx = this.game.ctx;
+    var healthPercent = this.health / this.data.health;
+    healthPercent = Math.max(healthPercent, 0);
+    var height = this.height / 2;
+    //var healthBar = {x: this.x, y: this.y, width: this.width * healthPercent, height: height};
+    this.game
+    ctx.fillStyle = 'red';
+    ctx.fillRect(this.x, this.y, this.width, height);
+    ctx.fillStyle = 'green';
+    ctx.fillRect(this.x, this.y, this.width * healthPercent, height);
+    ctx.strokeStyle = 'black';
+    ctx.rect(this.x, this.y, this.width, height);
+    ctx.stroke();
+    ctx.fillStyle = 'black';
+
+
+    // // collisionBox
+    // var action = this.currentAction;
+    // var box = {};
+    // var collisionBox = action.getFrameHitbox(action.currentFrame());
+    // box.x = action.x + collisionBox.x;
+    // box.y = action.y + collisionBox.y;
+    // box.width = collisionBox.width;
+    // box.height = collisionBox.height;
+
+    // //this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
+    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    
 }
 
 /*===============================================================*/
@@ -598,7 +632,7 @@ Effect.prototype.update = function() {//Updating the coordinate for the unit in 
         if (this.numOfLoop <= 0) {
             this.removeFromWorld = true;
         } else {
-            console.log("I did");
+
             this.elapsedTime = 0;
             this.hitList = new Set();
         }
@@ -653,6 +687,10 @@ Effect.prototype.getFrameHitbox = function(frame) {
 Effect.prototype.draw = function() {
     if (this.spritesheet != undefined)
         AnimatedObject.prototype.draw.call(this);
+//For testing skill hit box
+    // var box = this.getFrameHitbox(this.currentFrame());
+    // this.game.ctx.fillStyle = 'red';
+    // this.game.ctx.fillRect(box.x + this.x, box.y + this.y, box.width, box.height);
 }
 
 Effect.prototype.currentFrame = function () {
@@ -664,45 +702,9 @@ Effect.prototype.isDone = function () {
     return (this.elapsedTime >= this.totalTime);
 }
 
-
-
 /*===============================================================*/
 
-function Tomb(game, x, y) {
-    var a = AM.getAsset("./img/tomb.png");
 
-    a.onclick = function() {
-        console.log("Clicked");
-    }
-    NonAnimatedObject.call(this, game, a, x, y);
-    this.gravity = true;
-    this.yVelocity = -400;
-    this.colliseBox = {x: x, y: y + 33, width: 40, height: 10}; 
-}
-
-Tomb.prototype = Object.create(NonAnimatedObject.prototype);
-Tomb.prototype.constructor = Tomb;
-
-Tomb.prototype.update = function() {
-    if (this.gravity === true) {
-        this.colliseBox = {x: this.x, y: this.y + 33, width: 40, height: 5};
-
-        if (this.yVelocity >= 0) {
-            for (var box in this.game.collisionBox.ground) {
-                if (collise(this.colliseBox, this.game.collisionBox.ground[box])) {
-                    this.y = this.game.collisionBox.ground[box].y - this.height;
-                    this.gravity = false;
-                    return;
-                }
-            }
-        }
-    }
-
-}
-
-Tomb.prototype.draw = function() {
-    NonAnimatedObject.prototype.draw.call(this);
-}
 
 /*===============================================================*/
 
@@ -714,15 +716,38 @@ function Button(game, spritesheet, x, y, scale = 1) {
     Entity.call(this, game, x, y);
 
     this.status = this.NORMAL;
-    this.normal = new NonAnimatedObject(game, spritesheet.normal, x, y);
-    this.press = new NonAnimatedObject(game, spritesheet.press, x, y);
-    this.mouseover = new NonAnimatedObject(game, spritesheet.mouseover, x, y);
+    this.normal = new NonAnimatedObject(game, spritesheet, x, y);
+    this.press = new NonAnimatedObject(game, spritesheet, x, y);
+    this.mouseover = new NonAnimatedObject(game, spritesheet, x, y);
 
     this.colliseBox = {x: x, y: y, width: this.normal.width, height: this.normal.height};
+
+    this.clickAction = function() {};
+    this.pressAction = function() {};
 }
 
 Button.prototype = Object.create (Entity.prototype);
 Button.prototype.constructor = Button;
+
+Button.prototype.addSheet = function(spritesheet, sheetType) {
+    switch (sheetType) {
+        case "click":
+        case "press":
+            this.press = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            break;
+        case "mouseover":
+            this.mouseover = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            break;
+        case "normal":
+            this.normal = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            break;
+    }
+}
+
+Button.prototype.addEventListener = function(eventType, action) {
+    if (eventType === "click") this.clickAction = action;
+    else if (eventType === "press") this.pressAction = action;
+}
 
 Button.prototype.draw = function() {
     if (this.status === this.NORMAL) {
@@ -736,17 +761,13 @@ Button.prototype.draw = function() {
 
 Button.prototype.update = function() {
     if (collise(this.colliseBox, this.game.mouse)) {
-        if (this.game.mouse.click) {
-         //   spawn(this.game);
-            spawnUnit(this.game, 100, 100, "h000", PLAYER);
-            spawnUnit(this.game, 900, 100, "m000", ENEMY);
+        if (this.game.mouse.click) {      
+            this.clickAction(this);
             this.game.mouse.click = false;
-            // for (var i = 0; i < this.game.entities.length; i++) {
-            //     this.game.entities[i].x -= 5;
-            //     //this.game.entities[i].y -= 5;
-            // }   
-        } else if (this.game.mouse.pressed) this.status = this.PRESS;
-        else this.status = this.MOUSEOVER;
+        } else if (this.game.mouse.pressed) {
+            this.status = this.PRESS;
+            this.pressAction(this);
+        } else this.status = this.MOUSEOVER;
     } else this.status = this.NORMAL;
 }
 
