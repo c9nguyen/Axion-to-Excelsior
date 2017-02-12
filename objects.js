@@ -442,7 +442,7 @@ Unit.prototype.takeDamage = function(damage) {
 
 Unit.prototype.checkEnemyInRange = function() {
     var enemy = this.side === PLAYER ? this.game.enemyList : this.game.playerList;
-    var rangeIndex = -1;
+    var rangeIndex = new Set();
                 //var collisionBox = this.getCollisionBox();
     for (var i in enemy) {
         if (enemy[i].removeFromWorld){
@@ -456,10 +456,12 @@ Unit.prototype.checkEnemyInRange = function() {
                                 width: range.width, height: range.height};
                 if (collise(tempRange, otherCollisionBox)) {
                     this.lockedTarget = enemy[i];
-                    return j;
+                    rangeIndex.add(j);
                 } 
             }
         }
+
+        if (rangeIndex.size > 0) break;
     } 
 
     return rangeIndex;
@@ -511,7 +513,7 @@ Unit.prototype.update = function() {
                 if (this.currentAction.interruptible || this.currentAction.isDone()) {
                     var collisedEnemy = this.checkEnemyInRange();
                     
-                    if (collisedEnemy >= 0) {
+                    if (collisedEnemy.size > 0) {
                         //reaction when an enemy gets in range
                         this.rangeReact(collisedEnemy);
                 }else
@@ -524,7 +526,7 @@ Unit.prototype.update = function() {
         } else {    //Fyling unit
                 var collisedEnemy = this.checkEnemyInRange();
 
-                if (collisedEnemy >= 0) 
+                if (collisedEnemy.size > 0) 
                     //reaction when an enemy gets in range
                     this.rangeReact(collisedEnemy);
                 else 
@@ -581,10 +583,6 @@ Unit.prototype.draw = function() {
 }
 
 /*===============================================================*/
-
-function inform() {
-    console.log("Changed");
-}
 
 /**
  * Skill effect

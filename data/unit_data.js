@@ -19,7 +19,7 @@ var unitData = {
     h100: {
         groundWidth: 50,
         groundHeight: 10,
-        health: 200,
+        health: 2000,
         movementspeed: 200,
         att: 20,
         flying: false,
@@ -39,7 +39,7 @@ var unitData = {
     m010: {
         groundWidth: 120,
         groundHeight: 10,
-        health: 300,
+        health: 3000,
         movementspeed: -100,
         att: 40,
         flying: false,

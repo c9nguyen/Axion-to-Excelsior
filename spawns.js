@@ -75,10 +75,10 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             unit.defaultAction = walk;
             unit.setCollisionReacts(function() { this.changeAction("walk"); }, 
                                     function() { this.changeAction("jump"); }, 
-                                    function(enemy) { 
-                                        if (enemy === 0)
+                                    function(enemy) {
+                                        if (enemy.has(0))
                                             this.changeAction("attack");
-                                        else if (enemy === 1 && unit.actions["attack2"].checkCooldown())
+                                        else if (enemy.has(1) && unit.actions["attack2"].checkCooldown())
                                             this.changeAction("attack2");
                                         else this.groundReact(); });
             break;
@@ -151,9 +151,9 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             unit.setCollisionReacts(function() { this.changeAction("stand");}, 
                                     function() { this.changeAction("jump");}, 
                                     function(enemy) { 
-                                        if (enemy === 1 && unit.actions["attack3"].checkCooldown())
+                                        if (enemy.has(0) && unit.actions["attack3"].checkCooldown())
                                             this.changeAction("attack3");
-                                        else if (enemy === 0)
+                                        else if (enemy.has(1))
                                             this.changeAction("attack");
                                         else this.groundReact(); });
             break;
