@@ -292,14 +292,11 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
             this.unit.currentAction.start();
             this.unit.currentAction.update();
             return;
-         } //else{
-        //     this.start();
-        //}
-     //   this.effectCasted = new Set();
+         }
     }
     this.during();
     this.cooldownClock += this.game.clockTick;
-    if (!this.loop && this.isDone()) this.end(); // perform ending action
+   // if (!this.loop && this.isDone()) this.end(); // perform ending action
     var frame = this.currentFrame();
     //Updating ground point
     var groundPoint = this.getFrameGroundPoint(frame); 
@@ -432,6 +429,7 @@ Unit.prototype.changeAction = function(actionName) {
         if (this.currentAction !== undefined) this.currentAction.end();
         this.currentAction = action;
         this.currentAction.start();
+        this.currentAction.update();
     } 
         
 }
@@ -562,7 +560,7 @@ Unit.prototype.draw = function() {
 
 
     // // collisionBox
-    // var action = this.currentAction;
+    //var action = this.currentAction;
     // var box = {};
     // var collisionBox = action.getFrameHitbox(action.currentFrame());
     // box.x = action.x + collisionBox.x;
@@ -570,12 +568,23 @@ Unit.prototype.draw = function() {
     // box.width = collisionBox.width;
     // box.height = collisionBox.height;
 
-    // //this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
+    // var rangeBox = this.rangeBox[0];
+    // var box = {};
+    // box.x = this.x + rangeBox.x;
+    // box.y = this.y + rangeBox.y;
+    // box.width = rangeBox.width;
+    // box.height = rangeBox.height;
+
+    //this.game.ctx.fillRect(rangeBox.x, rangeBox.y, rangeBox.width, rangeBox.height);
     // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
     
 }
 
 /*===============================================================*/
+
+function inform() {
+    console.log("Changed");
+}
 
 /**
  * Skill effect

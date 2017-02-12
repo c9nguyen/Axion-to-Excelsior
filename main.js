@@ -19,6 +19,14 @@ AM.queueDownload("./img/unit/h000/stab_right.png");
 AM.queueDownload("./img/unit/h000/jumpattack_right.png");
 AM.queueDownload("./img/unit/h000/die_right.png");
 
+AM.queueDownload("./img/unit/h100/stand.png");
+AM.queueDownload("./img/unit/h100/walk.png");
+AM.queueDownload("./img/unit/h100/jump.png");
+AM.queueDownload("./img/unit/h100/die.png");
+AM.queueDownload("./img/unit/h100/attack1.png");
+AM.queueDownload("./img/unit/h100/attack2.png");
+AM.queueDownload("./img/unit/h100/attack3.png");
+
 AM.queueDownload("./img/unit/m000/stand_left.png");
 AM.queueDownload("./img/unit/m000/walk_left.png");
 AM.queueDownload("./img/unit/m000/jump_left.png");
@@ -45,7 +53,7 @@ AM.queueDownload("./img/ui/start_button_pressed.png");
 AM.queueDownload("./img/ui/start_button_mouseover.png");
 
 AM.queueDownload("./img/effect/00000/stab.png");
-
+AM.queueDownload("./img/effect/00000/9.swingP1.2_0.png");
 
 
 AM.downloadAll(function () {
