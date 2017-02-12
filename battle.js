@@ -9,15 +9,15 @@ Battle.prototype.create = function() {
     this.buildingBackground();
     this.buildTiles();
 
-    var button = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 200, 500);
-    button.addSheet(AM.getAsset("./img/ui/start_button_pressed.png"), "click");
-    button.addSheet(AM.getAsset("./img/ui/start_button_mouseover.png"), "mouseover");
+    var button = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 200, 520);
+    button.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
+    button.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
     button.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h000", PLAYER); })
     this.game.addEntity(button);
 
-    var button2 = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 600, 500);
-    button2.addSheet(AM.getAsset("./img/ui/start_button_pressed.png"), "click");
-    button2.addSheet(AM.getAsset("./img/ui/start_button_mouseover.png"), "mouseover");
+    var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 600, 520);
+    button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
+    button2.addSheet(AM.getAsset("./img/unit/m000/card_mouseover.png"), "mouseover");
     button2.addEventListener("click", function() { spawnUnit(this.game, 800, 400, "m000", ENEMY); })
     this.game.addEntity(button2);
 

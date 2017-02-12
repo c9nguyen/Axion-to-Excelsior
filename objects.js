@@ -731,6 +731,7 @@ function Button(game, spritesheet, x, y, scale = 1) {
 
     this.clickAction = function() {};
     this.pressAction = function() {};
+    this.mouseoverAction = function() {};
 }
 
 Button.prototype = Object.create (Entity.prototype);
@@ -754,16 +755,25 @@ Button.prototype.addSheet = function(spritesheet, sheetType) {
 Button.prototype.addEventListener = function(eventType, action) {
     if (eventType === "click") this.clickAction = action;
     else if (eventType === "press") this.pressAction = action;
+    else if (eventType === "mouseover") this.mouseoverAction = action;
 }
 
 Button.prototype.draw = function() {
+    var drawObj;
     if (this.status === this.NORMAL) {
-        this.normal.draw();
+        drawObj = this.normal;
     } else if (this.status === this.PRESS) {
-        this.press.draw();
+        drawObj = this.press;
     } else if (this.status === this.MOUSEOVER) {
-        this.mouseover.draw();
+        drawObj = this.mouseover;
     }
+
+    if (drawObj !== undefined) {
+        drawObj.x = this.x;
+        drawObj.y = this.y;
+    }
+    drawObj.draw();
+
 }
 
 Button.prototype.update = function() {
@@ -774,8 +784,13 @@ Button.prototype.update = function() {
         } else if (this.game.mouse.pressed) {
             this.status = this.PRESS;
             this.pressAction(this);
-        } else this.status = this.MOUSEOVER;
+        } else {
+            this.status = this.MOUSEOVER;
+            this.mouseoverAction(this);
+        }
     } else this.status = this.NORMAL;
+
+    Entity.prototype.update.call(this);
 }
 
 /*=========================================================================*/

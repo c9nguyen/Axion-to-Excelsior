@@ -202,6 +202,14 @@ function Entity(game, x, y, side = NEUTRAL) {
     this.yVelocity = 0; //will be removed
     this.side = side;
     this.removeFromWorld = false;
+    this.forceX = 0;
+    this.forceY = 0;
+}
+
+//Push the entity in a direction
+Entity.prototype.force = function(forceX, forceY) {
+    this.forceX += forceX;
+    this.forceY += forceY;
 }
 
 Entity.prototype.update = function () {
@@ -217,6 +225,14 @@ Entity.prototype.update = function () {
     this.y += this.game.clockTick * this.velocity.y;
     this.x += this.game.clockTick * this.velocity.x;
    // console.log(this.game.moveAmount);
+
+   //force
+   var forceX = this.game.clockTick * this.forceX;
+   this.forceX -= forceX;
+   var forceY = this.game.clockTick * this.forceY;
+   this.forceY -= forceY;
+   this.x += forceX;
+   this.y += forceY;
 }
 
 Entity.prototype.draw = function (ctx) {
