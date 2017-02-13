@@ -44,6 +44,6 @@ var unitData = {
         att: 40,
         flying: false,
         //Attacking with x and y are offset from unit's ground hit box
-        range: [{x: -40, y: -120, width: 140, height: 120}],
+        range: [{x: -40, y: -120, width: 150, height: 120}],
     }
 }

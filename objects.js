@@ -235,6 +235,7 @@ function Action(game, unit, spritesheet,
                         frameWidth, frameHeight,
                         sheetWidth, frameDuration, frames, cooldown === 0, 
                         scale = 1, width, height);
+    this.movable = false;
 }
 
 Action.prototype = Object.create(AnimatedObject);
@@ -544,13 +545,14 @@ Unit.prototype.draw = function() {
     if(this.currentAction !== undefined)
         this.currentAction.draw();
 
-    //For testing
+    //Health bar
     var ctx = this.game.ctx;
     var healthPercent = this.health / this.data.health;
     healthPercent = Math.max(healthPercent, 0);
     var height = this.height / 2;
     //var healthBar = {x: this.x, y: this.y, width: this.width * healthPercent, height: height};
-    this.game
+    
+    //For Debugging
     ctx.fillStyle = 'red';
     ctx.fillRect(this.x, this.y, this.width, height);
     ctx.fillStyle = 'green';
@@ -721,6 +723,7 @@ function Button(game, spritesheet, x, y, scale = 1) {
     this.MOUSEOVER = 2;
 
     Entity.call(this, game, x, y);
+    this.movable = false;
 
     this.status = this.NORMAL;
     this.normal = new NonAnimatedObject(game, spritesheet, x, y);

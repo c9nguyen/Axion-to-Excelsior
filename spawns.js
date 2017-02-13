@@ -52,7 +52,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                                     4, 0.2, 4, groundPoints, collisionBox, false, 5);
             attack2.addEffect (2, function (that) {
                 var minus = that.unit.lockedTarget.velocity.x;
-                that.unit.velocity.x = 900 + (minus * 1.5);
+                that.unit.velocity.x = 900 + (minus * 2);
             });
             attack2.addEffect (3, function (that) {
                 that.unit.velocity.x = 0;
@@ -111,6 +111,9 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var effect = function(that) {
                 castSkill(that.game, that.x + 40, that.y, that.unit, 00000, 0.25,
                         undefined, 502, 304, 0.1);};
+            var effect2 = function (that) {
+                castSkill(that.game, that.x, that.y, that.unit, 'h1000', 0);};
+            attack.effects[0] = effect2;
             attack.effects[1] = effect;
             attack.effects[2] = effect;
             attack.effects[4] = effect;
@@ -125,9 +128,12 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             collisionBox = [{x: 280, y: 190, width: 55, height: 75}];
             var attack3 = new Action(game, unit, AM.getAsset("./img/unit/h100/attack3.png"),
                                     13, 0.1, 13, groundPoints, collisionBox, false, 5);
-            var effect = function(that) {
+            effect = function(that) {
                 castSkill(that.game, that.x, that.y + 105, that.unit, 00000, 1,
                         undefined, 635, 166, 0.1);};
+            effect2 = function (that) {
+                castSkill(that.game, that.x, that.y, that.unit, 'h1001', 0);};
+            attack3.effects[0] = effect2;     
             attack3.effects[4] = effect;
             attack3.effects[5] = effect;
             attack3.effects[6] = effect;
@@ -231,7 +237,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                             function(unit) { unit.velocity.x = unit.movementspeed / (-unit.movementspeed) * 200;
                                             unit.velocity.y = -300;
                                             unit.changeAction("jump");},
-                            150, 100, 0.4)};
+                            160, 100, 0.4)};
 
             groundPoints = [{x: 0, y: 130}];
             var die = new Action(game, unit, AM.getAsset("./img/unit/m010/die.png"),

@@ -45,15 +45,17 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 2,//You mostly need
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/00000/9.swingP1.2_0.png"),
                                 1, 0.1, 1, collisionBox, action, percentAtt);
             break;
-       case 10000:
-            var collisionBox = [{x: 0, y: 0, width: 280, height: 60}];
-            var action = function(unit) {
-                var damage = percentAtt * this.unit.att;
-                unit.takeDamage(damage);
-                additionalEffect(unit);
-            };
-            skill = new Effect(game, x, y, unit, nonAnimationSheet,
-                                1, 0.3, 1, collisionBox, action, percentAtt, true);
+       case 'h1000':
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            var action = function(unit) {};
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/unit/h100/attack1.png"),
+                                7, 0.1, 14, collisionBox, action, percentAtt);
+            break;
+       case 'h1001':
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            var action = function(unit) {};
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/unit/h100/attack3.png"),
+                                13, 0.1, 13, collisionBox, action, percentAtt);
             break;
     }
 
