@@ -5,9 +5,9 @@
  * additionalEffect: is the effect after the effect of the skill
  * effect: overwriting the effect of the skill
  */
-function castSkill(game, x, y, unit, skillCode,//You mostly need this
+function castSkill(game, x, y, unit, skillCode, percentAtt = 2,//You mostly need this
                     additionalEffect = function() {}, // little addion
-                    width, height, durationTime, percentAtt = 1, effect) {  //this for customized effect
+                    width, height, durationTime, effect) {  //this for customized effect
     var skill;
     var nonAnimationSheet = {width: 0, height: 0};
     switch (skillCode) {
@@ -17,33 +17,45 @@ function castSkill(game, x, y, unit, skillCode,//You mostly need this
             if (effect !== undefined) action = effect;
             else {
                 action = function(unit) {
-                    var damage = percentAtt * this.unit.att;
+                    var damage = this.percent * this.unit.att;
                     unit.takeDamage(damage);
                     additionalEffect(unit);
                 };
             }
             skill = new Effect(game, x, y, unit, nonAnimationSheet,
-                                1, durationTime, 1, collisionBox, action, 1, true);
+                                1, durationTime, 1, collisionBox, action, percentAtt, true);
             break;
         case 00001:
             var collisionBox = [{x: 0, y: 0, width: 93, height: 45}];
             var action = function(unit) {
-                var damage = this.percent * this.unit.att;
+                var damage = percentAtt * this.unit.att;
                 unit.takeDamage(damage);
                 additionalEffect(unit);
             };
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/00000/stab.png"),
-                                1, 0.05, 1, collisionBox, action, 1);
+                                1, 0.1, 1, collisionBox, action, percentAtt);
             break;
-       case 10000:
-            var collisionBox = [{x: 0, y: 0, width: 280, height: 60}];
+        case 00002: //swing
+            var collisionBox = [{x: 0, y: 0, width: 164, height: 143}];
             var action = function(unit) {
-                var damage = this.percent * this.unit.att;
+                var damage = percentAtt * this.unit.att;
                 unit.takeDamage(damage);
                 additionalEffect(unit);
             };
-            skill = new Effect(game, x, y, unit, nonAnimationSheet,
-                                1, 0.3, 1, collisionBox, action, 1, true);
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/00000/9.swingP1.2_0.png"),
+                                1, 0.1, 1, collisionBox, action, percentAtt);
+            break;
+       case 'h1000':
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            var action = function(unit) {};
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/unit/h100/attack1.png"),
+                                7, 0.1, 14, collisionBox, action, percentAtt);
+            break;
+       case 'h1001':
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            var action = function(unit) {};
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/unit/h100/attack3.png"),
+                                13, 0.1, 13, collisionBox, action, percentAtt);
             break;
     }
 

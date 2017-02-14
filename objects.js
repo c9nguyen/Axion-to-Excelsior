@@ -235,6 +235,7 @@ function Action(game, unit, spritesheet,
                         frameWidth, frameHeight,
                         sheetWidth, frameDuration, frames, cooldown === 0, 
                         scale = 1, width, height);
+    this.movable = false;
 }
 
 Action.prototype = Object.create(AnimatedObject);
@@ -292,14 +293,11 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
             this.unit.currentAction.start();
             this.unit.currentAction.update();
             return;
-         } //else{
-        //     this.start();
-        //}
-     //   this.effectCasted = new Set();
+         }
     }
     this.during();
     this.cooldownClock += this.game.clockTick;
-    if (!this.loop && this.isDone()) this.end(); // perform ending action
+   // if (!this.loop && this.isDone()) this.end(); // perform ending action
     var frame = this.currentFrame();
     //Updating ground point
     var groundPoint = this.getFrameGroundPoint(frame); 
@@ -432,6 +430,7 @@ Unit.prototype.changeAction = function(actionName) {
         if (this.currentAction !== undefined) this.currentAction.end();
         this.currentAction = action;
         this.currentAction.start();
+        this.currentAction.update();
     } 
         
 }
@@ -444,7 +443,7 @@ Unit.prototype.takeDamage = function(damage) {
 
 Unit.prototype.checkEnemyInRange = function() {
     var enemy = this.side === PLAYER ? this.game.enemyList : this.game.playerList;
-    var rangeIndex = -1;
+    var rangeIndex = new Set();
                 //var collisionBox = this.getCollisionBox();
     for (var i in enemy) {
         if (enemy[i].removeFromWorld){
@@ -458,10 +457,12 @@ Unit.prototype.checkEnemyInRange = function() {
                                 width: range.width, height: range.height};
                 if (collise(tempRange, otherCollisionBox)) {
                     this.lockedTarget = enemy[i];
-                    return j;
+                    rangeIndex.add(j);
                 } 
             }
         }
+
+        if (rangeIndex.size > 0) break;
     } 
 
     return rangeIndex;
@@ -513,7 +514,7 @@ Unit.prototype.update = function() {
                 if (this.currentAction.interruptible || this.currentAction.isDone()) {
                     var collisedEnemy = this.checkEnemyInRange();
                     
-                    if (collisedEnemy >= 0) {
+                    if (collisedEnemy.size > 0) {
                         //reaction when an enemy gets in range
                         this.rangeReact(collisedEnemy);
                 }else
@@ -526,7 +527,7 @@ Unit.prototype.update = function() {
         } else {    //Fyling unit
                 var collisedEnemy = this.checkEnemyInRange();
 
-                if (collisedEnemy >= 0) 
+                if (collisedEnemy.size > 0) 
                     //reaction when an enemy gets in range
                     this.rangeReact(collisedEnemy);
                 else 
@@ -544,13 +545,14 @@ Unit.prototype.draw = function() {
     if(this.currentAction !== undefined)
         this.currentAction.draw();
 
-    //For testing
+    //Health bar
     var ctx = this.game.ctx;
     var healthPercent = this.health / this.data.health;
     healthPercent = Math.max(healthPercent, 0);
     var height = this.height / 2;
     //var healthBar = {x: this.x, y: this.y, width: this.width * healthPercent, height: height};
-    this.game
+    
+    //For Debugging
     ctx.fillStyle = 'red';
     ctx.fillRect(this.x, this.y, this.width, height);
     ctx.fillStyle = 'green';
@@ -562,7 +564,7 @@ Unit.prototype.draw = function() {
 
 
     // // collisionBox
-    // var action = this.currentAction;
+    //var action = this.currentAction;
     // var box = {};
     // var collisionBox = action.getFrameHitbox(action.currentFrame());
     // box.x = action.x + collisionBox.x;
@@ -570,7 +572,14 @@ Unit.prototype.draw = function() {
     // box.width = collisionBox.width;
     // box.height = collisionBox.height;
 
-    // //this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
+    // var rangeBox = this.rangeBox[0];
+    // var box = {};
+    // box.x = this.x + rangeBox.x;
+    // box.y = this.y + rangeBox.y;
+    // box.width = rangeBox.width;
+    // box.height = rangeBox.height;
+
+    //this.game.ctx.fillRect(rangeBox.x, rangeBox.y, rangeBox.width, rangeBox.height);
     // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
     
 }
@@ -714,6 +723,7 @@ function Button(game, spritesheet, x, y, scale = 1) {
     this.MOUSEOVER = 2;
 
     Entity.call(this, game, x, y);
+    this.movable = false;
 
     this.status = this.NORMAL;
     this.normal = new NonAnimatedObject(game, spritesheet, x, y);
@@ -724,6 +734,7 @@ function Button(game, spritesheet, x, y, scale = 1) {
 
     this.clickAction = function() {};
     this.pressAction = function() {};
+    this.mouseoverAction = function() {};
 }
 
 Button.prototype = Object.create (Entity.prototype);
@@ -747,16 +758,25 @@ Button.prototype.addSheet = function(spritesheet, sheetType) {
 Button.prototype.addEventListener = function(eventType, action) {
     if (eventType === "click") this.clickAction = action;
     else if (eventType === "press") this.pressAction = action;
+    else if (eventType === "mouseover") this.mouseoverAction = action;
 }
 
 Button.prototype.draw = function() {
+    var drawObj;
     if (this.status === this.NORMAL) {
-        this.normal.draw();
+        drawObj = this.normal;
     } else if (this.status === this.PRESS) {
-        this.press.draw();
+        drawObj = this.press;
     } else if (this.status === this.MOUSEOVER) {
-        this.mouseover.draw();
+        drawObj = this.mouseover;
     }
+
+    if (drawObj !== undefined) {
+        drawObj.x = this.x;
+        drawObj.y = this.y;
+    }
+    drawObj.draw();
+
 }
 
 Button.prototype.update = function() {
@@ -767,8 +787,13 @@ Button.prototype.update = function() {
         } else if (this.game.mouse.pressed) {
             this.status = this.PRESS;
             this.pressAction(this);
-        } else this.status = this.MOUSEOVER;
+        } else {
+            this.status = this.MOUSEOVER;
+            this.mouseoverAction(this);
+        }
     } else this.status = this.NORMAL;
+
+    Entity.prototype.update.call(this);
 }
 
 /*=========================================================================*/
