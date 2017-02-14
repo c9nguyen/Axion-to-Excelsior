@@ -12,13 +12,18 @@ Battle.prototype.create = function() {
     var button = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 200, 520);
     button.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
     button.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
-    button.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h000", PLAYER); })
+    button.addEventListener("click", function() { 
+        var xSpawnLocation = globalGiveMapX(this.game, 100);
+        spawnUnit(this.game, xSpawnLocation, 400, "h000", PLAYER); })
     this.game.addEntity(button);
 
     var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 600, 520);
     button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
     button2.addSheet(AM.getAsset("./img/unit/m000/card_mouseover.png"), "mouseover");
-    button2.addEventListener("click", function() { spawnUnit(this.game, 800, 400, "m000", ENEMY); })
+    button2.addEventListener("click", function() { 
+        var xSpawnLocation = globalGiveMapX(this.game, 800);
+        spawnUnit(this.game, xSpawnLocation, 400, "m000", ENEMY); 
+    })
 
     this.game.addEntity(button2);
 
@@ -28,7 +33,7 @@ Battle.prototype.create = function() {
 
     var screenmove = new ScreenMover(this.game);
     this.game.addEntity(screenmove);
-    var map = new ScreenScroller(this.game, 800, 550, 400, 50); 
+    var map = new ScreenScroller(this.game, screenmove, 800, 550, 400, 50); 
     this.game.addEntity(map);
     var rightAndLeftKey = new ScreenMoveArrow(this.game, screenmove);
     this.game.addEntity(rightAndLeftKey);

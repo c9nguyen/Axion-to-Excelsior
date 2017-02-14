@@ -30,6 +30,7 @@ function GameEngine() {
     this.surfaceHeight = null;
 
     this.movedAmount = 0;
+    this.mapX = 0;
 
     this.right = null;
     this.left = null;
@@ -278,4 +279,13 @@ function collise(box1, box2) {
             box1.x + box1.width > box2.x &&
             box1.y < box2.y + box2.height &&
             box1.height + box1.y > box2.y) 
+}
+
+/**
+ * Calculate the x cordinate relative to map.
+ * Given a map x value.
+ * Returns correct position to spawn a unit.
+ */
+function globalGiveMapX(game, x){
+    return x + game.mapX;
 }
