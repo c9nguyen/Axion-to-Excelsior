@@ -161,7 +161,6 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
     var entities = this.sceneManager.getCurrentEntities();
-    this.theMove = this.movedAmount;
     for (var i = 0; i < entities.length; i++) {
         //If this enetity will be removed
             var entity = entities[i];
@@ -228,7 +227,7 @@ Entity.prototype.update = function () {
     //     console.log(this.velocity.y);
     // }
     if(this.movable){
-        this.x += this.game.theMove;
+        this.x += this.game.movedAmount;
     }
 
     if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
