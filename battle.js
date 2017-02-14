@@ -5,6 +5,14 @@ function Battle(game)
 
 Battle.prototype.create = function() {
     console.log('battle created');
+
+    var screenmove = new ScreenMover(this.game);
+    this.game.addEntity(screenmove);
+    var map = new ScreenScroller(this.game, screenmove, 800, 550, 400, 50); 
+    this.game.addEntity(map);
+    var rightAndLeftKey = new ScreenMoveArrow(this.game, screenmove);
+    this.game.addEntity(rightAndLeftKey);
+
 	this.loadCharacter();
     this.buildingBackground();
     this.buildTiles();

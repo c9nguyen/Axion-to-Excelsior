@@ -162,8 +162,11 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
     var entities = this.sceneManager.getCurrentEntities();
+
     // Update Screen
     this.screenMover.update();
+    this.theMove = this.movedAmount;
+
     for (var i = 0; i < entities.length; i++) {
         //If this enetity will be removed
             var entity = entities[i];
@@ -230,7 +233,7 @@ Entity.prototype.update = function () {
     //     console.log(this.velocity.y);
     // }
     if(this.movable){
-        this.x += this.game.movedAmount;
+        this.x += this.game.theMove;
     }
 
     if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
@@ -239,12 +242,12 @@ Entity.prototype.update = function () {
    // console.log(this.game.moveAmount);
 
    //force
-   var forceX = this.game.clockTick * this.forceX;
-   this.forceX -= forceX;
-   var forceY = this.game.clockTick * this.forceY;
-   this.forceY -= forceY;
-   this.x += forceX;
-   this.y += forceY;
+//    var forceX = this.game.clockTick * this.forceX;
+//    this.forceX -= forceX;
+//    var forceY = this.game.clockTick * this.forceY;
+//    this.forceY -= forceY;
+//    this.x += forceX;
+//    this.y += forceY;
 }
 
 Entity.prototype.draw = function (ctx) {
