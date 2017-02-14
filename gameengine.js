@@ -17,6 +17,7 @@ const GRAVITY = 1800; //can change this to make gravity better
 
 function GameEngine() {
     this.sceneManager = new SceneManager(this);
+    this.screenMover = new ScreenMover(this);
     this.collisionBox = {
         ground: [],
     };
@@ -161,6 +162,8 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
     var entities = this.sceneManager.getCurrentEntities();
+    // Update Screen
+    this.screenMover.update();
     for (var i = 0; i < entities.length; i++) {
         //If this enetity will be removed
             var entity = entities[i];

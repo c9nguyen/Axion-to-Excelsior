@@ -31,11 +31,9 @@ Battle.prototype.create = function() {
 
     spawnUnit(this.game, 100, 400, "h100", PLAYER);
 
-    var screenmove = new ScreenMover(this.game);
-    this.game.addEntity(screenmove);
-    var map = new ScreenScroller(this.game, screenmove, 800, 550, 400, 50); 
+    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50); 
     this.game.addEntity(map);
-    var rightAndLeftKey = new ScreenMoveArrow(this.game, screenmove);
+    var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
     this.game.addEntity(rightAndLeftKey);
 
 };

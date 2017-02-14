@@ -6,7 +6,7 @@ function ScreenScroller(game, screenmove, x, y, boxX, boxY){
 
     this.colliseBox = {x: x, y: y, width: boxX, height: boxY};
 
-    // TODO Box size
+    // ADJUST Box size
     this.returnPoint = boxX / 7;
     this.mapSize = this.screenmove.mapSize;
     this.screenSize = this.screenmove.screenSize;
@@ -62,7 +62,6 @@ ScreenScroller.prototype.update = function(){
             this.game.mouse.click = false;
         }
     }
-    // TODO update movement
 }
 
 
