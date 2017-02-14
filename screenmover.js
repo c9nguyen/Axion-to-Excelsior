@@ -51,8 +51,8 @@ ScreenMover.prototype.update = function(){
 ScreenMover.prototype.draw = function(){
 }
 
-ScreenMover.prototype.checkBoundaries() = function(){
-
+ScreenMover.prototype.checkBoundaries = function(){
+    
 }
 
 ScreenMover.prototype.rebootScreen = function(){
