@@ -633,11 +633,7 @@ Effect.prototype.addEffect = function(callback, index) {
 
 
 Effect.prototype.update = function() {//Updating the coordinate for the unit in the frame
-    if (this.unit.side === PLAYER)
-    console.log("Before: " + this.x + " and " + this.game.theMove);
     AnimatedObject.prototype.update.call(this);
-    if (this.unit.side === PLAYER)
-   console.log("After: " + this.x + " and " + this.game.theMove);
     if (this.isDone()) {
         this.numOfLoop--;
         if (this.numOfLoop <= 0) {
@@ -697,9 +693,6 @@ Effect.prototype.getFrameHitbox = function(frame) {
 }
 
 Effect.prototype.draw = function() {
-                if (this.unit.side === PLAYER) {
-   console.log("Draw: " + this.x + " and " + this.game.theMove);
-    }
     if (this.spritesheet != undefined)
         AnimatedObject.prototype.draw.call(this);
 
