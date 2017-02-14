@@ -112,6 +112,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x + 40, that.y, that.unit, 00000, 0.25,
                         undefined, 502, 304, 0.1);};
             var effect2 = function (that) {
+                console.log(that.x);
                 castSkill(that.game, that.x, that.y, that.unit, 'h1000', 0);};
             attack.effects[0] = effect2;
             attack.effects[1] = effect;

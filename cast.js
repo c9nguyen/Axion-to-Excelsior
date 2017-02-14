@@ -59,7 +59,10 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 2,//You mostly need
             break;
     }
 
-    if (skill !== undefined) game.addEntity(skill);
+    if (skill !== undefined) {
+        game.addEntity(skill);
+        skill.update();
+    } 
     else console.log("Wrong skillcode");
     return skill;
 }
