@@ -22,8 +22,18 @@ Battle.prototype.create = function() {
     button.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
     button.addEventListener("click", function() { 
         var xSpawnLocation = globalGiveMapX(this.game, 100);
-        spawnUnit(this.game, xSpawnLocation, 400, "h000", PLAYER); })
+        spawnUnit(this.game, xSpawnLocation, 400, "h001", PLAYER); 
+    });
     this.game.addEntity(button);
+
+    var button3 = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 300, 520);
+    button3.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
+    button3.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
+    button3.addEventListener("click", function() { 
+        var xSpawnLocation = globalGiveMapX(this.game, 100);
+        spawnUnit(this.game, xSpawnLocation, 400, "h000", PLAYER); 
+    });
+    this.game.addEntity(button3);
 
     var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 600, 520);
     button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
@@ -31,8 +41,7 @@ Battle.prototype.create = function() {
     button2.addEventListener("click", function() { 
         var xSpawnLocation = globalGiveMapX(this.game, 800);
         spawnUnit(this.game, xSpawnLocation, 400, "m000", ENEMY); 
-    })
-
+    });
     this.game.addEntity(button2);
 
     spawnUnit(this.game, 900, 400, "m010", ENEMY);

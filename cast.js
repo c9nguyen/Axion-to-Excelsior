@@ -5,9 +5,9 @@
  * additionalEffect: is the effect after the effect of the skill
  * effect: overwriting the effect of the skill
  */
-function castSkill(game, x, y, unit, skillCode, percentAtt = 2,//You mostly need this
+function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need this
                     additionalEffect = function() {}, // little addion
-                    width, height, durationTime, effect) {  //this for customized effect
+                    width, height, durationTime, aoe, effect) {  //this for customized effect
     var skill;
     var nonAnimationSheet = {width: 0, height: 0};
     switch (skillCode) {
@@ -23,9 +23,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 2,//You mostly need
                 };
             }
             skill = new Effect(game, x, y, unit, nonAnimationSheet,
-                                1, durationTime, 1, collisionBox, action, percentAtt, true);
+                                1, durationTime, 1, collisionBox, action, percentAtt, aoe);
             break;
-        case 00001:
+        case 00001: //stab
             var collisionBox = [{x: 0, y: 0, width: 93, height: 45}];
             var action = function(unit) {
                 var damage = percentAtt * this.unit.att;
@@ -33,7 +33,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 2,//You mostly need
                 additionalEffect(unit);
             };
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/00000/stab.png"),
-                                1, 0.1, 1, collisionBox, action, percentAtt);
+                                1, 0.1, 1, collisionBox, action, percentAtt, false);
             break;
         case 00002: //swing
             var collisionBox = [{x: 0, y: 0, width: 164, height: 143}];
@@ -43,7 +43,27 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 2,//You mostly need
                 additionalEffect(unit);
             };
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/00000/9.swingP1.2_0.png"),
-                                1, 0.1, 1, collisionBox, action, percentAtt);
+                                1, 0.1, 1, collisionBox, action, percentAtt, false);
+            break;
+        case 00005: //shuriken 1
+            var collisionBox = [{x: 0, y: 0, width: 29, height: 29}];
+            var action = function(unit) {
+                var damage = percentAtt * this.unit.att;
+                unit.takeDamage(damage);
+                additionalEffect(unit);
+                this.removeFromWorld = true;
+            };
+
+            var random = Math.floor(Math.random() * 20 - 10);
+            console.log(random);
+
+            skill = new Effect(game, x, y + random, unit, AM.getAsset("./img/effect/00001/shuriken.png"),
+                                2, 0.02, 2, collisionBox, action, percentAtt, false, 100000);
+
+            var direction = unit.data.movementspeed / unit.data.movementspeed;
+            skill.velocity.x = 600 * direction;
+            random = Math.floor(Math.random() * 80 - 40);
+            skill.velocity.y = random;
             break;
        case 'h1000':
             var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];

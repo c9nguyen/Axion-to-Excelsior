@@ -23,6 +23,15 @@ AM.queueDownload("./img/unit/h000/stab_right.png");
 AM.queueDownload("./img/unit/h000/jumpattack_right.png");
 AM.queueDownload("./img/unit/h000/die_right.png");
 
+// AM.queueDownload("./img/unit/h001/card.png");
+// AM.queueDownload("./img/unit/h001/card_mouseover.png");
+// AM.queueDownload("./img/unit/h001/card_click.png");
+AM.queueDownload("./img/unit/h001/stand.png");
+AM.queueDownload("./img/unit/h001/walk.png");
+AM.queueDownload("./img/unit/h001/jump.png");
+AM.queueDownload("./img/unit/h001/attack.png");
+AM.queueDownload("./img/unit/h001/die.png");
+
 AM.queueDownload("./img/unit/h100/stand.png");
 AM.queueDownload("./img/unit/h100/walk.png");
 AM.queueDownload("./img/unit/h100/jump.png");
@@ -61,6 +70,8 @@ AM.queueDownload("./img/ui/start_button_mouseover.png");
 
 AM.queueDownload("./img/effect/00000/stab.png");
 AM.queueDownload("./img/effect/00000/9.swingP1.2_0.png");
+AM.queueDownload("./img/effect/00001/shuriken.png");
+AM.queueDownload("./img/effect/00002/dummy.png");
 
 
 AM.downloadAll(function () {
