@@ -2,45 +2,6 @@ var canvasWidth = 0;
 var canvasHeight = 0;
 
 
-// function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
-//     this.spriteSheet = spriteSheet;
-//     this.frameWidth = frameWidth;
-//     this.frameDuration = frameDuration;
-//     this.frameHeight = frameHeight;
-//     this.sheetWidth = sheetWidth;
-//     this.frames = frames;
-//     this.totalTime = frameDuration * frames;
-//     this.elapsedTime = 0;
-//     this.loop = loop;
-//     this.scale = scale;
-// }
-
-// Animation.prototype.drawFrame = function (tick, ctx, x, y) {
-//     this.elapsedTime += tick;
-//     if (this.isDone()) {
-//         if (this.loop) this.elapsedTime = 0;
-//     }
-//     var frame = this.currentFrame();
-//     var xindex = 0;
-//     var yindex = 0;
-//     xindex = frame % this.sheetWidth;
-//     yindex = Math.floor(frame / this.sheetWidth);
-//     ctx.drawImage(this.spriteSheet,
-//                  xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
-//                  this.frameWidth, this.frameHeight,
-//                  x, y,
-//                  this.frameWidth * this.scale,
-//                  this.frameHeight * this.scale);
-// }
-
-// Animation.prototype.currentFrame = function () {
-//     return Math.floor(this.elapsedTime / this.frameDuration);
-// }
-
-// Animation.prototype.isDone = function () {
-//     return (this.elapsedTime >= this.totalTime);
-// }
-
 /*===============================================================*/
 
 /**
@@ -173,10 +134,6 @@ AnimatedObject.prototype.draw = function () {
 
 AnimatedObject.prototype.update = function () {
     if (this.y > canvasHeight * 2) this.removeFromWorld = true;
-    if (this.x > canvasWidth) 
-        this.x = -this.width;
-    else if (this.x < -this.width)
-        this.x = canvasWidth;
     Entity.prototype.update.call(this);
 }
 
@@ -235,6 +192,7 @@ function Action(game, unit, spritesheet,
                         frameWidth, frameHeight,
                         sheetWidth, frameDuration, frames, cooldown === 0, 
                         scale = 1, width, height);
+    this.movable = false;
 }
 
 Action.prototype = Object.create(AnimatedObject);
@@ -292,14 +250,11 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
             this.unit.currentAction.start();
             this.unit.currentAction.update();
             return;
-         } //else{
-        //     this.start();
-        //}
-     //   this.effectCasted = new Set();
+         }
     }
     this.during();
     this.cooldownClock += this.game.clockTick;
-    if (!this.loop && this.isDone()) this.end(); // perform ending action
+   // if (!this.loop && this.isDone()) this.end(); // perform ending action
     var frame = this.currentFrame();
     //Updating ground point
     var groundPoint = this.getFrameGroundPoint(frame); 
@@ -382,19 +337,24 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
 
     //var range = this.data.range;
     this.rangeBox = this.data.range; 
-    this.speedPercent = 1;  
+    this.speedPercent = 1;
     this.flying = this.data.flying;
     
     //Stats
     this.health = this.data.health;
     this.movementspeed = this.data.movementspeed;
     this.att = this.data.att;
+    this.def = this.data.def;
 
     this.actions = {}; //contains all actions this unit can perform (walk, stand, attack)
     this.defaultAction;
     this.collisionReacts = {};  //Not used yet
     this.currentAction;
-    this.lockedTarget;  //The enemy that the unit targetting. 
+    this.lockedTarget;  //The enemy that the unit targetting.
+
+    this.getHit = function(damage) {  //default get hit action: lose hp
+        this.health -= Math.max(damage - (this.def * damage), 1);
+    };
 }
 
 Unit.prototype = Object.create(Entity.prototype);
@@ -404,24 +364,19 @@ Unit.prototype.getCollisionBox = function() {
     return this.currentAction !== undefined ? this.currentAction.collisionBox : this;
 }
 
-/**
- * There are 4 basic collision action:
- * 1. Action when standing on the platform (Stand or walk)
- * 2. Action when in the air (flying or jump)
- * 3. Action when an enemy gets within attack range (attack)
- * 4. Action when the unit get hit (mostly nothing, some special unit might explode or jump back)
- * Pass 3 actions as callback functions. 
- * Suggestion: use changeAction
- */
-Unit.prototype.setCollisionReacts = function(ground = function() {}, 
-                                                air = function() {}, 
-                                                range = function() {}, 
-                                                hit = function() {}) {
-    this.groundReact = ground;
-    this.airReact = air;
-    this.rangeReact = range;
-    this.hitReact = hit;
-}
+// /**
+//  * There are 4 basic collision action:
+//  * 1. Action when standing on the platform (Stand or walk)
+//  * 2. Action when in the air (flying or jump)
+//  * 3. Action when an enemy gets within attack range (attack)
+//  * 4. Action when the unit get hit (mostly nothing, some special unit might explode or jump back)
+//  * Pass 3 actions as callback functions. 
+//  * Suggestion: use changeAction
+//  */
+// Unit.prototype.setCollisionReacts = function(reaction, callback = function() {}) {
+    
+//     this.reaction[reaction] = callback;
+// }
 
 /**
  * Change the action of unit
@@ -432,6 +387,7 @@ Unit.prototype.changeAction = function(actionName) {
         if (this.currentAction !== undefined) this.currentAction.end();
         this.currentAction = action;
         this.currentAction.start();
+        this.currentAction.update();
     } 
         
 }
@@ -439,12 +395,12 @@ Unit.prototype.changeAction = function(actionName) {
 
 
 Unit.prototype.takeDamage = function(damage) {
-    this.health -= damage;
+    this.getHit(damage);
 }
 
 Unit.prototype.checkEnemyInRange = function() {
     var enemy = this.side === PLAYER ? this.game.enemyList : this.game.playerList;
-    var rangeIndex = -1;
+    var rangeIndex = new Set();
                 //var collisionBox = this.getCollisionBox();
     for (var i in enemy) {
         if (enemy[i].removeFromWorld){
@@ -458,10 +414,12 @@ Unit.prototype.checkEnemyInRange = function() {
                                 width: range.width, height: range.height};
                 if (collise(tempRange, otherCollisionBox)) {
                     this.lockedTarget = enemy[i];
-                    return j;
+                    rangeIndex.add(j);
                 } 
             }
         }
+
+        if (rangeIndex.size > 0) break;
     } 
 
     return rangeIndex;
@@ -482,61 +440,34 @@ Unit.prototype.update = function() {
         // this.rangeBox.x = range.x + this.x;
         // this.rangeBox.y = range.y + this.y;
 
+        //if the unit is not flying unit, check gravity (flying is different from jumping) 
 
-        if (!this.flying) { //if the unit is not flying unit, check gravity (flying is different from jumping)
-            var groundCollised = false;
-            if (this.velocity.y >= 0) { //Only check for ground collision when the unit falling down or standing           
+        if (!this.flying) {
+            this.gravity = true;
+            //Only check for ground collision when the unit falling down or standing    
+            if (this.velocity.y >= 0) {
                 //Improving performace by checking if still standing on the previous platform                    
                 if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
                     this.y = this.previousPlatform.y + 10;
                     this.velocity.y = 0;
-                    groundCollised = true;
+                    this.gravity = false;
                 } else {
                     var groundCollisionBox = this.game.collisionBox.ground;
                     for (var box in groundCollisionBox) {
                         if (collise(this, groundCollisionBox[box])) {
                             this.y = groundCollisionBox[box].y + 10;
                             this.velocity.y = 0;
-                            groundCollised = true;
+                            this.gravity = false;
                             this.previousPlatform = groundCollisionBox[box];    //Save this to check again
                             break;
                         }
-                    }  
+                    }
                 }
-      
             }
-
-            this.gravity = !groundCollised;
-
-            if (!this.gravity) {     //On the ground reaction
-                //var collisionBox = this.getCollisionBox();
-                if (this.currentAction.interruptible || this.currentAction.isDone()) {
-                    var collisedEnemy = this.checkEnemyInRange();
-                    
-                    if (collisedEnemy >= 0) {
-                        //reaction when an enemy gets in range
-                        this.rangeReact(collisedEnemy);
-                }else
-                        this.groundReact();
-                }
-
-            } else if (this.gravity)  //In the air action
-                this.airReact();
-
-        } else {    //Fyling unit
-                var collisedEnemy = this.checkEnemyInRange();
-
-                if (collisedEnemy >= 0) 
-                    //reaction when an enemy gets in range
-                    this.rangeReact(collisedEnemy);
-                else 
-                    this.airReact();
         }
-
-        //update the current action
-
+        this.actionHandler(this);
     }
-    
+    //update the current action
     if (this.currentAction !== undefined) this.currentAction.update();
 }
 
@@ -544,13 +475,14 @@ Unit.prototype.draw = function() {
     if(this.currentAction !== undefined)
         this.currentAction.draw();
 
-    //For testing
+    //Health bar
     var ctx = this.game.ctx;
     var healthPercent = this.health / this.data.health;
     healthPercent = Math.max(healthPercent, 0);
     var height = this.height / 2;
     //var healthBar = {x: this.x, y: this.y, width: this.width * healthPercent, height: height};
-    this.game
+    
+    //For Debugging
     ctx.fillStyle = 'red';
     ctx.fillRect(this.x, this.y, this.width, height);
     ctx.fillStyle = 'green';
@@ -562,7 +494,7 @@ Unit.prototype.draw = function() {
 
 
     // // collisionBox
-    // var action = this.currentAction;
+    //var action = this.currentAction;
     // var box = {};
     // var collisionBox = action.getFrameHitbox(action.currentFrame());
     // box.x = action.x + collisionBox.x;
@@ -570,10 +502,19 @@ Unit.prototype.draw = function() {
     // box.width = collisionBox.width;
     // box.height = collisionBox.height;
 
-    // //this.game.ctx.fillRect(this.rangeBox.x, this.rangeBox.y, this.rangeBox.width, this.rangeBox.height);
+    // var rangeBox = this.rangeBox[0];
+    // var box = {};
+    // box.x = this.x + rangeBox.x;
+    // box.y = this.y + rangeBox.y;
+    // box.width = rangeBox.width;
+    // box.height = rangeBox.height;
+
+    //this.game.ctx.fillRect(rangeBox.x, rangeBox.y, rangeBox.width, rangeBox.height);
     // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
     
 }
+
+var skillSet = new Set();
 
 /*===============================================================*/
 
@@ -626,7 +567,7 @@ Effect.prototype.addEffect = function(callback, index) {
 
 
 Effect.prototype.update = function() {//Updating the coordinate for the unit in the frame
-
+    AnimatedObject.prototype.update.call(this);
     if (this.isDone()) {
         this.numOfLoop--;
         if (this.numOfLoop <= 0) {
@@ -666,8 +607,9 @@ Effect.prototype.update = function() {//Updating the coordinate for the unit in 
         }
     }
     var effect = this.subEffects[frame]; //Callback the effect
-    if (effect !== undefined && typeof effect === "function") effect(this); 
-    AnimatedObject.prototype.update.call(this);
+    if (effect !== undefined && typeof effect === "function") effect(this);
+    
+
 }
 
 /**
@@ -687,6 +629,7 @@ Effect.prototype.getFrameHitbox = function(frame) {
 Effect.prototype.draw = function() {
     if (this.spritesheet != undefined)
         AnimatedObject.prototype.draw.call(this);
+
 //For testing skill hit box
     // var box = this.getFrameHitbox(this.currentFrame());
     // this.game.ctx.fillStyle = 'red';
@@ -714,6 +657,7 @@ function Button(game, spritesheet, x, y, scale = 1) {
     this.MOUSEOVER = 2;
 
     Entity.call(this, game, x, y);
+    this.movable = false;
 
     this.status = this.NORMAL;
     this.normal = new NonAnimatedObject(game, spritesheet, x, y);
@@ -724,6 +668,7 @@ function Button(game, spritesheet, x, y, scale = 1) {
 
     this.clickAction = function() {};
     this.pressAction = function() {};
+    this.mouseoverAction = function() {};
 }
 
 Button.prototype = Object.create (Entity.prototype);
@@ -747,16 +692,25 @@ Button.prototype.addSheet = function(spritesheet, sheetType) {
 Button.prototype.addEventListener = function(eventType, action) {
     if (eventType === "click") this.clickAction = action;
     else if (eventType === "press") this.pressAction = action;
+    else if (eventType === "mouseover") this.mouseoverAction = action;
 }
 
 Button.prototype.draw = function() {
+    var drawObj;
     if (this.status === this.NORMAL) {
-        this.normal.draw();
+        drawObj = this.normal;
     } else if (this.status === this.PRESS) {
-        this.press.draw();
+        drawObj = this.press;
     } else if (this.status === this.MOUSEOVER) {
-        this.mouseover.draw();
+        drawObj = this.mouseover;
     }
+
+    if (drawObj !== undefined) {
+        drawObj.x = this.x;
+        drawObj.y = this.y;
+    }
+    drawObj.draw();
+
 }
 
 Button.prototype.update = function() {
@@ -767,8 +721,13 @@ Button.prototype.update = function() {
         } else if (this.game.mouse.pressed) {
             this.status = this.PRESS;
             this.pressAction(this);
-        } else this.status = this.MOUSEOVER;
+        } else {
+            this.status = this.MOUSEOVER;
+            this.mouseoverAction(this);
+        }
     } else this.status = this.NORMAL;
+
+    Entity.prototype.update.call(this);
 }
 
 /*=========================================================================*/

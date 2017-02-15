@@ -17,6 +17,7 @@ const GRAVITY = 1800; //can change this to make gravity better
 
 function GameEngine() {
     this.sceneManager = new SceneManager(this);
+    this.screenMover = new ScreenMover(this);
     this.collisionBox = {
         ground: [],
     };
@@ -30,7 +31,10 @@ function GameEngine() {
     this.surfaceHeight = null;
 
     this.movedAmount = 0;
+    this.mapX = 0;
 
+    this.right = null;
+    this.left = null;
     //events
     this.mouse = {click: false,
                     x: undefined,
@@ -123,6 +127,12 @@ GameEngine.prototype.startInput = function () {
     //     console.log(e);
     //     console.log("Key Pressed Event - Char " + e.charCode + " Code " + e.keyCode);
     // }, false);
+    
+    // vinh
+    // left = 37, up = 38, right = 39, down = 40
+    this.right = new KeyBoard(this.ctx, "ArrowRight");
+    this.left = new KeyBoard(this.ctx, "ArrowLeft");
+    //end vinh
 
     // this.ctx.canvas.addEventListener("keyup", function (e) {
     //     console.log(e);
@@ -152,6 +162,10 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
     var entities = this.sceneManager.getCurrentEntities();
+
+    // Update Screen
+    this.screenMover.update();
+
     for (var i = 0; i < entities.length; i++) {
         //If this enetity will be removed
             var entity = entities[i];
@@ -202,6 +216,14 @@ function Entity(game, x, y, side = NEUTRAL) {
     this.yVelocity = 0; //will be removed
     this.side = side;
     this.removeFromWorld = false;
+    this.forceX = 0;
+    this.forceY = 0;
+}
+
+//Push the entity in a direction
+Entity.prototype.force = function(forceX, forceY) {
+    this.forceX += forceX;
+    this.forceY += forceY;
 }
 
 Entity.prototype.update = function () {
@@ -217,6 +239,14 @@ Entity.prototype.update = function () {
     this.y += this.game.clockTick * this.velocity.y;
     this.x += this.game.clockTick * this.velocity.x;
    // console.log(this.game.moveAmount);
+
+   //force
+//    var forceX = this.game.clockTick * this.forceX;
+//    this.forceX -= forceX;
+//    var forceY = this.game.clockTick * this.forceY;
+//    this.forceY -= forceY;
+//    this.x += forceX;
+//    this.y += forceY;
 }
 
 Entity.prototype.draw = function (ctx) {
@@ -254,4 +284,13 @@ function collise(box1, box2) {
             box1.x + box1.width > box2.x &&
             box1.y < box2.y + box2.height &&
             box1.height + box1.y > box2.y) 
+}
+
+/**
+ * Calculate the x cordinate relative to map.
+ * Given a map x value.
+ * Returns correct position to spawn a unit.
+ */
+function globalGiveMapX(game, x){
+    return x + game.mapX;
 }

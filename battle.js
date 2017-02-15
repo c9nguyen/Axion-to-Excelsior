@@ -5,26 +5,44 @@ function Battle(game)
 
 Battle.prototype.create = function() {
     console.log('battle created');
+
+    var screenmove = new ScreenMover(this.game);
+    this.game.addEntity(screenmove);
+    var map = new ScreenScroller(this.game, screenmove, 800, 550, 400, 50); 
+    this.game.addEntity(map);
+    var rightAndLeftKey = new ScreenMoveArrow(this.game, screenmove);
+    this.game.addEntity(rightAndLeftKey);
+
 	this.loadCharacter();
     this.buildingBackground();
     this.buildTiles();
 
-    var button = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 200, 500);
-    button.addSheet(AM.getAsset("./img/ui/start_button_pressed.png"), "click");
-    button.addSheet(AM.getAsset("./img/ui/start_button_mouseover.png"), "mouseover");
-    button.addEventListener("click", function() { spawnUnit(this.game, 100, 100, "h000", PLAYER); })
+    var button = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 200, 520);
+    button.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
+    button.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
+    button.addEventListener("click", function() { 
+        var xSpawnLocation = globalGiveMapX(this.game, 100);
+        spawnUnit(this.game, xSpawnLocation, 400, "h000", PLAYER); })
     this.game.addEntity(button);
 
-    var button2 = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 600, 500);
-    button2.addSheet(AM.getAsset("./img/ui/start_button_pressed.png"), "click");
-    button2.addSheet(AM.getAsset("./img/ui/start_button_mouseover.png"), "mouseover");
-    button2.addEventListener("click", function() { spawnUnit(this.game, 800, 100, "m000", ENEMY); })
+    var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 600, 520);
+    button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
+    button2.addSheet(AM.getAsset("./img/unit/m000/card_mouseover.png"), "mouseover");
+    button2.addEventListener("click", function() { 
+        var xSpawnLocation = globalGiveMapX(this.game, 800);
+        spawnUnit(this.game, xSpawnLocation, 400, "m000", ENEMY); 
+    })
+
     this.game.addEntity(button2);
 
-    spawnUnit(this.game, 900, 100, "m010", ENEMY);
+    spawnUnit(this.game, 900, 400, "m010", ENEMY);
 
-    var map = new ScreenScroller(this.game, 800, 550, 400, 50); 
+    spawnUnit(this.game, 100, 400, "h100", PLAYER);
+
+    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50); 
     this.game.addEntity(map);
+    var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
+    this.game.addEntity(rightAndLeftKey);
 
 };
 
@@ -34,7 +52,7 @@ Battle.prototype.update = function() {
 
 Battle.prototype.buildingBackground = function() {
 	canvasHeight = this.game.ctx.canvas.clientHeight;
-	canvasWidth = this.game.ctx.canvas.clentWidth;
+	canvasWidth = this.game.ctx.canvas.clientWidth;
 
     var back = new NonAnimatedObject(this.game, AM.getAsset("./img/back/sky.png"),0, 0);
     back.setSize(canvasWidth, canvasHeight);
@@ -43,7 +61,7 @@ Battle.prototype.buildingBackground = function() {
     back = new NonAnimatedObject(this.game, AM.getAsset("./img/back/cloud.png"),0, 0);
     this.game.addEntity(back);
 
-    back = new NonAnimatedObject(this.game, AM.getAsset("./img/back/back.png"), 0, 250);
+    back = new NonAnimatedObject(this.game, AM.getAsset("./img/back/back.png"), 0, 150);
     this.game.addEntity(back);
 
     // back = new AnimatedObject(this.game, AM.getAsset("./img/back/1.png"), 100, 50,
@@ -83,14 +101,4 @@ Battle.prototype.buildTiles = function() {
 
     var tile = new Tile(this.game, groundX, canvasHeight - 100, numOfTile, "greenGrass");
     this.game.addEntity(tile);
-};
-
-Battle.prototype.placePortals = function() {
-    var dist = 370;
-
-    for (var i = 0; i < 4; i++) {
-        var portal = new Portal(this.game, AM.getAsset("./img/back/portal.png"), dist * i, canvasHeight - 219, 4, 0.1, 8, true, 1);
-        this.game.addEntity(portal);
-        this.game.portals.push(portal);
-    }
 };
