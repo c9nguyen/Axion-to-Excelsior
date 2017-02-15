@@ -2,45 +2,6 @@ var canvasWidth = 0;
 var canvasHeight = 0;
 
 
-// function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
-//     this.spriteSheet = spriteSheet;
-//     this.frameWidth = frameWidth;
-//     this.frameDuration = frameDuration;
-//     this.frameHeight = frameHeight;
-//     this.sheetWidth = sheetWidth;
-//     this.frames = frames;
-//     this.totalTime = frameDuration * frames;
-//     this.elapsedTime = 0;
-//     this.loop = loop;
-//     this.scale = scale;
-// }
-
-// Animation.prototype.drawFrame = function (tick, ctx, x, y) {
-//     this.elapsedTime += tick;
-//     if (this.isDone()) {
-//         if (this.loop) this.elapsedTime = 0;
-//     }
-//     var frame = this.currentFrame();
-//     var xindex = 0;
-//     var yindex = 0;
-//     xindex = frame % this.sheetWidth;
-//     yindex = Math.floor(frame / this.sheetWidth);
-//     ctx.drawImage(this.spriteSheet,
-//                  xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
-//                  this.frameWidth, this.frameHeight,
-//                  x, y,
-//                  this.frameWidth * this.scale,
-//                  this.frameHeight * this.scale);
-// }
-
-// Animation.prototype.currentFrame = function () {
-//     return Math.floor(this.elapsedTime / this.frameDuration);
-// }
-
-// Animation.prototype.isDone = function () {
-//     return (this.elapsedTime >= this.totalTime);
-// }
-
 /*===============================================================*/
 
 /**
@@ -388,7 +349,10 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.defaultAction;
     this.collisionReacts = {};  //Not used yet
     this.currentAction;
-    this.lockedTarget;  //The enemy that the unit targetting. 
+    this.lockedTarget;  //The enemy that the unit targetting.
+
+    this.reaction = {};     //all reactions will be in here now
+    this.condition = {};
 }
 
 Unit.prototype = Object.create(Entity.prototype);
@@ -407,14 +371,9 @@ Unit.prototype.getCollisionBox = function() {
  * Pass 3 actions as callback functions. 
  * Suggestion: use changeAction
  */
-Unit.prototype.setCollisionReacts = function(ground = function() {}, 
-                                                air = function() {}, 
-                                                range = function() {}, 
-                                                hit = function() {}) {
-    this.groundReact = ground;
-    this.airReact = air;
-    this.rangeReact = range;
-    this.hitReact = hit;
+Unit.prototype.setCollisionReacts = function(reaction, callback = function() {}) {
+    
+    this.reaction[reaction] = callback;
 }
 
 /**
@@ -434,6 +393,7 @@ Unit.prototype.changeAction = function(actionName) {
 
 
 Unit.prototype.takeDamage = function(damage) {
+
     this.health -= damage;
 }
 
@@ -479,61 +439,34 @@ Unit.prototype.update = function() {
         // this.rangeBox.x = range.x + this.x;
         // this.rangeBox.y = range.y + this.y;
 
+        //if the unit is not flying unit, check gravity (flying is different from jumping) 
 
-        if (!this.flying) { //if the unit is not flying unit, check gravity (flying is different from jumping)
-            var groundCollised = false;
-            if (this.velocity.y >= 0) { //Only check for ground collision when the unit falling down or standing           
+        if (!this.flying) {
+            this.gravity = true;
+            //Only check for ground collision when the unit falling down or standing    
+            if (this.velocity.y >= 0) {
                 //Improving performace by checking if still standing on the previous platform                    
                 if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
                     this.y = this.previousPlatform.y + 10;
                     this.velocity.y = 0;
-                    groundCollised = true;
+                    this.gravity = false;
                 } else {
                     var groundCollisionBox = this.game.collisionBox.ground;
                     for (var box in groundCollisionBox) {
                         if (collise(this, groundCollisionBox[box])) {
                             this.y = groundCollisionBox[box].y + 10;
                             this.velocity.y = 0;
-                            groundCollised = true;
+                            this.gravity = false;
                             this.previousPlatform = groundCollisionBox[box];    //Save this to check again
                             break;
                         }
-                    }  
+                    }
                 }
-      
             }
-
-            this.gravity = !groundCollised;
-
-            if (!this.gravity) {     //On the ground reaction
-                //var collisionBox = this.getCollisionBox();
-                if (this.currentAction.interruptible || this.currentAction.isDone()) {
-                    var collisedEnemy = this.checkEnemyInRange();
-                    
-                    if (collisedEnemy.size > 0) {
-                        //reaction when an enemy gets in range
-                        this.rangeReact(collisedEnemy);
-                }else
-                        this.groundReact();
-                }
-
-            } else if (this.gravity)  //In the air action
-                this.airReact();
-
-        } else {    //Fyling unit
-                var collisedEnemy = this.checkEnemyInRange();
-
-                if (collisedEnemy.size > 0) 
-                    //reaction when an enemy gets in range
-                    this.rangeReact(collisedEnemy);
-                else 
-                    this.airReact();
         }
-
-        //update the current action
-
+        this.actionHandler(this);
     }
-    
+    //update the current action
     if (this.currentAction !== undefined) this.currentAction.update();
 }
 
