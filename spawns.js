@@ -27,7 +27,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var groundPoints = [{x: 50, y: 95}];
             var collisionBox = [{x: 40, y: 20, width: 50, height: 75}];
             var walk = new Action(game, unit, AM.getAsset("./img/unit/h000/walk_right.png"),
-                                    2, 0.08, 4, groundPoints, collisionBox, true);
+                                    2, 0.1, 4, groundPoints, collisionBox, true);
             walk.startEffect = function() {this.unit.velocity.x = this.unit.movementspeed};
             walk.endEffect = function() {this.unit.velocity.x = 0};
 

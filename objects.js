@@ -337,13 +337,14 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
 
     //var range = this.data.range;
     this.rangeBox = this.data.range; 
-    this.speedPercent = 1;  
+    this.speedPercent = 1;
     this.flying = this.data.flying;
     
     //Stats
     this.health = this.data.health;
     this.movementspeed = this.data.movementspeed;
     this.att = this.data.att;
+    this.def = this.data.def;
 
     this.actions = {}; //contains all actions this unit can perform (walk, stand, attack)
     this.defaultAction;
@@ -351,8 +352,9 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.currentAction;
     this.lockedTarget;  //The enemy that the unit targetting.
 
-    this.reaction = {};     //all reactions will be in here now
-    this.condition = {};
+    this.getHit = function(damage) {  //default get hit action: lose hp
+        this.health -= Math.max(damage - (this.def * damage), 1);
+    };
 }
 
 Unit.prototype = Object.create(Entity.prototype);
@@ -362,19 +364,19 @@ Unit.prototype.getCollisionBox = function() {
     return this.currentAction !== undefined ? this.currentAction.collisionBox : this;
 }
 
-/**
- * There are 4 basic collision action:
- * 1. Action when standing on the platform (Stand or walk)
- * 2. Action when in the air (flying or jump)
- * 3. Action when an enemy gets within attack range (attack)
- * 4. Action when the unit get hit (mostly nothing, some special unit might explode or jump back)
- * Pass 3 actions as callback functions. 
- * Suggestion: use changeAction
- */
-Unit.prototype.setCollisionReacts = function(reaction, callback = function() {}) {
+// /**
+//  * There are 4 basic collision action:
+//  * 1. Action when standing on the platform (Stand or walk)
+//  * 2. Action when in the air (flying or jump)
+//  * 3. Action when an enemy gets within attack range (attack)
+//  * 4. Action when the unit get hit (mostly nothing, some special unit might explode or jump back)
+//  * Pass 3 actions as callback functions. 
+//  * Suggestion: use changeAction
+//  */
+// Unit.prototype.setCollisionReacts = function(reaction, callback = function() {}) {
     
-    this.reaction[reaction] = callback;
-}
+//     this.reaction[reaction] = callback;
+// }
 
 /**
  * Change the action of unit
@@ -393,8 +395,7 @@ Unit.prototype.changeAction = function(actionName) {
 
 
 Unit.prototype.takeDamage = function(damage) {
-
-    this.health -= damage;
+    this.getHit(damage);
 }
 
 Unit.prototype.checkEnemyInRange = function() {
