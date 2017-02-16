@@ -4,7 +4,7 @@ function ScreenMover(game){
     this.myMoveAmount = 0;
     this.maxVelocity = 100;
     this.VelocityPercentage = 0.005;
-    this.game.mapX = 0;
+    //this.game.mapX = 0;
     // TODO ADJUST
     this.mapSize = 2400;
     this.screenSize = 1200;
@@ -46,7 +46,7 @@ ScreenMover.prototype.checkBoundaries = function(){
 }
 // Adjust screen speed to screen move amount
 ScreenMover.prototype.pickSpeed = function(){
-    if(this.myMoveAmount != 0){
+    if(this.myMoveAmount !== 0){
         if(Math.abs(this.moveVelocity) < this.maxVelocity){
             this.moveVelocity += this.VelocityPercentage * this.myMoveAmount;
         }
@@ -66,10 +66,11 @@ ScreenMover.prototype.doNotExceedMovement = function(){
 }
 // Move the gameboard
 ScreenMover.prototype.moveGameBoard = function(){
-    if(this.moveVelocity != 0){
+    if(this.moveVelocity !== 0){
         this.game.movedAmount = this.moveVelocity;
         this.myMoveAmount -= this.moveVelocity;
         this.x += this.moveVelocity;
+        console.log("after moving: " + this.x);
         this.game.mapX = this.x;
     } else {
         this.game.movedAmount = 0;
@@ -85,9 +86,9 @@ ScreenMover.prototype.moveScreenHere = function(percentage){
     this.myMoveAmount = targetLocation - this.x;
 }
 
-ScreenMover.prototype.rebootScreen = function(){
-    this.x = 0;
-    this.game.mapX = 0;
-    this.moveVelocity = 0;
-    this.myMoveAmount = 0;
-}
+// ScreenMover.prototype.rebootScreen = function(){
+//     this.x = 0;
+//     this.game.mapX = 0;
+//     this.moveVelocity = 0;
+//     this.myMoveAmount = 0;
+// }

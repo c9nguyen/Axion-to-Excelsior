@@ -6,13 +6,6 @@ function Battle(game)
 Battle.prototype.create = function() {
     console.log('battle created');
 
-    var screenmove = new ScreenMover(this.game);
-    this.game.addEntity(screenmove);
-    var map = new ScreenScroller(this.game, screenmove, 800, 550, 400, 50); 
-    this.game.addEntity(map);
-    var rightAndLeftKey = new ScreenMoveArrow(this.game, screenmove);
-    this.game.addEntity(rightAndLeftKey);
-
 	this.loadCharacter();
     this.buildingBackground();
     this.buildTiles();
@@ -22,16 +15,21 @@ Battle.prototype.create = function() {
     button.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
     button.addEventListener("click", function() { 
         var xSpawnLocation = globalGiveMapX(this.game, 100);
-        spawnUnit(this.game, xSpawnLocation, 400, "h000", PLAYER); })
+        spawnUnit(this.game, xSpawnLocation, 400, "h000", PLAYER); 
+    });
     this.game.addEntity(button);
+
+    var that = this;
 
     var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 600, 520);
     button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
     button2.addSheet(AM.getAsset("./img/unit/m000/card_mouseover.png"), "mouseover");
     button2.addEventListener("click", function() { 
         var xSpawnLocation = globalGiveMapX(this.game, 800);
+        console.log("maplocation: " + that.game.mapX + " spawnlocation: " + xSpawnLocation);
+        console.log("mapX: " + that.game.screenMover.x);
         spawnUnit(this.game, xSpawnLocation, 400, "m000", ENEMY); 
-    })
+    });
 
     this.game.addEntity(button2);
 
