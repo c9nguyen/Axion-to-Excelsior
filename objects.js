@@ -38,11 +38,15 @@ NonAnimatedObject.prototype.setSize = function(width, height) {
 }
 
 NonAnimatedObject.prototype.draw = function() {
+    var drawX = this.x;
+    if(this.movable){
+        drawX = this.x + this.game.mapX;
+    }
     try {
         this.ctx.drawImage(this.spritesheet,
                     this.xindex * this.frameWidth, this.yindex * this.frameHeight,  // source from sheet
                     this.frameWidth, this.frameHeight,
-                    this.x, this.y,
+                    drawX, this.y,
                     this.width * this.scale, this.height * this.scale);
     } catch (e) {
 
@@ -192,7 +196,6 @@ function Action(game, unit, spritesheet,
                         frameWidth, frameHeight,
                         sheetWidth, frameDuration, frames, cooldown === 0, 
                         scale = 1, width, height);
-    this.movable = false;
 }
 
 Action.prototype = Object.create(AnimatedObject);
@@ -473,7 +476,7 @@ Unit.prototype.update = function() {
 Unit.prototype.draw = function() {
     if(this.currentAction !== undefined)
         this.currentAction.draw();
-
+    var drawX = this.x + this.game.mapX;
     //Health bar
     var ctx = this.game.ctx;
     var healthPercent = this.health / this.data.health;
@@ -483,11 +486,11 @@ Unit.prototype.draw = function() {
     
     //For Debugging
     ctx.fillStyle = 'red';
-    ctx.fillRect(this.x, this.y, this.width, height);
+    ctx.fillRect(drawX, this.y, this.width, height);
     ctx.fillStyle = 'green';
-    ctx.fillRect(this.x, this.y, this.width * healthPercent, height);
+    ctx.fillRect(drawX, this.y, this.width * healthPercent, height);
     ctx.strokeStyle = 'black';
-    ctx.rect(this.x, this.y, this.width, height);
+    ctx.rect(drawX, this.y, this.width, height);
     ctx.stroke();
     ctx.fillStyle = 'black';
 
@@ -498,7 +501,7 @@ Unit.prototype.draw = function() {
     // var box = {};
     // var collisionBox = action.getFrameHitbox(action.currentFrame());
     // if (collisionBox !== undefined) {
-    // box.x = action.x + collisionBox.x;
+    // box.x = action.x + collisionBox.x + this.game.mapX;;
     // box.y = action.y + collisionBox.y;
     // box.width = collisionBox.width;
     // box.height = collisionBox.height;
@@ -509,7 +512,7 @@ Unit.prototype.draw = function() {
     // if (this.side === PLAYER) {
     // var rangeBox = this.rangeBox[0];
     // var box = {};
-    // box.x = this.x + rangeBox.x;
+    // box.x = this.x + rangeBox.x + this.game.mapX;;
     // box.y = this.y + rangeBox.y;
     // box.width = rangeBox.width;
     // box.height = rangeBox.height;
@@ -670,9 +673,11 @@ function Button(game, spritesheet, x, y, scale = 1) {
     this.movable = false;
 
     this.status = this.NORMAL;
-    this.normal = new NonAnimatedObject(game, spritesheet, x, y);
-    this.press = new NonAnimatedObject(game, spritesheet, x, y);
-    this.mouseover = new NonAnimatedObject(game, spritesheet, x, y);
+    var animatedObject = new NonAnimatedObject(game, spritesheet, x, y);
+    animatedObject.movable = false;
+    this.normal = animatedObject;
+    this.press = animatedObject;
+    this.mouseover = animatedObject;
 
     this.colliseBox = {x: x, y: y, width: this.normal.width, height: this.normal.height};
 
@@ -691,12 +696,15 @@ Button.prototype.addSheet = function(spritesheet, sheetType) {
         case "click":
         case "press":
             this.press = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            this.press.movable = false;
             break;
         case "mouseover":
             this.mouseover = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+           this.mouseover.movable = false;
             break;
         case "normal":
             this.normal = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            this.normal.movable = false;
             break;
     }
 }
