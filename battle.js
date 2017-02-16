@@ -40,9 +40,9 @@ Battle.prototype.create = function() {
 
     this.game.addEntity(button2);
 
-    spawnUnit(this.game, 900, 400, "m010", ENEMY);
+    spawnUnit(this.game, 900, 400, "m100", ENEMY);
 
-    spawnUnit(this.game, 100, 400, "h100", PLAYER);
+   // spawnUnit(this.game, 100, 400, "h100", PLAYER);
 
 };
 
@@ -93,7 +93,7 @@ Battle.prototype.loadCharacter = function(){
 Battle.prototype.buildTiles = function() {
 
 	var canvasHeight = this.game.ctx.canvas.clientHeight;
-	var canvasWidth = this.game.ctx.canvas.clientWidth;
+	var canvasWidth = this.game.screenMover.mapSize;
     var groundCollisionBox = this.game.collisionBox.ground;
 
     var numOfTile = Math.ceil(canvasWidth / 90) + 2;
