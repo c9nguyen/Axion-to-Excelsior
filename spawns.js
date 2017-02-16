@@ -182,9 +182,9 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var effect = function(that) {
                 castSkill(that.game, that.x + 40, that.y, that.unit, 00000, 0.25,
                         undefined, 502, 304, 0.1, true);};
-            var effect2 = function (that) {
-                castSkill(that.game, that.x, that.y, that.unit, 'h1000', 0);};
-            attack.effects[0] = effect2;
+            var effect2 = function () {
+                castSkill(this.game, this.x, this.y, this.unit, 'h1000', 0);};
+            attack.startEffect = effect2;
             attack.effects[1] = effect;
             attack.effects[2] = effect;
             attack.effects[4] = effect;
@@ -203,7 +203,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x, that.y + 105, that.unit, 00000, 1,
                         undefined, 635, 166, 0.1, true);};
             effect2 = function (that) {
-                castSkill(that.game, that.x, that.y, that.unit, 'h1001', 0);};
+                castSkill(this.game, this.x, this.y, this.unit, 'h1001', 0);};
+            attack3.startEffect = effect2;
             attack3.effects[0] = effect2;     
             attack3.effects[4] = effect;
             attack3.effects[5] = effect;
@@ -231,7 +232,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                         var collisedEnemy = that.checkEnemyInRange();
                         if (collisedEnemy.has(0) && attack3.checkCooldown()) that.changeAction("attack3");
                         else if (collisedEnemy.has(1)) that.changeAction("attack");
-                        else that.changeAction("stand");
+                        else that.changeAction("attack");
                     }
                 } else
                     that.changeAction("jump");

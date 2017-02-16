@@ -222,6 +222,7 @@ Action.prototype.start = function() {
     this.elapsedTime = 0;
     this.timeLastStart = this.game.timer.gameTime;
     this.effectCasted = new Set();
+    this.update();
     this.startEffect();
 }
 
@@ -269,14 +270,14 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         this.collisionBox.height = collisionBox.height;
     }
 
-
+    AnimatedObject.prototype.update.call(this);
     var effect = this.effects[frame]; //Callback the effect
     if (effect !== undefined && typeof effect === "function" && !this.effectCasted.has(frame)) {
         effect(this);
         this.effectCasted.add(frame);
     }
     
-    AnimatedObject.prototype.update.call(this);
+
 }
 
 /**
@@ -386,7 +387,7 @@ Unit.prototype.changeAction = function(actionName) {
     if (action !== undefined && this.currentAction !== action && action.checkCooldown()) {    //If action is defined and not performing
         if (this.currentAction !== undefined) this.currentAction.end();
         this.currentAction = action;
-        this.currentAction.update();
+ //       this.currentAction.update();
         this.currentAction.start();
     } 
         
@@ -494,23 +495,32 @@ Unit.prototype.draw = function() {
 
 
     // // collisionBox
-    //var action = this.currentAction;
+    // if (this.side === ENEMY) {
+    // var action = this.currentAction;
     // var box = {};
     // var collisionBox = action.getFrameHitbox(action.currentFrame());
+    // if (collisionBox !== undefined) {
     // box.x = action.x + collisionBox.x;
     // box.y = action.y + collisionBox.y;
     // box.width = collisionBox.width;
     // box.height = collisionBox.height;
+    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    // }
+    // }
 
+    // if (this.side === PLAYER) {
     // var rangeBox = this.rangeBox[0];
     // var box = {};
     // box.x = this.x + rangeBox.x;
     // box.y = this.y + rangeBox.y;
     // box.width = rangeBox.width;
     // box.height = rangeBox.height;
+    // this.game.ctx.strokeStyle = "red";
+    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    // }
 
     //this.game.ctx.fillRect(rangeBox.x, rangeBox.y, rangeBox.width, rangeBox.height);
-    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+
     
 }
 
