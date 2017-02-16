@@ -7,6 +7,8 @@ Generator = function(game, x, y, side, random = false) {
 Generator.prototype = Object.create(Entity.prototype);
 Generator.prototype.constructor = Generator;
 
+Generator.prototype.set
+
 Generator.prototype.update = function() {
 
 }

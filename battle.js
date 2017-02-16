@@ -10,7 +10,7 @@ Battle.prototype.create = function() {
     this.buildingBackground();
     this.buildTiles();
 
-    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50); 
+    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50);
     this.game.addEntity(map);
     var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
     this.game.addEntity(rightAndLeftKey);
@@ -40,16 +40,28 @@ Battle.prototype.create = function() {
 
     this.game.addEntity(button2);
 
+
     spawnUnit(this.game, 900, 400, "m100", ENEMY);
 
    // spawnUnit(this.game, 100, 400, "h100", PLAYER);
+
+	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
+	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
+	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
+	exit_button.addEventListener('click', function() {
+		this.game.sceneManager.startScene('mainmenu');
+	});
+	this.game.addEntity(exit_button);
+
 
 };
 
 Battle.prototype.update = function() {
 	// body...
 };
-
+Battle.prototype.shutdown = function () {
+	this.game.clearEntities();
+};
 Battle.prototype.buildingBackground = function() {
 	canvasHeight = this.game.ctx.canvas.clientHeight;
 	canvasWidth = this.game.ctx.canvas.clientWidth;
