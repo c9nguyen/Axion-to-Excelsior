@@ -23,7 +23,7 @@ function GameEngine() {
     };
     this.playerList = [];
     this.enemyList = [];
-    
+
     this.portals = [];  // will be removed
     this.food = []; // will be removed
     this.ctx = null;
@@ -86,7 +86,7 @@ GameEngine.prototype.startInput = function () {
 
     this.ctx.canvas.addEventListener("mousedown", function (e) {
         if (e.which === 1)
-            that.mouse.pressed = true; 
+            that.mouse.pressed = true;
     }, false);
 
     this.ctx.canvas.addEventListener("click", function (e) {
@@ -190,6 +190,9 @@ GameEngine.prototype.loop = function () {
     this.update();
     this.draw();
 }
+GameEngine.prototype.clearEntities = function () {
+  this.sceneManager.clearEntities();
+};
 
 function Timer() {
     this.gameTime = 0;
@@ -286,6 +289,6 @@ function collise(box1, box2) {
     return (box1.x < box2.x + box2.width &&
             box1.x + box1.width > box2.x &&
             box1.y < box2.y + box2.height &&
-            box1.height + box1.y > box2.y) 
+            box1.height + box1.y > box2.y)
 }
 
