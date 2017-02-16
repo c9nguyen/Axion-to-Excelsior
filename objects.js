@@ -352,8 +352,8 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.currentAction;
     this.lockedTarget;  //The enemy that the unit targetting.
 
-    this.getHit = function(damage) {  //default get hit action: lose hp
-        this.health -= Math.max(damage - (this.def * damage), 1);
+    this.getHit = function(that, damage) {  //default get hit action: lose hp
+        that.health -= Math.max(damage - (that.def * damage), 1);
     };
 }
 
@@ -386,8 +386,8 @@ Unit.prototype.changeAction = function(actionName) {
     if (action !== undefined && this.currentAction !== action && action.checkCooldown()) {    //If action is defined and not performing
         if (this.currentAction !== undefined) this.currentAction.end();
         this.currentAction = action;
-        this.currentAction.start();
         this.currentAction.update();
+        this.currentAction.start();
     } 
         
 }
@@ -395,7 +395,7 @@ Unit.prototype.changeAction = function(actionName) {
 
 
 Unit.prototype.takeDamage = function(damage) {
-    this.getHit(damage);
+    this.getHit(this, damage);
 }
 
 Unit.prototype.checkEnemyInRange = function() {
@@ -579,7 +579,9 @@ Effect.prototype.update = function() {//Updating the coordinate for the unit in 
         }
   
     } 
-    if (!this.hit) {  //If this effect already hit the opponent, skip below statements
+    //If this effect already hit the opponent, skip below statements
+    //Or no action
+    if (!this.hit || this.collisingAction !== undefined ) {  
         var frame = this.currentFrame();
         //Updating collisionBox
         var collisionBox = this.getFrameHitbox(frame);

@@ -30,6 +30,7 @@ AM.queueDownload("./img/unit/h001/stand.png");
 AM.queueDownload("./img/unit/h001/walk.png");
 AM.queueDownload("./img/unit/h001/jump.png");
 AM.queueDownload("./img/unit/h001/attack.png");
+AM.queueDownload("./img/unit/h001/skill.png");
 AM.queueDownload("./img/unit/h001/die.png");
 
 AM.queueDownload("./img/unit/h100/stand.png");

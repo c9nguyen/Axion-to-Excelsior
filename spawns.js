@@ -111,20 +111,18 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             attack.effects[4] = effect;
             attack.effects[5] = effect;
 
-            // groundPoints = [{x: 55, y: 120}];
-            // groundPoints[2] = {x: 55, y: 150};
-            // groundPoints[3] = {x: 55, y: 120};
-            // collisionBox = [{x: 20, y: 20, width: 60, height: 70}];
-            // var attack2 = new Action(game, unit, AM.getAsset("./img/unit/h000/jumpattack_right.png"),
-            //                         4, 0.2, 4, groundPoints, collisionBox, false, 5);
-            // attack2.addEffect (2, function (that) {
-            //     var minus = that.unit.lockedTarget.velocity.x;
-            //     that.unit.velocity.x = 900 + (minus * 2);
-            // });
-            // attack2.addEffect (3, function (that) {
-            //     that.unit.velocity.x = 0;
-            //     castSkill(that.game, that.x + 34, that.y + 13, that.unit, 00002, 1.5);
-            // });
+            groundPoints = [{x: 5, y: 67}];
+            collisionBox = [{x: 5, y: 0, width: 40, height: 67}];
+            var skill = new Action(game, unit, AM.getAsset("./img/unit/h001/skill.png"),
+                                    1, 0.2, 1, groundPoints, collisionBox, false, 10);
+            skill.startEffect = function () {
+                castSkill(this.game, this.x, this.y, this.unit, 00010, 0);
+                this.unit.x = this.unit.x - 100;
+                this.unit.velocity.x = -100;
+            };
+            skill.endEffect = function () {
+                this.unit.velocity.x = 0;
+            };
 
             groundPoints = [{x: 60, y: 108}];
             var die = new Action(game, unit, AM.getAsset("./img/unit/h001/die.png"),
@@ -135,7 +133,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             unit.actions["walk"] = walk;
             unit.actions["jump"] = jump;
             unit.actions["attack"] = attack;
- //           unit.actions["attack2"] = attack2;
+            unit.actions["skill"] = skill;
             unit.actions["die"] = die;
             unit.defaultAction = walk;
             unit.actionHandler = function(that) {
@@ -143,11 +141,16 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                     if (that.currentAction.interruptible || that.currentAction.isDone()) {
                         var collisedEnemy = that.checkEnemyInRange();
                         if (collisedEnemy.has(0)) that.changeAction("attack");
-   //                     else if (collisedEnemy.has(1) && attack2.checkCooldown()) that.changeAction("attack2");
                         else that.changeAction("walk");
                     }
                 } else
                     that.changeAction("jump");
+            }
+            unit.getHit = function (that, damage) {
+                if (unit.actions.skill.checkCooldown()) {
+                    that.changeAction("skill");
+                } else
+                    that.health -= Math.max(damage - (that.def * damage), 1);
             }
             break;
 
