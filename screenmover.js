@@ -67,10 +67,11 @@ ScreenMover.prototype.doNotExceedMovement = function(){
 // Move the gameboard
 ScreenMover.prototype.moveGameBoard = function(){
     if(this.moveVelocity !== 0){
-        this.game.movedAmount = this.moveVelocity;
+        //DEPRECATED
+        // this.game.movedAmount = this.moveVelocity;
         this.myMoveAmount -= this.moveVelocity;
         this.x += this.moveVelocity;
-        console.log("after moving: " + this.x);
+
         this.game.mapX = this.x;
     } else {
         this.game.movedAmount = 0;

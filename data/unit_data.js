@@ -31,7 +31,7 @@ var unitData = {
     h100: {
         groundWidth: 50,
         groundHeight: 10,
-        health: 2000,
+        health: 1,
         movementspeed: 130,
         att: 20,
         def: 0.15,

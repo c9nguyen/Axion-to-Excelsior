@@ -30,7 +30,8 @@ function GameEngine() {
     this.surfaceWidth = null;
     this.surfaceHeight = null;
 
-    this.movedAmount = 0;
+    //DEPRECATED
+    // this.movedAmount = 0;
     this.mapX = 0;
 
     this.right = null;
@@ -234,9 +235,10 @@ Entity.prototype.update = function () {
     // if (this.side === ENEMY) {
     //     console.log(this.velocity.y);
     // }
-    if(this.movable){
-        this.x += this.game.movedAmount;
-    }
+    //DEPRECATED
+    // if(this.movable){
+    //     this.x += this.game.movedAmount;
+    // }
 
     if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
     this.y += this.game.clockTick * this.velocity.y;
@@ -253,6 +255,7 @@ Entity.prototype.update = function () {
 }
 
 Entity.prototype.draw = function (ctx) {
+
     if (this.game.showOutlines && this.radius) {
         this.game.ctx.beginPath();
         this.game.ctx.strokeStyle = "green";
@@ -289,11 +292,3 @@ function collise(box1, box2) {
             box1.height + box1.y > box2.y)
 }
 
-/**
- * Calculate the x cordinate relative to map.
- * Given a map x value.
- * Returns correct position to spawn a unit.
- */
-function globalGiveMapX(game, x){
-    return x + game.mapX;
-}
