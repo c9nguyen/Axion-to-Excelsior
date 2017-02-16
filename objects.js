@@ -38,11 +38,15 @@ NonAnimatedObject.prototype.setSize = function(width, height) {
 }
 
 NonAnimatedObject.prototype.draw = function() {
+    var drawX = this.x;
+    if(this.movable){
+        drawX = this.x + this.game.mapX;
+    }
     try {
         this.ctx.drawImage(this.spritesheet,
                     this.xindex * this.frameWidth, this.yindex * this.frameHeight,  // source from sheet
                     this.frameWidth, this.frameHeight,
-                    this.x, this.y,
+                    drawX, this.y,
                     this.width * this.scale, this.height * this.scale);
     } catch (e) {
 
@@ -192,7 +196,6 @@ function Action(game, unit, spritesheet,
                         frameWidth, frameHeight,
                         sheetWidth, frameDuration, frames, cooldown === 0, 
                         scale = 1, width, height);
-    this.movable = false;
 }
 
 Action.prototype = Object.create(AnimatedObject);
@@ -222,7 +225,6 @@ Action.prototype.start = function() {
     this.elapsedTime = 0;
     this.timeLastStart = this.game.timer.gameTime;
     this.effectCasted = new Set();
-    this.startEffect();
 }
 
 /**
@@ -246,9 +248,9 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         this.effectCasted = new Set();
         if (!this.checkCooldown() || !this.loop) {
             this.end();
-            this.unit.currentAction = this.unit.defaultAction;
-            this.unit.currentAction.start();
-            this.unit.currentAction.update();
+            // this.unit.currentAction = this.unit.defaultAction;
+            // this.unit.currentAction.start();
+            // this.unit.currentAction.update();
             return;
          }
     }
@@ -275,8 +277,8 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         effect(this);
         this.effectCasted.add(frame);
     }
-    
     AnimatedObject.prototype.update.call(this);
+
 }
 
 /**
@@ -352,8 +354,8 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.currentAction;
     this.lockedTarget;  //The enemy that the unit targetting.
 
-    this.getHit = function(damage) {  //default get hit action: lose hp
-        this.health -= Math.max(damage - (this.def * damage), 1);
+    this.getHit = function(that, damage) {  //default get hit action: lose hp
+        that.health -= Math.max(damage - (that.def * damage), 1);
     };
 }
 
@@ -386,8 +388,8 @@ Unit.prototype.changeAction = function(actionName) {
     if (action !== undefined && this.currentAction !== action && action.checkCooldown()) {    //If action is defined and not performing
         if (this.currentAction !== undefined) this.currentAction.end();
         this.currentAction = action;
+ //       this.currentAction.update();
         this.currentAction.start();
-        this.currentAction.update();
     } 
         
 }
@@ -395,7 +397,7 @@ Unit.prototype.changeAction = function(actionName) {
 
 
 Unit.prototype.takeDamage = function(damage) {
-    this.getHit(damage);
+    this.getHit(this, damage);
 }
 
 Unit.prototype.checkEnemyInRange = function() {
@@ -474,7 +476,7 @@ Unit.prototype.update = function() {
 Unit.prototype.draw = function() {
     if(this.currentAction !== undefined)
         this.currentAction.draw();
-
+    var drawX = this.x + this.game.mapX;
     //Health bar
     var ctx = this.game.ctx;
     var healthPercent = this.health / this.data.health;
@@ -484,33 +486,42 @@ Unit.prototype.draw = function() {
     
     //For Debugging
     ctx.fillStyle = 'red';
-    ctx.fillRect(this.x, this.y, this.width, height);
+    ctx.fillRect(drawX, this.y, this.width, height);
     ctx.fillStyle = 'green';
-    ctx.fillRect(this.x, this.y, this.width * healthPercent, height);
+    ctx.fillRect(drawX, this.y, this.width * healthPercent, height);
     ctx.strokeStyle = 'black';
-    ctx.rect(this.x, this.y, this.width, height);
+    ctx.rect(drawX, this.y, this.width, height);
     ctx.stroke();
     ctx.fillStyle = 'black';
 
 
     // // collisionBox
-    //var action = this.currentAction;
+    // if (this.side === ENEMY) {
+    // var action = this.currentAction;
     // var box = {};
     // var collisionBox = action.getFrameHitbox(action.currentFrame());
-    // box.x = action.x + collisionBox.x;
+    // if (collisionBox !== undefined) {
+    // box.x = action.x + collisionBox.x + this.game.mapX;;
     // box.y = action.y + collisionBox.y;
     // box.width = collisionBox.width;
     // box.height = collisionBox.height;
+    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    // }
+    // }
 
+    // if (this.side === PLAYER) {
     // var rangeBox = this.rangeBox[0];
     // var box = {};
-    // box.x = this.x + rangeBox.x;
+    // box.x = this.x + rangeBox.x + this.game.mapX;;
     // box.y = this.y + rangeBox.y;
     // box.width = rangeBox.width;
     // box.height = rangeBox.height;
+    // this.game.ctx.strokeStyle = "red";
+    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    // }
 
     //this.game.ctx.fillRect(rangeBox.x, rangeBox.y, rangeBox.width, rangeBox.height);
-    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+
     
 }
 
@@ -579,7 +590,9 @@ Effect.prototype.update = function() {//Updating the coordinate for the unit in 
         }
   
     } 
-    if (!this.hit) {  //If this effect already hit the opponent, skip below statements
+    //If this effect already hit the opponent, skip below statements
+    //Or no action
+    if (!this.hit && this.collisingAction !== undefined ) {  
         var frame = this.currentFrame();
         //Updating collisionBox
         var collisionBox = this.getFrameHitbox(frame);
@@ -627,7 +640,7 @@ Effect.prototype.getFrameHitbox = function(frame) {
 }
 
 Effect.prototype.draw = function() {
-    if (this.spritesheet != undefined)
+    if (this.spritesheet !== undefined)
         AnimatedObject.prototype.draw.call(this);
 
 //For testing skill hit box
@@ -660,15 +673,19 @@ function Button(game, spritesheet, x, y, scale = 1) {
     this.movable = false;
 
     this.status = this.NORMAL;
-    this.normal = new NonAnimatedObject(game, spritesheet, x, y);
-    this.press = new NonAnimatedObject(game, spritesheet, x, y);
-    this.mouseover = new NonAnimatedObject(game, spritesheet, x, y);
+    var animatedObject = new NonAnimatedObject(game, spritesheet, x, y);
+    animatedObject.movable = false;
+    this.normal = animatedObject;
+    this.press = animatedObject;
+    this.mouseover = animatedObject;
 
     this.colliseBox = {x: x, y: y, width: this.normal.width, height: this.normal.height};
 
     this.clickAction = function() {};
     this.pressAction = function() {};
     this.mouseoverAction = function() {};
+    // SOUND
+    this.spawnSound = new SoundPlayer("./sound/effects/smb_stomp.wav");
 }
 
 Button.prototype = Object.create (Entity.prototype);
@@ -679,12 +696,15 @@ Button.prototype.addSheet = function(spritesheet, sheetType) {
         case "click":
         case "press":
             this.press = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            this.press.movable = false;
             break;
         case "mouseover":
             this.mouseover = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+           this.mouseover.movable = false;
             break;
         case "normal":
             this.normal = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            this.normal.movable = false;
             break;
     }
 }
@@ -717,6 +737,8 @@ Button.prototype.update = function() {
     if (collise(this.colliseBox, this.game.mouse)) {
         if (this.game.mouse.click) {      
             this.clickAction(this);
+            // SOUND
+            this.spawnSound.play();
             this.game.mouse.click = false;
         } else if (this.game.mouse.pressed) {
             this.status = this.PRESS;

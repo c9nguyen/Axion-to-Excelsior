@@ -6,50 +6,58 @@ function Battle(game)
 Battle.prototype.create = function() {
     console.log('battle created');
 
-    var screenmove = new ScreenMover(this.game);
-    this.game.addEntity(screenmove);
-    var map = new ScreenScroller(this.game, screenmove, 800, 550, 400, 50); 
-    this.game.addEntity(map);
-    var rightAndLeftKey = new ScreenMoveArrow(this.game, screenmove);
-    this.game.addEntity(rightAndLeftKey);
-
 	this.loadCharacter();
     this.buildingBackground();
     this.buildTiles();
 
+    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50);
+    this.game.addEntity(map);
+    var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
+    this.game.addEntity(rightAndLeftKey);
+    var testSound = new SoundPlayer("./sound/themes/mappedstoryMainTheme.mp3");
+    //var testSound = new SoundPlayer("./sound/themes/101-dearly-beloved.mp3");
+    testSound.loopEnable();
+    testSound.play();
+
     var button = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 200, 520);
     button.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
     button.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
-    button.addEventListener("click", function() { 
-        var xSpawnLocation = globalGiveMapX(this.game, 100);
-        spawnUnit(this.game, xSpawnLocation, 400, "h000", PLAYER); })
+    button.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h000", PLAYER); });
     this.game.addEntity(button);
+
+    var that = this;
+
+    var button3 = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 300, 520);
+    button3.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
+    button3.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
+    button3.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h001", PLAYER); });
+    this.game.addEntity(button3);
 
     var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 600, 520);
     button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
     button2.addSheet(AM.getAsset("./img/unit/m000/card_mouseover.png"), "mouseover");
-    button2.addEventListener("click", function() { 
-        var xSpawnLocation = globalGiveMapX(this.game, 800);
-        spawnUnit(this.game, xSpawnLocation, 400, "m000", ENEMY); 
-    })
+    button2.addEventListener("click", function() { spawnUnit(this.game, 800, 400, "m000", ENEMY); });
 
     this.game.addEntity(button2);
 
     spawnUnit(this.game, 900, 400, "m010", ENEMY);
-
-    spawnUnit(this.game, 100, 400, "h100", PLAYER);
-
-    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50); 
-    this.game.addEntity(map);
-    var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
-    this.game.addEntity(rightAndLeftKey);
+		spawnUnit(this.game, 100, 400, "h100", PLAYER);
+		var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
+		// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
+		// exit_button.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
+		exit_button.addEventListener('click', function() {
+			this.game.sceneManager.startScene('mainmenu');
+		});
+		this.game.addEntity(exit_button);
 
 };
 
 Battle.prototype.update = function() {
 	// body...
 };
-
+Battle.prototype.shutdown = function () {
+	this.game.clearEntities();
+};
 Battle.prototype.buildingBackground = function() {
 	canvasHeight = this.game.ctx.canvas.clientHeight;
 	canvasWidth = this.game.ctx.canvas.clientWidth;

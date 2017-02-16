@@ -23,6 +23,16 @@ AM.queueDownload("./img/unit/h000/stab_right.png");
 AM.queueDownload("./img/unit/h000/jumpattack_right.png");
 AM.queueDownload("./img/unit/h000/die_right.png");
 
+// AM.queueDownload("./img/unit/h001/card.png");
+// AM.queueDownload("./img/unit/h001/card_mouseover.png");
+// AM.queueDownload("./img/unit/h001/card_click.png");
+AM.queueDownload("./img/unit/h001/stand.png");
+AM.queueDownload("./img/unit/h001/walk.png");
+AM.queueDownload("./img/unit/h001/jump.png");
+AM.queueDownload("./img/unit/h001/attack.png");
+AM.queueDownload("./img/unit/h001/skill.png");
+AM.queueDownload("./img/unit/h001/die.png");
+
 AM.queueDownload("./img/unit/h100/stand.png");
 AM.queueDownload("./img/unit/h100/walk.png");
 AM.queueDownload("./img/unit/h100/jump.png");
@@ -59,8 +69,28 @@ AM.queueDownload("./img/ui/start_button_disable.png");
 AM.queueDownload("./img/ui/start_button_pressed.png");
 AM.queueDownload("./img/ui/start_button_mouseover.png");
 
+AM.queueDownload("./img/ui/cards_button.png");
+AM.queueDownload("./img/ui/cards_pressbutton.png");
+AM.queueDownload("./img/ui/cards_hoverbutton.png");
+
+AM.queueDownload("./img/ui/settings_button.png");
+AM.queueDownload("./img/ui/settings_pressbutton.png");
+AM.queueDownload("./img/ui/settings_hoverbutton.png");
+
+AM.queueDownload("./img/ui/maps_button.png");
+AM.queueDownload("./img/ui/maps_pressbutton.png");
+AM.queueDownload("./img/ui/maps_hoverbutton.png");
+
+AM.queueDownload("./img/ui/shop_button.png");
+AM.queueDownload("./img/ui/shop_pressbutton.png");
+AM.queueDownload("./img/ui/shop_hoverbutton.png");
+
+AM.queueDownload("./img/ui/exit_button.png");
+
 AM.queueDownload("./img/effect/00000/stab.png");
 AM.queueDownload("./img/effect/00000/9.swingP1.2_0.png");
+AM.queueDownload("./img/effect/00001/shuriken.png");
+AM.queueDownload("./img/effect/00002/dummy.png");
 
 
 AM.downloadAll(function () {
@@ -68,17 +98,11 @@ AM.downloadAll(function () {
     var ctx = canvas.getContext("2d");
     var gameEngine = new GameEngine();
     gameEngine.init(ctx);
+    gameEngine.sceneManager.addScene('mainmenu',MainMenu);
     gameEngine.sceneManager.addScene('battle',Battle);
     gameEngine.start();
 
-    
-    gameEngine.sceneManager.startScene('battle');
-    
+    gameEngine.sceneManager.startScene('mainmenu');
+
 
 });
-
-
-
-
-
-

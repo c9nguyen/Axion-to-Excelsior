@@ -23,14 +23,15 @@ function GameEngine() {
     };
     this.playerList = [];
     this.enemyList = [];
-    
+
     this.portals = [];  // will be removed
     this.food = []; // will be removed
     this.ctx = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
 
-    this.movedAmount = 0;
+    //DEPRECATED
+    // this.movedAmount = 0;
     this.mapX = 0;
 
     this.right = null;
@@ -85,7 +86,7 @@ GameEngine.prototype.startInput = function () {
 
     this.ctx.canvas.addEventListener("mousedown", function (e) {
         if (e.which === 1)
-            that.mouse.pressed = true; 
+            that.mouse.pressed = true;
     }, false);
 
     this.ctx.canvas.addEventListener("click", function (e) {
@@ -189,6 +190,9 @@ GameEngine.prototype.loop = function () {
     this.update();
     this.draw();
 }
+GameEngine.prototype.clearEntities = function () {
+  this.sceneManager.clearEntities();
+};
 
 function Timer() {
     this.gameTime = 0;
@@ -231,9 +235,10 @@ Entity.prototype.update = function () {
     // if (this.side === ENEMY) {
     //     console.log(this.velocity.y);
     // }
-    if(this.movable){
-        this.x += this.game.movedAmount;
-    }
+    //DEPRECATED
+    // if(this.movable){
+    //     this.x += this.game.movedAmount;
+    // }
 
     if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
     this.y += this.game.clockTick * this.velocity.y;
@@ -250,6 +255,7 @@ Entity.prototype.update = function () {
 }
 
 Entity.prototype.draw = function (ctx) {
+
     if (this.game.showOutlines && this.radius) {
         this.game.ctx.beginPath();
         this.game.ctx.strokeStyle = "green";
@@ -283,14 +289,6 @@ function collise(box1, box2) {
     return (box1.x < box2.x + box2.width &&
             box1.x + box1.width > box2.x &&
             box1.y < box2.y + box2.height &&
-            box1.height + box1.y > box2.y) 
+            box1.height + box1.y > box2.y)
 }
 
-/**
- * Calculate the x cordinate relative to map.
- * Given a map x value.
- * Returns correct position to spawn a unit.
- */
-function globalGiveMapX(game, x){
-    return x + game.mapX;
-}

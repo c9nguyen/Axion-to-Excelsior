@@ -1,13 +1,14 @@
 function ScreenMover(game){
     Entity.call(this, game, 0, 0); 
     this.moveVelocity = 0;
-    this.moveAmount = 0;
+    this.myMoveAmount = 0;
     this.maxVelocity = 100;
     this.VelocityPercentage = 0.005;
-    this.game.mapX = 0;
+    //this.game.mapX = 0;
     // TODO ADJUST
     this.mapSize = 2400;
     this.screenSize = 1200;
+
 }
 
 ScreenMover.prototype = Object.create (Entity.prototype);
@@ -32,17 +33,22 @@ ScreenMover.prototype.draw = function(){
 // ---------------------------------- FOUR BIG METHODS ------------------------------------//
 // Check the move amount to not pass the boundaries of the screen
 ScreenMover.prototype.checkBoundaries = function(){
-    if(this.moveAmount + this.x < this.screenSize - this.mapSize){
-        this.moveAmount = this.screenSize - this.mapSize - this.x;
-    } else if (this.moveAmount + this.x > 0){
-        this.moveAmount = 0 - this.x;
+    if(this.myMoveAmount + this.x < this.screenSize - this.mapSize){
+        this.myMoveAmount = this.screenSize - this.mapSize - this.x;
+    } else if (this.myMoveAmount + this.x > 0){
+        this.myMoveAmount = 0 - this.x;
+    }
+    // Make sure momentum does not glitch outside of map
+    if((this.myMoveAmount > 0 && this.moveVelocity < 0) 
+        || (this.myMoveAmount < 0 && this.moveVelocity > 0)){
+        this.moveVelocity = 0;
     }
 }
 // Adjust screen speed to screen move amount
 ScreenMover.prototype.pickSpeed = function(){
-    if(this.moveAmount != 0){
+    if(this.myMoveAmount !== 0){
         if(Math.abs(this.moveVelocity) < this.maxVelocity){
-            this.moveVelocity += this.VelocityPercentage * this.moveAmount;
+            this.moveVelocity += this.VelocityPercentage * this.myMoveAmount;
         }
     } else {
         this.moveVelocity = 0;
@@ -50,20 +56,22 @@ ScreenMover.prototype.pickSpeed = function(){
 }
 // Cap speed so you don't move pass the move requested
 ScreenMover.prototype.doNotExceedMovement = function(){
-    if(this.moveAmount > 0 && this.moveVelocity > 0
-                    && this.moveAmount < this.moveVelocity){
-        this.moveVelocity = this.moveAmount;
-    } else if(this.moveAmount < 0 && this.moveVelocity < 0
-                && this.moveAmount > this.moveVelocity) {
-        this.moveVelocity = this.moveAmount;
+    if(this.myMoveAmount > 0 && this.moveVelocity > 0
+                    && this.myMoveAmount < this.moveVelocity){
+        this.moveVelocity = this.myMoveAmount;
+    } else if(this.myMoveAmount < 0 && this.moveVelocity < 0
+                && this.myMoveAmount > this.moveVelocity) {
+        this.moveVelocity = this.myMoveAmount;
     }
 }
 // Move the gameboard
 ScreenMover.prototype.moveGameBoard = function(){
-    if(this.moveVelocity != 0){
-        this.game.movedAmount = this.moveVelocity;
-        this.moveAmount -= this.moveVelocity;
+    if(this.moveVelocity !== 0){
+        //DEPRECATED
+        // this.game.movedAmount = this.moveVelocity;
+        this.myMoveAmount -= this.moveVelocity;
         this.x += this.moveVelocity;
+
         this.game.mapX = this.x;
     } else {
         this.game.movedAmount = 0;
@@ -76,12 +84,12 @@ ScreenMover.prototype.moveScreenHere = function(percentage){
         targetLocation = percentage / 100.0 * (this.mapSize - this.screenSize);
         targetLocation = targetLocation * -1;
     }
-    this.moveAmount = targetLocation - this.x;
+    this.myMoveAmount = targetLocation - this.x;
 }
 
-ScreenMover.prototype.rebootScreen = function(){
-    this.x = 0;
-    this.game.mapX = 0;
-    this.moveVelocity = 0;
-    this.moveAmount = 0;
-}
+// ScreenMover.prototype.rebootScreen = function(){
+//     this.x = 0;
+//     this.game.mapX = 0;
+//     this.moveVelocity = 0;
+//     this.myMoveAmount = 0;
+// }
