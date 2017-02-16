@@ -27,7 +27,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var groundPoints = [{x: 50, y: 95}];
             var collisionBox = [{x: 40, y: 20, width: 50, height: 75}];
             var walk = new Action(game, unit, AM.getAsset("./img/unit/h000/walk_right.png"),
-                                    2, 0.08, 4, groundPoints, collisionBox, true);
+                                    2, 0.1, 4, groundPoints, collisionBox, true);
             walk.startEffect = function() {this.unit.velocity.x = this.unit.movementspeed};
             walk.endEffect = function() {this.unit.velocity.x = 0};
 
@@ -73,14 +73,17 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             unit.actions["attack2"] = attack2;
             unit.actions["die"] = die;
             unit.defaultAction = walk;
-            unit.setCollisionReacts(function() { this.changeAction("walk"); }, 
-                                    function() { this.changeAction("jump"); }, 
-                                    function(enemy) {
-                                        if (enemy.has(0))
-                                            this.changeAction("attack");
-                                        else if (enemy.has(1) && unit.actions["attack2"].checkCooldown())
-                                            this.changeAction("attack2");
-                                        else this.groundReact(); });
+            unit.actionHandler = function(that) {
+                if (!that.gravity) {
+                    if (that.currentAction.interruptible || that.currentAction.isDone()) {
+                        var collisedEnemy = that.checkEnemyInRange();
+                        if (collisedEnemy.has(0)) that.changeAction("attack");
+                        else if (collisedEnemy.has(1) && attack2.checkCooldown()) that.changeAction("attack2");
+                        else that.changeAction("walk");
+                    }
+                } else
+                    that.changeAction("jump");
+            }
             break;
         
         case "h100":
@@ -154,14 +157,17 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             unit.actions["attack3"] = attack3;
             unit.actions["die"] = die;
             unit.defaultAction = stand;
-            unit.setCollisionReacts(function() { this.changeAction("stand");}, 
-                                    function() { this.changeAction("jump");}, 
-                                    function(enemy) { 
-                                        if (enemy.has(0) && unit.actions["attack3"].checkCooldown())
-                                            this.changeAction("attack3");
-                                        else if (enemy.has(1))
-                                            this.changeAction("attack");
-                                        else this.groundReact(); });
+            unit.actionHandler = function(that) {
+                if (!that.gravity) {
+                    if (that.currentAction.interruptible || that.currentAction.isDone()) {
+                        var collisedEnemy = that.checkEnemyInRange();
+                        if (collisedEnemy.has(0) && attack3.checkCooldown()) that.changeAction("attack3");
+                        else if (collisedEnemy.has(1)) that.changeAction("attack");
+                        else that.changeAction("stand");
+                    }
+                } else
+                    that.changeAction("jump");
+            }
             break;
 
         case "m000":
@@ -169,7 +175,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var groundPoints = [{x: 50, y: 105}];
             var collisionBox = [{x: 50, y: 20, width: 70, height: 85}];
             var walk = new Action(game, unit, AM.getAsset("./img/unit/m000/walk_left.png"),
-                                    2, 0.1, 4, groundPoints, collisionBox, true);
+                                    2, 0.13, 4, groundPoints, collisionBox, true);
             walk.startEffect = function() {this.unit.velocity.x = this.unit.movementspeed};
             walk.endEffect = function() {this.unit.velocity.x = 0};
                     
@@ -206,9 +212,16 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             unit.actions["attack"] = attack;
             unit.actions["die"] = die;
             unit.defaultAction = walk;
-            unit.setCollisionReacts(function() { this.changeAction("walk");}, 
-                                    function() { this.changeAction("jump");}, 
-                                    function() { this.changeAction("attack"); });
+            unit.actionHandler = function(that) {
+                if (!that.gravity) {
+                    if (that.currentAction.interruptible || that.currentAction.isDone()) {
+                        var collisedEnemy = that.checkEnemyInRange();
+                        if (collisedEnemy.has(0)) that.changeAction("attack");
+                        else that.changeAction("walk");
+                    }
+                } else
+                    that.changeAction("jump");
+            }
             break;
         
         case "m010":
@@ -257,9 +270,16 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             unit.actions["die"] = die;
             unit.actions["stand"] = stand;
             unit.defaultAction = walk;
-            unit.setCollisionReacts(function() { this.changeAction("stand");}, 
-                                    function() { this.changeAction("jump");}, 
-                                    function() { this.changeAction("attack"); });
+            unit.actionHandler = function(that) {
+                if (!that.gravity) {
+                    if (that.currentAction.interruptible || that.currentAction.isDone()) {
+                        var collisedEnemy = that.checkEnemyInRange();
+                        if (collisedEnemy.has(0)) that.changeAction("attack");
+                        else that.changeAction("stand");
+                    }
+                } else
+                    that.changeAction("jump");
+            }
             break;
     }
 
