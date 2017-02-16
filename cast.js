@@ -84,7 +84,6 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
 
     if (skill !== undefined) {
         game.addEntity(skill);
-        skill.update();
     } 
     else console.log("Wrong skillcode");
     return skill;

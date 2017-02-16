@@ -70,7 +70,7 @@ ScreenMover.prototype.moveGameBoard = function(){
         this.game.movedAmount = this.moveVelocity;
         this.myMoveAmount -= this.moveVelocity;
         this.x += this.moveVelocity;
-        console.log("after moving: " + this.x);
+
         this.game.mapX = this.x;
     } else {
         this.game.movedAmount = 0;

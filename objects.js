@@ -222,8 +222,6 @@ Action.prototype.start = function() {
     this.elapsedTime = 0;
     this.timeLastStart = this.game.timer.gameTime;
     this.effectCasted = new Set();
-    this.update();
-    this.startEffect();
 }
 
 /**
@@ -270,13 +268,13 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         this.collisionBox.height = collisionBox.height;
     }
 
-    AnimatedObject.prototype.update.call(this);
+
     var effect = this.effects[frame]; //Callback the effect
     if (effect !== undefined && typeof effect === "function" && !this.effectCasted.has(frame)) {
         effect(this);
         this.effectCasted.add(frame);
     }
-    
+    AnimatedObject.prototype.update.call(this);
 
 }
 
