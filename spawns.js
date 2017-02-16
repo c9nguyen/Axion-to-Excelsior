@@ -198,14 +198,13 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 284, y: 254}];
             collisionBox = [{x: 280, y: 190, width: 55, height: 75}];
             var attack3 = new Action(game, unit, AM.getAsset("./img/unit/h100/attack3.png"),
-                                    13, 0.1, 13, groundPoints, collisionBox, false, 5);
+                                    13, 0.1, 13, groundPoints, collisionBox, false);
             effect = function(that) {
                 castSkill(that.game, that.x, that.y + 105, that.unit, 00000, 1,
                         undefined, 635, 166, 0.1, true);};
             effect2 = function (that) {
                 castSkill(this.game, this.x, this.y, this.unit, 'h1001', 0);};
-            attack3.startEffect = effect2;
-            attack3.effects[0] = effect2;     
+            attack3.startEffect = effect2;    
             attack3.effects[4] = effect;
             attack3.effects[5] = effect;
             attack3.effects[6] = effect;

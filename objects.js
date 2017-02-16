@@ -639,7 +639,7 @@ Effect.prototype.getFrameHitbox = function(frame) {
 }
 
 Effect.prototype.draw = function() {
-    if (this.spritesheet != undefined)
+    if (this.spritesheet !== undefined)
         AnimatedObject.prototype.draw.call(this);
 
 //For testing skill hit box
