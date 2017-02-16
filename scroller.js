@@ -39,7 +39,6 @@ ScreenScroller.prototype.draw = function(){
 }
 
 ScreenScroller.prototype.update = function(){
-    var moved = 0;
     if(collise(this.colliseBox, this.game.mouse)){
         if (this.game.mouse.click) {
             console.log("Clicked  x: " + (this.game.mouse.x - this.x) + " y: " + (this.game.mouse.y - this.y));
@@ -84,14 +83,14 @@ ScreenMoveArrow.prototype.update = function(){
     //Entity.prototype.update.call(this);
     if(this.game.right.press){
         //console.log("right");
-        this.screenmove.moveAmount -= this.jump;
+        this.screenmove.myMoveAmount -= this.jump;
         //this.game.right.press = false;
     } else if(this.game.left.press){
         //console.log("left");
-        this.screenmove.moveAmount += this.jump;
+        this.screenmove.myMoveAmount += this.jump;
         //this.game.left.press = false;
     } else if(this.game.right.stopIm || this.game.left.stopIm){
-        this.screenmove.moveAmount = 0;
+        this.screenmove.myMoveAmount = 0;
         this.game.right.stopIm = false;
         this.game.left.stopIm = false;
     }
