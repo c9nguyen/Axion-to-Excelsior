@@ -59,6 +59,24 @@ AM.queueDownload("./img/ui/start_button_disable.png");
 AM.queueDownload("./img/ui/start_button_pressed.png");
 AM.queueDownload("./img/ui/start_button_mouseover.png");
 
+AM.queueDownload("./img/ui/cards_button.png");
+AM.queueDownload("./img/ui/cards_pressbutton.png");
+AM.queueDownload("./img/ui/cards_hoverbutton.png");
+
+AM.queueDownload("./img/ui/settings_button.png");
+AM.queueDownload("./img/ui/settings_pressbutton.png");
+AM.queueDownload("./img/ui/settings_hoverbutton.png");
+
+AM.queueDownload("./img/ui/maps_button.png");
+AM.queueDownload("./img/ui/maps_pressbutton.png");
+AM.queueDownload("./img/ui/maps_hoverbutton.png");
+
+AM.queueDownload("./img/ui/shop_button.png");
+AM.queueDownload("./img/ui/shop_pressbutton.png");
+AM.queueDownload("./img/ui/shop_hoverbutton.png");
+
+AM.queueDownload("./img/ui/exit_button.png");
+
 AM.queueDownload("./img/effect/00000/stab.png");
 AM.queueDownload("./img/effect/00000/9.swingP1.2_0.png");
 
@@ -68,17 +86,11 @@ AM.downloadAll(function () {
     var ctx = canvas.getContext("2d");
     var gameEngine = new GameEngine();
     gameEngine.init(ctx);
+    gameEngine.sceneManager.addScene('mainmenu',MainMenu);
     gameEngine.sceneManager.addScene('battle',Battle);
     gameEngine.start();
 
-    
-    gameEngine.sceneManager.startScene('battle');
-    
+    gameEngine.sceneManager.startScene('mainmenu');
+
 
 });
-
-
-
-
-
-

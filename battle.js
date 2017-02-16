@@ -25,15 +25,26 @@ Battle.prototype.create = function() {
 
     spawnUnit(this.game, 100, 400, "h100", PLAYER);
 
-    var map = new ScreenScroller(this.game, 800, 550, 400, 50); 
+    var map = new ScreenScroller(this.game, 800, 550, 400, 50);
     this.game.addEntity(map);
+
+
+		var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
+		// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
+		// exit_button.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
+		exit_button.addEventListener('click', function() {
+			this.game.sceneManager.startScene('mainmenu');
+		});
+		this.game.addEntity(exit_button);
 
 };
 
 Battle.prototype.update = function() {
 	// body...
 };
-
+Battle.prototype.shutdown = function () {
+	this.game.clearEntities();
+};
 Battle.prototype.buildingBackground = function() {
 	canvasHeight = this.game.ctx.canvas.clientHeight;
 	canvasWidth = this.game.ctx.canvas.clientWidth;

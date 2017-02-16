@@ -26,6 +26,9 @@ SceneManager.prototype.addScene = function (key, scene) {
   scene.getEntities = function(){
     return scene.entities;
   };
+  scene.clearEntities =function () {
+    scene.entities=[];
+  };
   this.scenes[key] = scene;
 };
 
@@ -64,16 +67,19 @@ SceneManager.prototype.preUpdate = function(time) {
 SceneManager.prototype.clearCurrentScene = function() {
   if(this.currentScene){
     if(this.currentScene.shutdown){
-      this.currentScene.shutdown();  
+      this.currentScene.shutdown();
     }
   }
 };
 SceneManager.prototype.setCurrentScene = function(key) {
   this.currentSceneKey = key;
   this.currentScene = this.scenes[key];
-  if(this.currentScene.init){ 
+  if(this.currentScene.init){
     this.currentScene.init();
   }
+};
+SceneManager.prototype.clearEntities = function () {
+  this.currentScene.clearEntities();
 };
 
 
@@ -111,4 +117,7 @@ Scene.prototype.pauseUpdate = function () {
 };
 Scene.prototype.shutdown = function () {
 
+};
+Scene.prototype.clearEntities = function () {
+    this,entities =[];
 };
