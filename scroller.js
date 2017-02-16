@@ -1,17 +1,18 @@
 
-function ScreenScroller(game, x, y, boxX, boxY, scale = 1){
-    this.NORMAL = 0;
-    this.PRESS = 1;
-    this.MOUSEOVER = 2;
+function ScreenScroller(game, screenmove, x, y, boxX, boxY){
     Entity.call(this, game, x, y);
     this.movable = false;
-    this.status = this.NORMAL;
-    this.screenLocation = 0;
+    this.screenmove = screenmove;
 
     this.colliseBox = {x: x, y: y, width: boxX, height: boxY};
 
-    this.returnPoint = boxX / 6;
-    this.mapSize = 2400;
+    // ADJUST Box size
+    this.returnPoint = boxX / 7;
+    this.mapSize = this.screenmove.mapSize;
+    this.screenSize = this.screenmove.screenSize;
+
+    // SOUND
+    this.clickSound = new SoundPlayer("./sound/effects/smw_yoshi_runs_away.wav");
 }
 
 ScreenScroller.prototype = Object.create (Entity.prototype);
@@ -38,39 +39,62 @@ ScreenScroller.prototype.draw = function(){
 }
 
 ScreenScroller.prototype.update = function(){
-    var movedAmount = 0;
     if(collise(this.colliseBox, this.game.mouse)){
         if (this.game.mouse.click) {
-            //console.log("Clicked  x: " + (this.game.mouse.x - this.x) + " y: " + (this.game.mouse.y - this.y));
+            console.log("Clicked  x: " + (this.game.mouse.x - this.x) + " y: " + (this.game.mouse.y - this.y));
             var tempx = this.game.mouse.x - this.x;
-            var tempy = this.game.mouse.y - this.y;
+            var screenPercentageMovement = -1;
 
             var endPoint = this.colliseBox.width - this.returnPoint;
-            var originalScreen = this.screenLocation;
             if(tempx < this.returnPoint){
-                this.screenLocation = 0;
-            } else if(tempx > endPoint){
-                this.screenLocation = this.mapSize / 2;
-            } else /*if(tempx > returnPoint && tempx < endPoint)*/{
-                var moveRange = this.mapSize / 2;
-                var numberFactor = moveRange / (endPoint - this.returnPoint);
-                this.screenLocation = (tempx - this.returnPoint) * numberFactor; 
-            }
-            // tempEntities = this.game.sceneManager.getCurrentEntities();
+                screenPercentageMovement = 0;
 
-            movedAmount = originalScreen - this.screenLocation;
-            // console.log("moved: " + movedAmount);
-            // for(var i = 0; i < tempEntities.length; i++){
-            //     if(tempEntities[i].movable){
-            //         tempEntities[i].x += movedAmount;
-            //     }
-            // }
+            } else if(tempx > endPoint){
+                screenPercentageMovement = 100;
+
+            } else /*if(tempx > returnPoint && tempx < endPoint)*/{
+                var barTotal = this.colliseBox.width - 2 * this.returnPoint;
+                var chosenPlaceInBar = tempx - this.returnPoint;
+                screenPercentageMovement = chosenPlaceInBar / barTotal * 100;
+            }
+            if(screenPercentageMovement >= 0){
+                this.screenmove.moveScreenHere(screenPercentageMovement);
+                // SOUND
+                this.clickSound.play();
+            }
+            
             this.game.mouse.click = false;
         }
     }
-    this.moveScreen(movedAmount);
 }
 
-ScreenScroller.prototype.moveScreen = function(moveNumber){
-    this.game.movedAmount = moveNumber;
+
+//---------------------------------- Arrow Key Move ------------------------------//
+function ScreenMoveArrow(game, screenmove){
+    Entity.call(this, game, 0, 0); 
+    this.screenmove = screenmove;
+    // ADJUST
+    this.jump = 100;
+}
+ScreenMoveArrow.prototype = Object.create (Entity.prototype);
+ScreenMoveArrow.prototype.constructor = ScreenMoveArrow;
+
+ScreenMoveArrow.prototype.update = function(){
+    //Entity.prototype.update.call(this);
+    if(this.game.right.press){
+        //console.log("right");
+        this.screenmove.myMoveAmount -= this.jump;
+        //this.game.right.press = false;
+    } else if(this.game.left.press){
+        //console.log("left");
+        this.screenmove.myMoveAmount += this.jump;
+        //this.game.left.press = false;
+    } else if(this.game.right.stopIm || this.game.left.stopIm){
+        this.screenmove.myMoveAmount = 0;
+        this.game.right.stopIm = false;
+        this.game.left.stopIm = false;
+    }
+
+}
+ScreenMoveArrow.prototype.draw = function(){
 }
