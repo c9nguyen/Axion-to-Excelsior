@@ -10,6 +10,15 @@ Battle.prototype.create = function() {
     this.buildingBackground();
     this.buildTiles();
 
+    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50); 
+    this.game.addEntity(map);
+    var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
+    this.game.addEntity(rightAndLeftKey);
+    var testSound = new SoundPlayer("./sound/themes/mappedstoryMainTheme.mp3");
+    //var testSound = new SoundPlayer("./sound/themes/101-dearly-beloved.mp3");
+    testSound.loopEnable();
+    testSound.play();
+
     var button = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 200, 520);
     button.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
     button.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
@@ -36,15 +45,6 @@ Battle.prototype.create = function() {
     spawnUnit(this.game, 900, 400, "m010", ENEMY);
 
     spawnUnit(this.game, 100, 400, "h100", PLAYER);
-
-    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50); 
-    this.game.addEntity(map);
-    var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
-    this.game.addEntity(rightAndLeftKey);
-    var testSound = new SoundPlayer("./sound/themes/mappedstoryMainTheme.mp3");
-    //var testSound = new SoundPlayer("./sound/themes/101-dearly-beloved.mp3");
-    testSound.loopEnable();
-    testSound.play();
 
 };
 
