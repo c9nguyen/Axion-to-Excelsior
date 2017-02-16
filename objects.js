@@ -735,6 +735,8 @@ function Button(game, spritesheet, x, y, scale = 1) {
     this.clickAction = function() {};
     this.pressAction = function() {};
     this.mouseoverAction = function() {};
+    // SOUND
+    this.spawnSound = new SoundPlayer("./sound/effects/smb_stomp.wav");
 }
 
 Button.prototype = Object.create (Entity.prototype);
@@ -783,6 +785,8 @@ Button.prototype.update = function() {
     if (collise(this.colliseBox, this.game.mouse)) {
         if (this.game.mouse.click) {      
             this.clickAction(this);
+            // SOUND
+            this.spawnSound.play();
             this.game.mouse.click = false;
         } else if (this.game.mouse.pressed) {
             this.status = this.PRESS;
