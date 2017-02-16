@@ -8,6 +8,7 @@ function ScreenMover(game){
     // TODO ADJUST
     this.mapSize = 2400;
     this.screenSize = 1200;
+
 }
 
 ScreenMover.prototype = Object.create (Entity.prototype);
@@ -36,6 +37,11 @@ ScreenMover.prototype.checkBoundaries = function(){
         this.moveAmount = this.screenSize - this.mapSize - this.x;
     } else if (this.moveAmount + this.x > 0){
         this.moveAmount = 0 - this.x;
+    }
+    // Make sure momentum does not glitch outside of map
+    if((this.moveAmount > 0 && this.moveVelocity < 0) 
+        || (this.moveAmount < 0 && this.moveVelocity > 0)){
+        this.moveVelocity = 0;
     }
 }
 // Adjust screen speed to screen move amount

@@ -52,6 +52,10 @@ Battle.prototype.create = function() {
     this.game.addEntity(map);
     var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
     this.game.addEntity(rightAndLeftKey);
+    var testSound = new SoundPlayer("./sound/themes/mappedstoryMainTheme.mp3");
+    //var testSound = new SoundPlayer("./sound/themes/101-dearly-beloved.mp3");
+    testSound.loopEnable();
+    testSound.play();
 
 };
 
