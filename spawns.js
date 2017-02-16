@@ -204,7 +204,11 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                         undefined, 635, 166, 0.1, true);};
             effect2 = function (that) {
                 castSkill(this.game, this.x, this.y, this.unit, 'h1001', 0);};
+<<<<<<< HEAD
             attack3.startEffect = effect2;    
+=======
+            attack3.startEffect = effect2;   
+>>>>>>> ded82f266c312ef44627013e870ac7be295195d6
             attack3.effects[4] = effect;
             attack3.effects[5] = effect;
             attack3.effects[6] = effect;
@@ -231,7 +235,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                         var collisedEnemy = that.checkEnemyInRange();
                         if (collisedEnemy.has(0) && attack3.checkCooldown()) that.changeAction("attack3");
                         else if (collisedEnemy.has(1)) that.changeAction("attack");
-                        else that.changeAction("attack");
+                        else that.changeAction("stand");
                     }
                 } else
                     that.changeAction("jump");
