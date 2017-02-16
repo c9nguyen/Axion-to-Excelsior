@@ -222,6 +222,7 @@ Action.prototype.start = function() {
     this.elapsedTime = 0;
     this.timeLastStart = this.game.timer.gameTime;
     this.effectCasted = new Set();
+    this.update();
     this.startEffect();
 }
 
@@ -269,14 +270,14 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         this.collisionBox.height = collisionBox.height;
     }
 
-
+    AnimatedObject.prototype.update.call(this);
     var effect = this.effects[frame]; //Callback the effect
     if (effect !== undefined && typeof effect === "function" && !this.effectCasted.has(frame)) {
         effect(this);
         this.effectCasted.add(frame);
     }
     
-    AnimatedObject.prototype.update.call(this);
+
 }
 
 /**
@@ -352,8 +353,8 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.currentAction;
     this.lockedTarget;  //The enemy that the unit targetting.
 
-    this.getHit = function(damage) {  //default get hit action: lose hp
-        this.health -= Math.max(damage - (this.def * damage), 1);
+    this.getHit = function(that, damage) {  //default get hit action: lose hp
+        that.health -= Math.max(damage - (that.def * damage), 1);
     };
 }
 
@@ -386,8 +387,8 @@ Unit.prototype.changeAction = function(actionName) {
     if (action !== undefined && this.currentAction !== action && action.checkCooldown()) {    //If action is defined and not performing
         if (this.currentAction !== undefined) this.currentAction.end();
         this.currentAction = action;
+ //       this.currentAction.update();
         this.currentAction.start();
-        this.currentAction.update();
     } 
         
 }
@@ -395,7 +396,7 @@ Unit.prototype.changeAction = function(actionName) {
 
 
 Unit.prototype.takeDamage = function(damage) {
-    this.getHit(damage);
+    this.getHit(this, damage);
 }
 
 Unit.prototype.checkEnemyInRange = function() {
@@ -494,23 +495,32 @@ Unit.prototype.draw = function() {
 
 
     // // collisionBox
-    //var action = this.currentAction;
+    // if (this.side === ENEMY) {
+    // var action = this.currentAction;
     // var box = {};
     // var collisionBox = action.getFrameHitbox(action.currentFrame());
+    // if (collisionBox !== undefined) {
     // box.x = action.x + collisionBox.x;
     // box.y = action.y + collisionBox.y;
     // box.width = collisionBox.width;
     // box.height = collisionBox.height;
+    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    // }
+    // }
 
+    // if (this.side === PLAYER) {
     // var rangeBox = this.rangeBox[0];
     // var box = {};
     // box.x = this.x + rangeBox.x;
     // box.y = this.y + rangeBox.y;
     // box.width = rangeBox.width;
     // box.height = rangeBox.height;
+    // this.game.ctx.strokeStyle = "red";
+    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    // }
 
     //this.game.ctx.fillRect(rangeBox.x, rangeBox.y, rangeBox.width, rangeBox.height);
-    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+
     
 }
 
@@ -579,7 +589,9 @@ Effect.prototype.update = function() {//Updating the coordinate for the unit in 
         }
   
     } 
-    if (!this.hit) {  //If this effect already hit the opponent, skip below statements
+    //If this effect already hit the opponent, skip below statements
+    //Or no action
+    if (!this.hit || this.collisingAction !== undefined ) {  
         var frame = this.currentFrame();
         //Updating collisionBox
         var collisionBox = this.getFrameHitbox(frame);
