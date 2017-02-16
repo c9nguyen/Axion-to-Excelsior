@@ -127,7 +127,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 60, y: 108}];
             var die = new Action(game, unit, AM.getAsset("./img/unit/h001/die.png"),
                                     4, 0.1, 4, groundPoints, collisionBox, false, -1);
-            die.effects[0] = function(that) {ththatis.unit.velocity.x = -that.unit.movementspeed;};
+            die.effects[0] = function(that) {that.unit.velocity.x = -that.unit.movementspeed;};
             die.endEffect = function() {this.unit.removeFromWorld = true;};
 
             unit.actions["walk"] = walk;
