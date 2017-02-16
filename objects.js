@@ -38,11 +38,15 @@ NonAnimatedObject.prototype.setSize = function(width, height) {
 }
 
 NonAnimatedObject.prototype.draw = function() {
+    var drawX = this.x;
+    if(this.movable){
+        drawX = this.x + this.game.mapX;
+    }
     try {
         this.ctx.drawImage(this.spritesheet,
                     this.xindex * this.frameWidth, this.yindex * this.frameHeight,  // source from sheet
                     this.frameWidth, this.frameHeight,
-                    this.x, this.y,
+                    drawX, this.y,
                     this.width * this.scale, this.height * this.scale);
     } catch (e) {
 
@@ -192,7 +196,6 @@ function Action(game, unit, spritesheet,
                         frameWidth, frameHeight,
                         sheetWidth, frameDuration, frames, cooldown === 0, 
                         scale = 1, width, height);
-    this.movable = false;
 }
 
 Action.prototype = Object.create(AnimatedObject);
@@ -672,9 +675,11 @@ function Button(game, spritesheet, x, y, scale = 1) {
     this.movable = false;
 
     this.status = this.NORMAL;
-    this.normal = new NonAnimatedObject(game, spritesheet, x, y);
-    this.press = new NonAnimatedObject(game, spritesheet, x, y);
-    this.mouseover = new NonAnimatedObject(game, spritesheet, x, y);
+    var animatedObject = new NonAnimatedObject(game, spritesheet, x, y);
+    animatedObject.movable = false;
+    this.normal = animatedObject;
+    this.press = animatedObject;
+    this.mouseover = animatedObject;
 
     this.colliseBox = {x: x, y: y, width: this.normal.width, height: this.normal.height};
 
@@ -693,12 +698,15 @@ Button.prototype.addSheet = function(spritesheet, sheetType) {
         case "click":
         case "press":
             this.press = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            this.press.movable = false;
             break;
         case "mouseover":
             this.mouseover = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+           this.mouseover.movable = false;
             break;
         case "normal":
             this.normal = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            this.normal.movable = false;
             break;
     }
 }
