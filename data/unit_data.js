@@ -15,7 +15,7 @@ var unitData = {
         def: 0.1,
         flying: false,
         //Attacking with x and y are offset from unit's ground hit box
-        range: [{x: 0, y: -90, width: 100, height: 100}, {x: 100, y: -90, width: 150, height: 100}],
+        range: [{x: 0, y: -90, width: 130, height: 100}, {x: 250, y: -90, width: 50, height: 100}],
     },
     h001: {
         groundWidth: 35,
@@ -60,5 +60,16 @@ var unitData = {
         flying: false,
         //Attacking with x and y are offset from unit's ground hit box
         range: [{x: -40, y: -120, width: 150, height: 120}],
+    },
+    m100: {
+        groundWidth: 70,
+        groundHeight: 10,
+        health: 500,
+        movementspeed: -100,
+        att: 150,
+        def: 0.2,
+        flying: false,
+        //Attacking with x and y are offset from unit's ground hit box
+        range: [{x: -100, y: -160, width: 200, height: 180}],
     }
 }

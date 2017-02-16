@@ -40,15 +40,19 @@ Battle.prototype.create = function() {
 
     this.game.addEntity(button2);
 
-    spawnUnit(this.game, 900, 400, "m010", ENEMY);
-		spawnUnit(this.game, 100, 400, "h100", PLAYER);
-		var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
-		// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
-		// exit_button.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
-		exit_button.addEventListener('click', function() {
-			this.game.sceneManager.startScene('mainmenu');
-		});
-		this.game.addEntity(exit_button);
+
+    spawnUnit(this.game, 900, 400, "m100", ENEMY);
+
+   // spawnUnit(this.game, 100, 400, "h100", PLAYER);
+
+	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
+	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
+	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
+	exit_button.addEventListener('click', function() {
+		this.game.sceneManager.startScene('mainmenu');
+	});
+	this.game.addEntity(exit_button);
+
 
 };
 
@@ -101,7 +105,7 @@ Battle.prototype.loadCharacter = function(){
 Battle.prototype.buildTiles = function() {
 
 	var canvasHeight = this.game.ctx.canvas.clientHeight;
-	var canvasWidth = this.game.ctx.canvas.clientWidth;
+	var canvasWidth = this.game.screenMover.mapSize;
     var groundCollisionBox = this.game.collisionBox.ground;
 
     var numOfTile = Math.ceil(canvasWidth / 90) + 2;

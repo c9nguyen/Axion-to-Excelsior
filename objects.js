@@ -646,7 +646,7 @@ Effect.prototype.draw = function() {
 //For testing skill hit box
     // var box = this.getFrameHitbox(this.currentFrame());
     // this.game.ctx.fillStyle = 'red';
-    // this.game.ctx.fillRect(box.x + this.x, box.y + this.y, box.width, box.height);
+    // this.game.ctx.fillRect(box.x + this.x + this.game.mapX, box.y + this.y, box.width, box.height);
 }
 
 Effect.prototype.currentFrame = function () {
