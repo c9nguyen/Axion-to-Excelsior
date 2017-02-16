@@ -325,7 +325,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 0, y: 130}];
             var die = new Action(game, unit, AM.getAsset("./img/unit/m010/die.png"),
                                     3, 0.1, 9, groundPoints, collisionBox, false, -1);
-            die.endEffect = function() {this.unit.removeFromWorld = true};
+            die.endEffect = function() {
+                this.unit.removeFromWorld = true};
 
             var groundPoints = [{x: 0, y: 130}];
             var collisionBox = [{x: 10, y: 10, width: 120, height: 120}];

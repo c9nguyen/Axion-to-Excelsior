@@ -248,9 +248,9 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         this.effectCasted = new Set();
         if (!this.checkCooldown() || !this.loop) {
             this.end();
-            this.unit.currentAction = this.unit.defaultAction;
-            this.unit.currentAction.start();
-            this.unit.currentAction.update();
+            // this.unit.currentAction = this.unit.defaultAction;
+            // this.unit.currentAction.start();
+            // this.unit.currentAction.update();
             return;
          }
     }
@@ -592,7 +592,7 @@ Effect.prototype.update = function() {//Updating the coordinate for the unit in 
     } 
     //If this effect already hit the opponent, skip below statements
     //Or no action
-    if (!this.hit || this.collisingAction !== undefined ) {  
+    if (!this.hit && this.collisingAction !== undefined ) {  
         var frame = this.currentFrame();
         //Updating collisionBox
         var collisionBox = this.getFrameHitbox(frame);
