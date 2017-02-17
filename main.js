@@ -50,6 +50,18 @@ AM.queueDownload("./img/unit/m000/jump_left.png");
 AM.queueDownload("./img/unit/m000/attack_left.png");
 AM.queueDownload("./img/unit/m000/die_left.png");
 
+AM.queueDownload("./img/unit/m001/stand.png");
+AM.queueDownload("./img/unit/m001/walk.png");
+AM.queueDownload("./img/unit/m001/jump.png");
+AM.queueDownload("./img/unit/m001/attack.png");
+AM.queueDownload("./img/unit/m001/die.png");
+
+AM.queueDownload("./img/unit/m002/stand.png");
+AM.queueDownload("./img/unit/m002/walk.png");
+AM.queueDownload("./img/unit/m002/jump.png");
+AM.queueDownload("./img/unit/m002/attack.png");
+AM.queueDownload("./img/unit/m002/die.png");
+
 AM.queueDownload("./img/unit/m010/stand.png");
 AM.queueDownload("./img/unit/m010/walk.png");
 AM.queueDownload("./img/unit/m010/jump.png");

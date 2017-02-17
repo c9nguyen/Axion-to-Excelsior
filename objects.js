@@ -354,6 +354,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.currentAction;
     this.lockedTarget;  //The enemy that the unit targetting.
 
+    this.takingDamage;
     this.getHit = function(that, damage) {  //default get hit action: lose hp
         that.health -= Math.max(damage - (that.def * damage), 1);
     };
@@ -394,10 +395,8 @@ Unit.prototype.changeAction = function(actionName) {
         
 }
 
-
-
 Unit.prototype.takeDamage = function(damage) {
-    this.getHit(this, damage);
+    this.takingDamage = damage;
 }
 
 Unit.prototype.checkEnemyInRange = function() {
@@ -434,7 +433,11 @@ Unit.prototype.update = function() {
          this.changeAction("die");
          this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
     } else {
-        
+        if (this.takingDamage !== undefined) {
+            this.getHit(this, this.takingDamage);
+            this.takingDamage = undefined;
+        }    
+
         //Will be added: effect on this unit (poison, movement locked,..)
 
         // //Updating range box
