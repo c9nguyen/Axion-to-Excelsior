@@ -6,9 +6,14 @@ function Battle(game)
 Battle.prototype.create = function() {
     console.log('battle created');
 
+
 	this.loadCharacter();
     this.buildingBackground();
     this.buildTiles();
+    
+    var list = ["m000", "m001", "m002"];
+    var gen = new EnemyGenerator(this.game, 1800, 400, list);
+    this.game.addEntity(gen);
 
     var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50);
     this.game.addEntity(map);
@@ -36,14 +41,15 @@ Battle.prototype.create = function() {
     var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 600, 520);
     button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
     button2.addSheet(AM.getAsset("./img/unit/m000/card_mouseover.png"), "mouseover");
-    button2.addEventListener("click", function() { spawnUnit(this.game, 800, 400, "m000", ENEMY); });
+    button2.addEventListener("click", function() { 
+        gen.switch(); });
 
     this.game.addEntity(button2);
 
 
-    spawnUnit(this.game, 900, 400, "m100", ENEMY);
+    spawnUnit(this.game, 1800, 400, "m100", ENEMY);
 
-   // spawnUnit(this.game, 100, 400, "h100", PLAYER);
+    spawnUnit(this.game, 100, 400, "h100", PLAYER);
 
 	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
 	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
