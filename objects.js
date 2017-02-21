@@ -238,7 +238,7 @@ Action.prototype.during = function() {
  * Overwrite it if you want to use. (Overwrite the instance of Action not the prototype)
  */
 Action.prototype.end = function() {
-    this.endEffect();
+    this.endEffect(this);
 }
 
 
@@ -247,7 +247,7 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
     if (this.isDone()) {
         this.effectCasted = new Set();
         if (!this.checkCooldown() || !this.loop) {
-            this.end();
+            this.endEffect(this);
             // this.unit.currentAction = this.unit.defaultAction;
             // this.unit.currentAction.start();
             // this.unit.currentAction.update();
@@ -353,8 +353,8 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.collisionReacts = {};  //Not used yet
     this.currentAction;
     this.lockedTarget;  //The enemy that the unit targetting.
-
-    this.takingDamage;
+    this.takingDamage = 0;
+    this.passiveEffectInit();
     this.getHit = function(that, damage) {  //default get hit action: lose hp
         that.health -= Math.max(damage - (that.def * damage), 1);
     };
@@ -362,6 +362,20 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
 
 Unit.prototype = Object.create(Entity.prototype);
 Unit.prototype.constructor = Unit;
+
+Unit.prototype.passiveEffectInit = function() {
+    this.passiveEffect = {};
+    this.passiveEffect["att"] = {amount: 0, duration: 0};
+    this.passiveEffect["def"] = {amount: 0, duration: 0};
+    this.passiveEffect["heal"] = {amount: 0, duration: 0};
+    this.passiveEffect["poison"] = {amount: 0, duration: 0};  
+    this.passiveEffect["slow"] = {amount: 0, duration: 0};  
+    this.passiveEffect["stun"] = {amount: 0, duration: 0};
+}
+
+Unit.prototype.takePassiveEffect = function(effectType, amount) {
+    this.passiveEffect[effectType] = {amount: amount, duration: 5}; 
+}
 
 Unit.prototype.getCollisionBox = function() {
     return this.currentAction !== undefined ? this.currentAction.collisionBox : this;
@@ -381,6 +395,25 @@ Unit.prototype.getCollisionBox = function() {
 //     this.reaction[reaction] = callback;
 // }
 
+Unit.prototype.applyPassiveEffect = function() {
+    this.att = this.data.att + this.passiveEffect.att.amount;
+    this.def = this.data.def + this.passiveEffect.def.amount;
+    this.health = Math.max(this.health - this.passiveEffect.poison.amount, 1);
+    this.health = Math.min(this.health + this.passiveEffect.heal.amount, this.data.health);
+    this.speedPercent = 1 - this.passiveEffect.slow.amount;
+    this.movementspeed = this.data.movementspeed * this.speedPercent;
+    this.velocity.x = this.velocity.x * this.speedPercent;
+    for (var effect in this.passiveEffect) {
+        effect.duration -= this.game.clockTick;
+        if (effect.duration <= 0) {
+            effect.amount = 0;
+            effect.duration = 0;
+        }
+    }
+}
+
+
+
 /**
  * Change the action of unit
  */
@@ -396,7 +429,7 @@ Unit.prototype.changeAction = function(actionName) {
 }
 
 Unit.prototype.takeDamage = function(damage) {
-    this.takingDamage = damage;
+    this.takingDamage += damage;
 }
 
 Unit.prototype.checkEnemyInRange = function() {
@@ -431,12 +464,14 @@ Unit.prototype.update = function() {
     if (this.y > canvasHeight * 2) this.health = -1;
     if (this.health <= 0) {
          this.changeAction("die");
+         this.velocity.x = 0;
          this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
     } else {
-        if (this.takingDamage !== undefined) {
+        this.applyPassiveEffect();
+        if (this.takingDamage > 0) {
             this.getHit(this, this.takingDamage);
-            this.takingDamage = undefined;
-        }    
+            this.takingDamage = 0;
+        }
 
         //Will be added: effect on this unit (poison, movement locked,..)
 
@@ -446,14 +481,13 @@ Unit.prototype.update = function() {
         // this.rangeBox.y = range.y + this.y;
 
         //if the unit is not flying unit, check gravity (flying is different from jumping) 
-
         if (!this.flying) {
             this.gravity = true;
             //Only check for ground collision when the unit falling down or standing    
             if (this.velocity.y >= 0) {
                 //Improving performace by checking if still standing on the previous platform                    
                 if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
-                    this.y = this.previousPlatform.y + 10;
+                    this.y = this.previousPlatform.y + this.data.groundHeight;
                     this.velocity.y = 0;
                     this.gravity = false;
                 } else {
@@ -470,6 +504,7 @@ Unit.prototype.update = function() {
                 }
             }
         }
+
         this.actionHandler(this);
     }
     //update the current action
@@ -512,7 +547,7 @@ Unit.prototype.draw = function() {
     // }
     // }
 
-    // if (this.side === PLAYER) {
+
     // var rangeBox = this.rangeBox[0];
     // var box = {};
     // box.x = this.x + rangeBox.x + this.game.mapX;;
@@ -521,14 +556,12 @@ Unit.prototype.draw = function() {
     // box.height = rangeBox.height;
     // this.game.ctx.strokeStyle = "red";
     // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
-    // }
+
 
     //this.game.ctx.fillRect(rangeBox.x, rangeBox.y, rangeBox.width, rangeBox.height);
 
     
 }
-
-var skillSet = new Set();
 
 /*===============================================================*/
 
@@ -559,6 +592,7 @@ function Effect(game, x, y, unit, spritesheet,
     this.positive = false;
     this.hit = false;
     this.hitList = new Set();   //A set of unit that already hit. So the effect won't hit again
+    this.hitEffect = function(that) {};
 }
 
 Effect.prototype = Object.create(AnimatedObject.prototype);
@@ -618,6 +652,7 @@ Effect.prototype.update = function() {//Updating the coordinate for the unit in 
                     } else {
                         this.hitList.add(opponent[i]);
                     }
+                    this.hitEffect(this);
                 }
             }
         }
@@ -647,9 +682,11 @@ Effect.prototype.draw = function() {
         AnimatedObject.prototype.draw.call(this);
 
 //For testing skill hit box
-    // var box = this.getFrameHitbox(this.currentFrame());
-    // this.game.ctx.fillStyle = 'red';
-    // this.game.ctx.fillRect(box.x + this.x + this.game.mapX, box.y + this.y, box.width, box.height);
+//     if (this.unit.side === PLAYER) {
+//     var box = this.getFrameHitbox(this.currentFrame());
+//     this.game.ctx.fillStyle = 'red';
+//     this.game.ctx.fillRect(box.x + this.x + this.game.mapX, box.y + this.y, box.width, box.height);
+// }
 }
 
 Effect.prototype.currentFrame = function () {
@@ -663,7 +700,7 @@ Effect.prototype.isDone = function () {
 
 /*===============================================================*/
 
-
+//function PassiveEffect(game, unit, )
 
 /*===============================================================*/
 

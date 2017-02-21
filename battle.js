@@ -24,7 +24,7 @@ Battle.prototype.create = function() {
     testSound.loopEnable();
     testSound.play();
 
-    var button = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 200, 520);
+    var button = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 100, 520);
     button.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
     button.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
     button.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h000", PLAYER); });
@@ -32,11 +32,17 @@ Battle.prototype.create = function() {
 
     var that = this;
 
-    var button3 = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 300, 520);
+    var button3 = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 200, 520);
     button3.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
     button3.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
     button3.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h001", PLAYER); });
     this.game.addEntity(button3);
+
+    var button4 = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 300, 520);
+    button4.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
+    button4.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
+    button4.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h002", PLAYER); });
+    this.game.addEntity(button4);
 
     var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 600, 520);
     button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
@@ -47,9 +53,9 @@ Battle.prototype.create = function() {
     this.game.addEntity(button2);
 
 
-    spawnUnit(this.game, 1800, 400, "m100", ENEMY);
+    //spawnUnit(this.game, 1800, 400, "m100", ENEMY);
 
-    spawnUnit(this.game, 100, 400, "h100", PLAYER);
+    //spawnUnit(this.game, 100, 400, "h100", PLAYER);
 
 	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
 	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
