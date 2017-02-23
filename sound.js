@@ -115,11 +115,11 @@ SoundPlayer.prototype.disableEffect = function(){
 
 //--- Remove all sounds
 SoundPlayer.prototype.removeAllSound = function(){
-    
-    privateRemoveSoundFromList(this.toPlayMusic);
-    privateRemoveSoundFromList(this.toPlayEffect);
-    privateRemoveSoundFromList(this.whilePlayMusic);
-    privateRemoveSoundFromList(this.whilePlayEffect);
+
+    this.privateRemoveSoundFromList(this.toPlayMusic);
+    this.privateRemoveSoundFromList(this.toPlayEffect);
+    this.privateRemoveSoundFromList(this.whilePlayMusic);
+    this.privateRemoveSoundFromList(this.whilePlayEffect);
 }
 SoundPlayer.prototype.privateRemoveSoundFromList = function(list){
     while(list.length > 0){

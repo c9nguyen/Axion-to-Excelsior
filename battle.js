@@ -53,6 +53,7 @@ Battle.prototype.create = function() {
 	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
 	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
 	exit_button.addEventListener('click', function() {
+        this.game.soundPlayer.removeAllSound();
 		this.game.sceneManager.startScene('mainmenu');
 	});
 	this.game.addEntity(exit_button);
