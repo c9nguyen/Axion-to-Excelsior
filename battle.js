@@ -23,10 +23,8 @@ Battle.prototype.create = function() {
     this.game.addEntity(map);
     var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
     this.game.addEntity(rightAndLeftKey);
-    var testSound = new SoundPlayer("./sound/themes/mappedstoryMainTheme.mp3");
-    //var testSound = new SoundPlayer("./sound/themes/101-dearly-beloved.mp3");
-    testSound.loopEnable();
-    testSound.play();
+    // Sound
+    this.game.soundPlayer.addToMusic("./sound/music/KH-dearly-beloved.mp3");
 
     var button = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 100, 520);
     button.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
@@ -65,6 +63,7 @@ Battle.prototype.create = function() {
 	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
 	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
 	exit_button.addEventListener('click', function() {
+        this.game.soundPlayer.removeAllSound();
 		this.game.sceneManager.startScene('mainmenu');
 	});
 	this.game.addEntity(exit_button);
