@@ -19,10 +19,8 @@ Battle.prototype.create = function() {
     this.game.addEntity(map);
     var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
     this.game.addEntity(rightAndLeftKey);
-    var testSound = new SoundPlayer("./sound/themes/mappedstoryMainTheme.mp3");
-    //var testSound = new SoundPlayer("./sound/themes/101-dearly-beloved.mp3");
-    testSound.loopEnable();
-    testSound.play();
+    // Sound
+    this.game.soundPlayer.addToMusic("./sound/music/KH-dearly-beloved.mp3");
 
     var button = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 200, 520);
     button.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
