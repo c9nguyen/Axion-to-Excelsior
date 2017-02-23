@@ -42,7 +42,7 @@ var unitData = {
     h100: {
         groundWidth: 50,
         groundHeight: 10,
-        health: 1,
+        health: 1000,
         movementspeed: 130,
         att: 20,
         def: 0.15,
@@ -108,7 +108,7 @@ var unitData = {
     m100: {
         groundWidth: 70,
         groundHeight: 10,
-        health: 500,
+        health: 2000,
         movementspeed: -70,
         att: 150,
         def: 0.2,

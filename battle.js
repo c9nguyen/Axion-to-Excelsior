@@ -57,9 +57,9 @@ Battle.prototype.create = function() {
     this.game.addEntity(button2);
 
 
-    //spawnUnit(this.game, 1800, 400, "m100", ENEMY);
+    spawnUnit(this.game, 1800, 400, "m100", ENEMY);
 
-    //spawnUnit(this.game, 100, 400, "h100", PLAYER);
+    spawnUnit(this.game, 100, 400, "h100", PLAYER);
 
 	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
 	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');

@@ -608,7 +608,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 50, y: 170}];
             collisionBox = [{x:30, y: 20, width:80, height: 160}];
             var stand = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/stand.png"),
-                                    3, 0.2, 6, groundPoints, collisionBox, true);
+                                    11, 0.2, 11, groundPoints, collisionBox, true);
             stand.effects[0] = function(that) {that.unit.velocity.x = 0};
 
             //attack.effects[0] = function() {this.unit.velocity.y = -800; this.unit.velocity.x = 200};
@@ -630,7 +630,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                             else
                             that.changeAction("attack2");
                         } 
-                        else that.changeAction("walk");
+                        else that.changeAction("stand");
                     }
                 } else
                     that.changeAction("jump");
