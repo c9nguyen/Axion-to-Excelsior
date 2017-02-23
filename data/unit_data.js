@@ -97,7 +97,7 @@ var unitData = {
     m010: {
         groundWidth: 120,
         groundHeight: 10,
-        health: 3000,
+        health: 300,
         movementspeed: -80,
         att: 40,
         def: 0,

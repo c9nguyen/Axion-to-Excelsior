@@ -11,7 +11,11 @@ Battle.prototype.create = function() {
     this.buildingBackground();
     this.buildTiles();
     
-    var list = ["m000", "m001", "m002"];
+    var list = ["m000", "m000", "m000",
+                "m001", "m001", "m001", "m001", "m001", "m001", "m001",
+                "m002", "m002", "m002", "m002", "m002",
+                "m010"];
+
     var gen = new EnemyGenerator(this.game, 1800, 400, list);
     this.game.addEntity(gen);
 

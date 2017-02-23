@@ -196,6 +196,7 @@ function Action(game, unit, spritesheet,
                         frameWidth, frameHeight,
                         sheetWidth, frameDuration, frames, cooldown === 0, 
                         scale = 1, width, height);
+                        
 }
 
 Action.prototype = Object.create(AnimatedObject);
@@ -354,9 +355,11 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.currentAction;
     this.lockedTarget;  //The enemy that the unit targetting.
     this.takingDamage = 0;
+    this.takingEffect;
     this.passiveEffectInit();
     this.getHit = function(that, damage) {  //default get hit action: lose hp
         that.health -= Math.max(damage - (that.def * damage), 1);
+        if (this.takingEffect) this.takingEffect(this);
     };
 }
 
@@ -432,6 +435,10 @@ Unit.prototype.takeDamage = function(damage) {
     this.takingDamage += damage;
 }
 
+Unit.prototype.takeEffect = function(effect) {
+    this.takingEffect = effect;
+}
+
 Unit.prototype.checkEnemyInRange = function() {
     var enemy = this.side === PLAYER ? this.game.enemyList : this.game.playerList;
     var rangeIndex = new Set();
@@ -464,7 +471,7 @@ Unit.prototype.update = function() {
     if (this.y > canvasHeight * 2) this.health = -1;
     if (this.health <= 0) {
          this.changeAction("die");
-         this.velocity.x = 0;
+    //     this.velocity.x = 0;
          this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
     } else {
         this.applyPassiveEffect();
@@ -509,6 +516,7 @@ Unit.prototype.update = function() {
     }
     //update the current action
     if (this.currentAction !== undefined) this.currentAction.update();
+    this.velocity.x = this.currentAction.velocity.x;
 }
 
 Unit.prototype.draw = function() {
