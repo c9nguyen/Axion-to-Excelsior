@@ -18,8 +18,6 @@ function Button(game, spritesheet, x, y, scale = 1) {
     this.clickAction = function() {};
     this.pressAction = function() {};
     this.mouseoverAction = function() {};
-    // SOUND
-    this.spawnSound = new SoundPlayer("./sound/effects/smb_stomp.wav");
 }
 
 Button.prototype = Object.create (Entity.prototype);
@@ -72,7 +70,7 @@ Button.prototype.update = function() {
         if (this.game.mouse.click) {      
             this.clickAction(this);
             // SOUND
-            this.spawnSound.play();
+            this.game.soundPlayer.addToEffect("./sound/effects/smb_stomp.wav", false, 2.0);
             this.game.mouse.click = false;
         } else if (this.game.mouse.pressed) {
             this.status = this.PRESS;
@@ -112,8 +110,6 @@ function UnitCard(game, unitcode, x, y, unitX, unitY) {
 
     this.clickAction = function() {spawnUnit(this.game, unitX, unitY, unitcode, PLAYER);};
 
-    // SOUND
-    this.spawnSound = new SoundPlayer("./sound/effects/smb_stomp.wav");
 }
 
 UnitCard.prototype = Object.create (Entity.prototype);
@@ -146,7 +142,7 @@ UnitCard.prototype.update = function() {
         if (this.game.mouse.click) {      
             this.clickAction(this);
             // SOUND
-            this.spawnSound.play();
+            this.game.soundPlayer.addToEffect("./sound/effects/smb_stomp.wav", false, 2.0);
             this.game.mouse.click = false;
         } else if (this.game.mouse.pressed) {
             this.status = this.PRESS;
