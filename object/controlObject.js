@@ -94,6 +94,7 @@ function UnitCard(game, unitcode, x, y, unitX, unitY) {
 
     Entity.call(this, game, x, y);
     this.movable = false;
+    this.unitcode = unitcode;
 
     this.status = this.NORMAL;
     var animatedObject = new NonAnimatedObject(game, AM.getAsset("./img/unit/" + unitcode + "/card.png"), x, y);
@@ -143,6 +144,7 @@ UnitCard.prototype.update = function() {
             this.clickAction(this);
             // SOUND
             this.game.soundPlayer.addToEffect("./sound/effects/smb_stomp.wav", false, 2.0);
+            this.removeFromWorld = true;
             this.game.mouse.click = false;
         } else if (this.game.mouse.pressed) {
             this.status = this.PRESS;

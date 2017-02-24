@@ -11,13 +11,26 @@ Battle.prototype.create = function() {
     this.buildingBackground();
     this.buildTiles();
     
-    var list = ["m000", "m000", "m000", "m000",
+    var list = [
+                "m000", "m000", "m000", "m000",
                 "m001", "m001", "m001", "m001", "m001", "m001", "m001", "m001", "m001",
                 "m002", "m002", "m002", "m002", "m002", "m002",
                 "m010"];
 
     var gen = new EnemyGenerator(this.game, 1800, 400, list);
+    gen.setFrequency(2);
     this.game.addEntity(gen);
+
+    var cards = [
+                "h000", "h000", "h000", "h000",
+                "h001", "h001", "h001", "h001",
+                "h002", "h002", "h002", "h002", "h002", "h002", "h002", "h002"];
+    var cardGen = new CardGenerator(this.game, 100, 400, cards);
+    cardGen.setLocation(0, {x: 100, y:535});
+    cardGen.setLocation(1, {x: 180, y:535});
+    cardGen.setLocation(2, {x: 260, y:535});
+    cardGen.start();
+    this.game.addEntity(cardGen);
 
     var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50);
     this.game.addEntity(map);
@@ -26,14 +39,14 @@ Battle.prototype.create = function() {
     // Sound
     this.game.soundPlayer.addToMusic("./sound/music/KH-dearly-beloved.mp3");
 
-    var card = new UnitCard(this.game, "h000", 100, 535, 100, 400);
-    this.game.addEntity(card);
+    // var card = new UnitCard(this.game, "h000", 100, 535, 100, 400);
+    // this.game.addEntity(card);
 
-    var card = new UnitCard(this.game, "h001", 180, 535, 100, 400);
-    this.game.addEntity(card);
+    // var card = new UnitCard(this.game, "h001", 180, 535, 100, 400);
+    // this.game.addEntity(card);
 
-    var card = new UnitCard(this.game, "h002", 260, 535, 100, 400);
-    this.game.addEntity(card);
+    // var card = new UnitCard(this.game, "h002", 260, 535, 100, 400);
+    // this.game.addEntity(card);
 
     var that = this;
 

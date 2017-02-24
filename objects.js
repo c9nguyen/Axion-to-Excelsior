@@ -482,34 +482,9 @@ Unit.prototype.checkEnemyInRange = function() {
 Unit.prototype.update = function() {
    Entity.prototype.update.call(this);
     if (this.y > canvasHeight * 2) this.health = -1;
-     if (this.side === PLAYER)
-        console.log(this.push);
-        //console.log(this.game.clockTick);
-        //console.log(this.push + " " + (this.push * this.game.clockTick));
-        this.velocity.x = this.push;
-        this.push = this.push - this.push * this.game.clockTick;
-        this.push = this.push >= 0 ? this.push < 10 ? 0 : Math.floor(this.push) : this.push > -10 ? 0 : Math.ceil(this.push);
-    if (this.health <= 0) {
-         this.changeAction("die");
-    //     this.velocity.x = 0;
-         this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
-    } else {
-        this.applyPassiveEffect();
-        if (this.takingDamage > 0) {
-            this.getHit(this, this.takingDamage);
-            this.takingDamage = 0;
-        }
-
-       
-
-        //Will be added: effect on this unit (poison, movement locked,..)
-
-        // //Updating range box
-        // var range = this.data.range;
-        // this.rangeBox.x = range.x + this.x;
-        // this.rangeBox.y = range.y + this.y;
-
-        //if the unit is not flying unit, check gravity (flying is different from jumping) 
+    this.velocity.x = this.push;
+    this.push = this.push - this.push * this.game.clockTick;
+    this.push = this.push >= 0 ? this.push < 10 ? 0 : Math.floor(this.push) : this.push > -10 ? 0 : Math.ceil(this.push);
         if (!this.flying) {
             this.gravity = true;
             //Only check for ground collision when the unit falling down or standing    
@@ -533,6 +508,52 @@ Unit.prototype.update = function() {
                 }
             }
         }
+
+
+    if (this.health <= 0) {
+         this.changeAction("die");
+    //     this.velocity.x = 0;
+         this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
+    } else {
+        this.applyPassiveEffect();
+        if (this.takingDamage > 0) {
+            this.getHit(this, this.takingDamage);
+            this.takingDamage = 0;
+        }
+
+       
+
+        //Will be added: effect on this unit (poison, movement locked,..)
+
+        // //Updating range box
+        // var range = this.data.range;
+        // this.rangeBox.x = range.x + this.x;
+        // this.rangeBox.y = range.y + this.y;
+
+        //if the unit is not flying unit, check gravity (flying is different from jumping) 
+        // if (!this.flying) {
+        //     this.gravity = true;
+        //     //Only check for ground collision when the unit falling down or standing    
+        //     if (this.velocity.y >= 0) {
+        //         //Improving performace by checking if still standing on the previous platform                    
+        //         if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
+        //             this.y = this.previousPlatform.y + this.data.groundHeight;
+        //             this.velocity.y = 0;
+        //             this.gravity = false;
+        //         } else {
+        //             var groundCollisionBox = this.game.collisionBox.ground;
+        //             for (var box in groundCollisionBox) {
+        //                 if (collise(this, groundCollisionBox[box])) {
+        //                     this.y = groundCollisionBox[box].y + 10;
+        //                     this.velocity.y = 0;
+        //                     this.gravity = false;
+        //                     this.previousPlatform = groundCollisionBox[box];    //Save this to check again
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         this.actionHandler(this);
     }
