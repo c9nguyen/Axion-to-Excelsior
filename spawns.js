@@ -528,10 +528,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             //Making knock back effect
             attack.effects[4] = function(that) {
                 castSkill(that.game, that.x, that.y + 30, that.unit, 00000, 1,
-                            function(unit) { unit.velocity.x = unit.movementspeed / (-unit.movementspeed) * 200;
-                                            unit.velocity.y = -300;
-                                          //  unit.y -= 50;
-                                            unit.changeAction("jump");},
+                            function(unit) { unit.getKnockback(300);},
                             160, 100, 0.4, true)};
 
             groundPoints = [{x: 0, y: 130}];

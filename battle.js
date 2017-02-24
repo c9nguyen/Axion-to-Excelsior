@@ -11,9 +11,9 @@ Battle.prototype.create = function() {
     this.buildingBackground();
     this.buildTiles();
     
-    var list = ["m000", "m000", "m000",
-                "m001", "m001", "m001", "m001", "m001", "m001", "m001",
-                "m002", "m002", "m002", "m002", "m002",
+    var list = ["m000", "m000", "m000", "m000",
+                "m001", "m001", "m001", "m001", "m001", "m001", "m001", "m001", "m001",
+                "m002", "m002", "m002", "m002", "m002", "m002",
                 "m010"];
 
     var gen = new EnemyGenerator(this.game, 1800, 400, list);
@@ -28,25 +28,28 @@ Battle.prototype.create = function() {
     testSound.loopEnable();
     testSound.play();
 
-    var button = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 100, 520);
-    button.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
-    button.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
-    button.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h000", PLAYER); });
-    this.game.addEntity(button);
+    var card = new UnitCard(this.game, "h000", 100, 535, 100, 400);
+    this.game.addEntity(card);
+
+    var card = new UnitCard(this.game, "h001", 180, 535, 100, 400);
+    this.game.addEntity(card);
+
+    var card = new UnitCard(this.game, "h002", 260, 535, 100, 400);
+    this.game.addEntity(card);
 
     var that = this;
 
-    var button3 = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 200, 520);
-    button3.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
-    button3.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
-    button3.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h001", PLAYER); });
-    this.game.addEntity(button3);
+    // var button3 = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 180, 535);
+    // button3.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
+    // button3.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
+    // button3.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h001", PLAYER); });
+    // this.game.addEntity(button3);
 
-    var button4 = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 300, 520);
-    button4.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
-    button4.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
-    button4.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h002", PLAYER); });
-    this.game.addEntity(button4);
+    // var button4 = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 260, 535);
+    // button4.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
+    // button4.addSheet(AM.getAsset("./img/unit/h000/card_mouseover.png"), "mouseover");
+    // button4.addEventListener("click", function() { spawnUnit(this.game, 100, 400, "h002", PLAYER); });
+    // this.game.addEntity(button4);
 
     var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 600, 520);
     button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");

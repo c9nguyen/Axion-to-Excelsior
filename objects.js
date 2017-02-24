@@ -355,7 +355,9 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.currentAction;
     this.lockedTarget;  //The enemy that the unit targetting.
     this.takingDamage = 0;
+    this.push = 0;
     this.takingEffect;
+    this.knockbackable = true;
     this.passiveEffectInit();
     this.getHit = function(that, damage) {  //default get hit action: lose hp
         that.health -= Math.max(damage - (that.def * damage), 1);
@@ -374,10 +376,11 @@ Unit.prototype.passiveEffectInit = function() {
     this.passiveEffect["poison"] = {amount: 0, duration: 0};  
     this.passiveEffect["slow"] = {amount: 0, duration: 0};  
     this.passiveEffect["stun"] = {amount: 0, duration: 0};
+    this.passiveEffect["push"] = {amount: 0, duration: 0};
 }
 
-Unit.prototype.takePassiveEffect = function(effectType, amount) {
-    this.passiveEffect[effectType] = {amount: amount, duration: 5}; 
+Unit.prototype.takePassiveEffect = function(effectType, amount, duration = 5) {
+    this.passiveEffect[effectType] = {amount: amount, duration: duration}; 
 }
 
 Unit.prototype.getCollisionBox = function() {
@@ -406,12 +409,22 @@ Unit.prototype.applyPassiveEffect = function() {
     this.speedPercent = 1 - this.passiveEffect.slow.amount;
     this.movementspeed = this.data.movementspeed * this.speedPercent;
     this.velocity.x = this.velocity.x * this.speedPercent;
+    this.velocity.x += this.passiveEffect.push.amount;
     for (var effect in this.passiveEffect) {
         effect.duration -= this.game.clockTick;
         if (effect.duration <= 0) {
             effect.amount = 0;
             effect.duration = 0;
         }
+    }
+}
+
+Unit.prototype.getKnockback = function(power) {
+    if (this.knockbackable) {
+       // this.velocity.x = this.movementspeed / (-this.movementspeed) * power * 2;
+        this.velocity.y = -400;
+        this.changeAction("jump");
+      this.push = -power;
     }
 }
 
@@ -469,6 +482,13 @@ Unit.prototype.checkEnemyInRange = function() {
 Unit.prototype.update = function() {
    Entity.prototype.update.call(this);
     if (this.y > canvasHeight * 2) this.health = -1;
+     if (this.side === PLAYER)
+        console.log(this.push);
+        //console.log(this.game.clockTick);
+        //console.log(this.push + " " + (this.push * this.game.clockTick));
+        this.velocity.x = this.push;
+        this.push = this.push - this.push * this.game.clockTick;
+        this.push = this.push >= 0 ? this.push < 10 ? 0 : Math.floor(this.push) : this.push > -10 ? 0 : Math.ceil(this.push);
     if (this.health <= 0) {
          this.changeAction("die");
     //     this.velocity.x = 0;
@@ -479,6 +499,8 @@ Unit.prototype.update = function() {
             this.getHit(this, this.takingDamage);
             this.takingDamage = 0;
         }
+
+       
 
         //Will be added: effect on this unit (poison, movement locked,..)
 
@@ -516,7 +538,7 @@ Unit.prototype.update = function() {
     }
     //update the current action
     if (this.currentAction !== undefined) this.currentAction.update();
-    this.velocity.x = this.currentAction.velocity.x;
+    this.velocity.x += this.currentAction.velocity.x;
 }
 
 Unit.prototype.draw = function() {
