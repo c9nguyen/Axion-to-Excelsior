@@ -44,10 +44,7 @@ Battle.prototype.create = function() {
     this.game.soundPlayer.addToMusic("./sound/music/battle/KH-monstrous-monstro.mp3", undefined, undefined, 0.4);
 
     // Game over temp SAMPLE
-    var endGame = new EndGame(this.game);
-    // endGame.isGameOver = true;
-    // endGame.playerWin = true;
-    this.game.addEntity(endGame);
+
 
     // var card = new UnitCard(this.game, "h000", 100, 535, 100, 400);
     // this.game.addEntity(card);
@@ -79,15 +76,22 @@ Battle.prototype.create = function() {
         gen.switch(); 
         // SAMPLE
         // endGame.gameOver(true); 
-        endGame.gameOver(false); 
+        //endGame.gameOver(false); 
     });
 
     this.game.addEntity(button2);
 
 
-    spawnUnit(this.game, 1800, 400, "m100", ENEMY);
+    var enemyBoss = spawnUnit(this.game, 1800, 400, "m100", ENEMY);
 
-    spawnUnit(this.game, 100, 400, "h100", PLAYER);
+    var playerBoss = spawnUnit(this.game, 100, 400, "h100", PLAYER);
+
+    var endGame = new EndGame(this.game);
+    // endGame.isGameOver = true;
+    // endGame.playerWin = true;
+    endGame.winCondition = function() { return enemyBoss.removeFromWorld === true};
+    endGame.lostCondition = function() { return playerBoss.removeFromWorld === true};
+    this.game.addEntity(endGame);
 
 	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
 	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');

@@ -3,6 +3,9 @@ function EndGame(game){
     this.isGameOver = false;
     this.playerWin = false;
     this.font = "100px Arial";
+
+    this.winCondition = function() {};
+    this.lostCondition = function() {};
 }
 
 EndGame.prototype = Object.create(Entity.prototype);
@@ -30,7 +33,11 @@ EndGame.prototype.draw = function(){
     }
 }
 EndGame.prototype.update = function(){
-
+    if(this.winCondition()) {
+        this.gameOver(true);
+    } else if (this.lostCondition()) {
+        this.gameOver(false);
+    }
 }
 //--- end draw and update
 
