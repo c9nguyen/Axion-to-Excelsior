@@ -11,8 +11,6 @@ function ScreenScroller(game, screenmove, x, y, boxX, boxY){
     this.mapSize = this.screenmove.mapSize;
     this.screenSize = this.screenmove.screenSize;
 
-    // SOUND
-    this.clickSound = new SoundPlayer("./sound/effects/smw_yoshi_runs_away.wav");
 }
 
 ScreenScroller.prototype = Object.create (Entity.prototype);
@@ -60,7 +58,7 @@ ScreenScroller.prototype.update = function(){
             if(screenPercentageMovement >= 0){
                 this.screenmove.moveScreenHere(screenPercentageMovement);
                 // SOUND
-                this.clickSound.play();
+                this.game.soundPlayer.addToEffect("./sound/effects/smw_yoshi_runs_away.wav");
             }
             
             this.game.mouse.click = false;
