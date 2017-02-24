@@ -24,6 +24,7 @@ function GameEngine() {
     };
     this.playerList = [];
     this.enemyList = [];
+    this.entitiesList = [];
 
     this.portals = [];  // will be removed
     this.food = []; // will be removed
