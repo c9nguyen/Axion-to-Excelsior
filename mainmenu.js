@@ -1,6 +1,10 @@
 function MainMenu(game) {
-  this.game = game;
+  // this.game = game;
+  Scene.call(this, game);
 };
+
+MainMenu.prototype = Object.create(Scene.prototype);
+MainMenu.prototype.constructor = MainMenu;
 
 MainMenu.prototype.init = function () {
 
@@ -27,6 +31,8 @@ MainMenu.prototype.create = function () {
   var shopbutton =  new Button(this.game, AM.getAsset("./img/ui/shop_button.png"), 250, 50+131+50);
   shopbutton.addSheet( AM.getAsset("./img/ui/shop_hoverbutton.png"),'mouseover');
   shopbutton.addSheet( AM.getAsset("./img/ui/shop_pressbutton.png"),'press');
+
+  this.game.soundPlayer.addToMusic("./sound/music/KH-dearly-beloved.mp3");
 
   this.game.addEntity(shopbutton);
   this.game.addEntity(mapbutton);

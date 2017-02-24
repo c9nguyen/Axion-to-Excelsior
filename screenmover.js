@@ -87,9 +87,9 @@ ScreenMover.prototype.moveScreenHere = function(percentage){
     this.myMoveAmount = targetLocation - this.x;
 }
 
-// ScreenMover.prototype.rebootScreen = function(){
-//     this.x = 0;
-//     this.game.mapX = 0;
-//     this.moveVelocity = 0;
-//     this.myMoveAmount = 0;
-// }
+ScreenMover.prototype.resetScreen = function(){
+    this.x = 0;
+    this.game.mapX = 0;
+    this.moveVelocity = 0;
+    this.myMoveAmount = 0;
+}

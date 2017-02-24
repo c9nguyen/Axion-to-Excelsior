@@ -1,7 +1,11 @@
 function Battle(game)
 {
-	this.game = game;
+	// this.game = game;
+    Scene.call(this, game);
 }
+
+Battle.prototype = Object.create(Scene.prototype);
+Battle.prototype.constructor = Battle;
 
 Battle.prototype.create = function() {
     console.log('battle created');
@@ -24,7 +28,13 @@ Battle.prototype.create = function() {
     var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
     this.game.addEntity(rightAndLeftKey);
     // Sound
-    this.game.soundPlayer.addToMusic("./sound/music/KH-dearly-beloved.mp3");
+    this.game.soundPlayer.addToMusic("./sound/music/battle/KH-monstrous-monstro.mp3", undefined, undefined, 0.4);
+
+    // Game over temp SAMPLE
+    var endGame = new EndGame(this.game);
+    // endGame.isGameOver = true;
+    // endGame.playerWin = true;
+    this.game.addEntity(endGame);
 
     var button = new Button(this.game, AM.getAsset("./img/unit/h000/card.png"), 100, 520);
     button.addSheet(AM.getAsset("./img/unit/h000/card_click.png"), "click");
@@ -50,7 +60,11 @@ Battle.prototype.create = function() {
     button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
     button2.addSheet(AM.getAsset("./img/unit/m000/card_mouseover.png"), "mouseover");
     button2.addEventListener("click", function() { 
-        gen.switch(); });
+        gen.switch(); 
+        // SAMPLE
+        // endGame.gameOver(true); 
+        endGame.gameOver(false); 
+    });
 
     this.game.addEntity(button2);
 
@@ -74,9 +88,7 @@ Battle.prototype.create = function() {
 Battle.prototype.update = function() {
 	// body...
 };
-Battle.prototype.shutdown = function () {
-	this.game.clearEntities();
-};
+
 Battle.prototype.buildingBackground = function() {
 	canvasHeight = this.game.ctx.canvas.clientHeight;
 	canvasWidth = this.game.ctx.canvas.clientWidth;
