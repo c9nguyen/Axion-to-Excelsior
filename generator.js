@@ -95,7 +95,7 @@ CardGenerator = function(game, x, y, list = [], numOfCard) {
     this.onHandLocation = [];
     this.onHandCooldown = [0, 0, 0];
     this.onDeck = list;
-    this.cooldown = 5;
+    this.cooldown = 3;
 
     Entity.call(this, game, x, y);
 
