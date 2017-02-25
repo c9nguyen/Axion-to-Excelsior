@@ -75,3 +75,80 @@ EnemyGenerator.prototype.constructor = EnemyGenerator;
 EnemyGenerator.prototype.setFrequency = function (frequency) {
     this.frequency = frequency;
 }
+
+EnemyGenerator.prototype.setEndgame = function (endgame) {
+    this.endgame = endgame;
+}
+
+EnemyGenerator.prototype.update = function() {
+    if (this.active && (this.endgame === undefined || !this.endgame.isGameOver)) {
+        if (this.frequency > 1)
+            this.frequency -= 0.01 * this.game.clockTick;
+        Generator.prototype.update.call(this);
+    }
+}
+
+
+
+CardGenerator = function(game, x, y, list = [], numOfCard) {
+    this.onHand = [];
+    this.onHandLocation = [];
+    this.onHandCooldown = [0, 0, 0];
+    this.onDeck = list;
+    this.cooldown = 3;
+
+    Entity.call(this, game, x, y);
+
+    for (var i = 0; i < numOfCard; i++) {
+        this.setLocation(i, {x: 100 + i * 60, y:535});
+    }
+}
+
+
+CardGenerator.prototype = Object.create(Entity.prototype);
+CardGenerator.prototype.constructor = CardGenerator;
+
+CardGenerator.prototype.start = function() {
+     for (var i = 0; i < this.onHandLocation.length; i++) {
+        this.drawCard(i);
+    }
+}
+
+CardGenerator.prototype.setLocation = function(index, location = {x :0, y: 0}) {
+    this.onHandLocation[index] = location;
+}
+
+CardGenerator.prototype.setCooldown = function(cooldown) {
+    this.cooldown = cooldown;
+}
+
+CardGenerator.prototype.drawCard = function(index) {
+    var ran = Math.floor(Math.random() * this.onDeck.length);
+    var card = this.onDeck[ran];
+    this.onDeck.slice(ran, 1);
+    var location = this.onHandLocation[index];
+    var newCard = new UnitCard(this.game, card, location.x, location.y, this.x, this.y);
+    this.onHand[index] = newCard;
+    this.game.addEntity(newCard);
+}
+
+CardGenerator.prototype.update = function() {
+    var that = this;
+    for (var i = 0; i < this.onHand.length; i++) {
+        var card = this.onHand[i];
+        if (card.removeFromWorld) {
+            if (this.onHandCooldown[i] >= this.cooldown) {
+                var oldCardCode = card.unitcode;
+                this.drawCard(i);
+                this.onDeck.push(oldCardCode);
+                this.onHandCooldown[i] = 0;
+            } else {
+                this.onHandCooldown[i] += this.game.clockTick;
+            }
+        }
+    }
+}
+
+CardGenerator.prototype.draw = function() {
+
+}

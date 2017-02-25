@@ -19,7 +19,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 action = function(unit) {
                     var damage = this.percent * this.unit.att;
                     unit.takeDamage(damage);
-                    additionalEffect(unit);
+                    unit.takeEffect(additionalEffect);
                 };
             }
             skill = new Effect(game, x, y, unit, nonAnimationSheet,
@@ -30,7 +30,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             action = function(unit) {
                 var damage = percentAtt * this.unit.att;
                 unit.takeDamage(damage);
-                additionalEffect(unit);
+                unit.takeEffect(additionalEffect);
             };
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/00000/stab.png"),
                                 1, 0.1, 1, collisionBox, action, percentAtt, false);
@@ -40,7 +40,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             action = function(unit) {
                 var damage = percentAtt * this.unit.att;
                 unit.takeDamage(damage);
-                additionalEffect(unit);
+                unit.takeEffect(additionalEffect);
             };
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/00000/9.swingP1.2_0.png"),
                                 1, 0.1, 1, collisionBox, action, percentAtt, false);
@@ -50,7 +50,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             action = function(unit) {
                 var damage = percentAtt * this.unit.att;
                 unit.takeDamage(damage);
-                additionalEffect(unit);
+                unit.takeEffect(additionalEffect);
                 this.removeFromWorld = true;
             };
 
