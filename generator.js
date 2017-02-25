@@ -76,10 +76,16 @@ EnemyGenerator.prototype.setFrequency = function (frequency) {
     this.frequency = frequency;
 }
 
+EnemyGenerator.prototype.setEndgame = function (endgame) {
+    this.endgame = endgame;
+}
+
 EnemyGenerator.prototype.update = function() {
-    if (this.frequency > 1)
-        this.frequency -= 0.01 * this.game.clockTick;
-    Generator.prototype.update.call(this);
+    if (this.active && (this.endgame === undefined || !this.endgame.isGameOver)) {
+        if (this.frequency > 1)
+            this.frequency -= 0.01 * this.game.clockTick;
+        Generator.prototype.update.call(this);
+    }
 }
 
 

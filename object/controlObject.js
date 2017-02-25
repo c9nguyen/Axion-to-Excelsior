@@ -3,7 +3,7 @@ function Button(game, spritesheet, x, y, scale = 1) {
     this.PRESS = 1;
     this.MOUSEOVER = 2;
 
-    Entity.call(this, game, x, y);
+    Entity.call(this, game, x, y, UI);
     this.movable = false;
 
     this.status = this.NORMAL;
@@ -92,7 +92,7 @@ function UnitCard(game, unitcode, x, y, unitX, unitY) {
     this.PRESS = 1;
     this.MOUSEOVER = 2;
 
-    Entity.call(this, game, x, y);
+    Entity.call(this, game, x, y, UI);
     this.movable = false;
     this.unitcode = unitcode;
 

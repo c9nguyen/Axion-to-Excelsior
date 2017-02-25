@@ -42,9 +42,9 @@ var unitData = {
     h100: {
         groundWidth: 50,
         groundHeight: 10,
-        health: 1000,
+        health: 500,
         movementspeed: 130,
-        att: 20,
+        att: 10,
         def: 0.15,
         flying: false,
         //Attacking with x and y are offset from unit's ground hit box
@@ -108,7 +108,7 @@ var unitData = {
     m100: {
         groundWidth: 70,
         groundHeight: 10,
-        health: 2000,
+        health: 1000,
         movementspeed: -70,
         att: 150,
         def: 0.2,

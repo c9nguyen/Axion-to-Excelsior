@@ -579,7 +579,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             jump.endEffect = function(that) {that.unit.velocity.x = 0};
             
             groundPoints = [{x: 120, y: 170}];
-            collisionBox[0] = {x: 110, y: 20, width: 120, height: 120};
+            collisionBox[0] = {x: 110, y: 20, width: 120, height: 160};
             var attack = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack.png"),
                                     5, 0.15, 15, groundPoints, collisionBox, false);
             attack.effects[1] = function(that) {
@@ -588,7 +588,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                             150, 150, 0.3, true)}; 
 
             groundPoints = [{x: 120, y: 170}];
-            collisionBox[0] = {x: 110, y: 20, width: 120, height: 120};
+            collisionBox[0] = {x: 110, y: 20, width: 120, height: 160};
             var attack2 = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack2.png"),
                                     5, 0.15, 15, groundPoints, collisionBox, false);
             attack2.effects[1] = function(that) {
@@ -605,7 +605,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 50, y: 170}];
             collisionBox = [{x:30, y: 20, width:80, height: 160}];
             var stand = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/stand.png"),
-                                    11, 0.2, 11, groundPoints, collisionBox, true);
+                                    11, 0.15, 11, groundPoints, collisionBox, true);
             stand.effects[0] = function(that) {that.unit.velocity.x = 0};
 
             //attack.effects[0] = function() {this.unit.velocity.y = -800; this.unit.velocity.x = 200};

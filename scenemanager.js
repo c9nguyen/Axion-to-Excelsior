@@ -34,6 +34,7 @@ SceneManager.prototype.addScene = function (key, scene) {
     this.game.entitiesList = [];
     this.game.enemyList = [];
     this.game.playerList = [];
+    this.game.uiList = [];
     this.game.screenMover.resetScreen();
     this.game.soundPlayer.removeAllSound();
   };

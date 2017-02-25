@@ -9,9 +9,15 @@ AM.queueDownload("./img/back/back.png");
 AM.queueDownload("./img/back/1.png");
 AM.queueDownload("./img/back/2.png");
 
+AM.queueDownload("./img/map/01/back.png");
+
 AM.queueDownload("./img/tiles/en_spritesheet.png");
 AM.queueDownload("./img/tiles/en1_spritesheet.png");
 AM.queueDownload("./img/tiles/bsc_spritesheet.png");
+
+AM.queueDownload("./img/tiles/02/en_spritesheet.png");
+AM.queueDownload("./img/tiles/02/en1_spritesheet.png");
+AM.queueDownload("./img/tiles/02/bsc_spritesheet.png");
 
 AM.queueDownload("./img/unit/h000/card.png");
 AM.queueDownload("./img/unit/h000/card_click.png");
