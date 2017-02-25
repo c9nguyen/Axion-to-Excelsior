@@ -126,6 +126,13 @@ AM.queueDownload("./img/ui/shop_hoverbutton.png");
 
 AM.queueDownload("./img/ui/exit_button.png");
 
+AM.queueDownload("./img/ui/right_arrow_button.png");
+AM.queueDownload("./img/ui/right_arrow_hoverbutton.png");
+AM.queueDownload("./img/ui/right_arrow_pressbutton.png");
+AM.queueDownload("./img/ui/left_arrow_button.png");
+AM.queueDownload("./img/ui/left_arrow_hoverbutton.png");
+AM.queueDownload("./img/ui/left_arrow_pressbutton.png");
+
 AM.queueDownload("./img/effect/00000/stab.png");
 AM.queueDownload("./img/effect/00000/9.swingP1.2_0.png");
 AM.queueDownload("./img/effect/00001/shuriken.png");

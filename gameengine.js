@@ -135,6 +135,10 @@ GameEngine.prototype.startInput = function () {
     // left = 37, up = 38, right = 39, down = 40
     this.right = new KeyBoard(this.ctx, "ArrowRight");
     this.left = new KeyBoard(this.ctx, "ArrowLeft");
+    this.keyW = new KeyBoard(this.ctx, "KeyW");
+    this.keyA = new KeyBoard(this.ctx, "KeyA");
+    this.keyS = new KeyBoard(this.ctx, "KeyS");
+    this.keyD = new KeyBoard(this.ctx, "KeyD");
     //end vinh
 
     // this.ctx.canvas.addEventListener("keyup", function (e) {

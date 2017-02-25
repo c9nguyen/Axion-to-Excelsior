@@ -38,12 +38,19 @@ Battle.prototype.create = function() {
 
     var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50);
     this.game.addEntity(map);
-    var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover);
+    var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover, this.game.left, this.game.right);
     this.game.addEntity(rightAndLeftKey);
+    var ADKey = new ScreenMoveArrow(this.game, this.game.screenMover, this.game.keyA, this.game.keyD);
+    this.game.addEntity(ADKey);
+
+    var rightArrow =  new ScreenMouseOverMovement(this.game, this.game.screenMover, "right");
+    this.game.addEntity(rightArrow);
+    var leftArrow = new ScreenMouseOverMovement(this.game, this.game.screenMover, "left");
+    this.game.addEntity(leftArrow);
+
     // Sound
     this.game.soundPlayer.addToMusic("./sound/music/battle/KH-monstrous-monstro.mp3", undefined, undefined, 0.4);
 
-    // Game over temp SAMPLE
 
 
     // var card = new UnitCard(this.game, "h000", 100, 535, 100, 400);

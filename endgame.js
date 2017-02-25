@@ -26,7 +26,7 @@ EndGame.prototype.draw = function(){
         if(this.playerWin){
             this.game.ctx.fillText("YOU WIN!", 400, 350);
         } else {
-            this.game.ctx.fillText("GAME OVER!", 450, 350);
+            this.game.ctx.fillText("GAME OVER!", 325, 350);
         }
         this.game.ctx.fillStyle = tempGradient;
         this.game.ctx.font = tempFont;
