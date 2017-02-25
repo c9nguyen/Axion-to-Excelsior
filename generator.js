@@ -90,13 +90,18 @@ EnemyGenerator.prototype.update = function() {
 
 
 
-CardGenerator = function(game, x, y, list = []) {
+CardGenerator = function(game, x, y, list = [], numOfCard) {
     this.onHand = [];
     this.onHandLocation = [];
     this.onHandCooldown = [0, 0, 0];
     this.onDeck = list;
+    this.cooldown = 5;
 
     Entity.call(this, game, x, y);
+
+    for (var i = 0; i < numOfCard; i++) {
+        this.setLocation(i, {x: 100 + i * 60, y:535});
+    }
 }
 
 
@@ -111,6 +116,10 @@ CardGenerator.prototype.start = function() {
 
 CardGenerator.prototype.setLocation = function(index, location = {x :0, y: 0}) {
     this.onHandLocation[index] = location;
+}
+
+CardGenerator.prototype.setCooldown = function(cooldown) {
+    this.cooldown = cooldown;
 }
 
 CardGenerator.prototype.drawCard = function(index) {
@@ -128,7 +137,7 @@ CardGenerator.prototype.update = function() {
     for (var i = 0; i < this.onHand.length; i++) {
         var card = this.onHand[i];
         if (card.removeFromWorld) {
-            if (this.onHandCooldown[i] >= 2) {
+            if (this.onHandCooldown[i] >= this.cooldown) {
                 var oldCardCode = card.unitcode;
                 this.drawCard(i);
                 this.onDeck.push(oldCardCode);

@@ -28,11 +28,9 @@ Battle.prototype.create = function() {
     var cards = [
                 "h000", "h000", "h000", 
                 "h001", "h001",
-                "h002", "h002", "h002", "h002", "h002", "h002", "h002"];
-    var cardGen = new CardGenerator(this.game, 100, 400, cards);
-    cardGen.setLocation(0, {x: 100, y:535});
-    cardGen.setLocation(1, {x: 180, y:535});
-    cardGen.setLocation(2, {x: 260, y:535});
+                "h002", "h002", "h002", "h002", "h002",
+                "h003", "h003", "h003", "h003", "h003",];
+    var cardGen = new CardGenerator(this.game, 100, 400, cards, 5);
     cardGen.start();
     this.game.addEntity(cardGen);
 
@@ -64,7 +62,7 @@ Battle.prototype.create = function() {
     });
 
     this.game.addEntity(button2);
-
+//    spawnUnit(this.game, 100, 400, "h003", PLAYER);
 
     var enemyBoss = spawnUnit(this.game, 1800, 400, "m100", ENEMY);
 

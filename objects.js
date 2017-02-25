@@ -348,6 +348,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.movementspeed = this.data.movementspeed;
     this.att = this.data.att;
     this.def = this.data.def;
+    this.knockable = this.data.knockable
 
     this.actions = {}; //contains all actions this unit can perform (walk, stand, attack)
     this.defaultAction;
@@ -357,7 +358,6 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.takingDamage = 0;
     this.push = 0;
     this.takingEffect;
-    this.knockbackable = true;
     this.passiveEffectInit();
     this.getHit = function(that, damage) {  //default get hit action: lose hp
         that.health -= Math.max(damage - (that.def * damage), 1);
@@ -420,7 +420,7 @@ Unit.prototype.applyPassiveEffect = function() {
 }
 
 Unit.prototype.getKnockback = function(power) {
-    if (this.knockbackable) {
+    if (this.knockable) {
        // this.velocity.x = this.movementspeed / (-this.movementspeed) * power * 2;
         this.velocity.y = -400;
         this.changeAction("jump");

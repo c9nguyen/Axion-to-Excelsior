@@ -50,8 +50,17 @@ AM.queueDownload("./img/unit/h002/walk.png");
 AM.queueDownload("./img/unit/h002/jump.png");
 AM.queueDownload("./img/unit/h002/attack.png");
 AM.queueDownload("./img/unit/h002/attack2.png");
-AM.queueDownload("./img/unit/h002/skill.png");
 AM.queueDownload("./img/unit/h002/die.png");
+
+AM.queueDownload("./img/unit/h003/card.png");
+AM.queueDownload("./img/unit/h003/card_click.png");
+AM.queueDownload("./img/unit/h003/card_mouseover.png");
+AM.queueDownload("./img/unit/h003/stand.png");
+AM.queueDownload("./img/unit/h003/walk.png");
+AM.queueDownload("./img/unit/h003/jump.png");
+AM.queueDownload("./img/unit/h003/attack.png");
+AM.queueDownload("./img/unit/h003/attack2.png");
+AM.queueDownload("./img/unit/h003/die.png");
 
 AM.queueDownload("./img/unit/h100/stand.png");
 AM.queueDownload("./img/unit/h100/walk.png");
