@@ -29,15 +29,15 @@ SceneManager.prototype.addScene = function (key, scene) {
     // return scene.entities;
     return this.game.entitiesList;
   };
-  scene.clearEntities =function () {
-    // scene.entities=[];
-    this.game.entitiesList = [];
-    this.game.enemyList = [];
-    this.game.playerList = [];
-    this.game.uiList = [];
-    this.game.screenMover.resetScreen();
-    this.game.soundPlayer.removeAllSound();
-  };
+  // scene.clearEntities =function () {
+  //   // scene.entities=[];
+  //   this.game.entitiesList = [];
+  //   this.game.enemyList = [];
+  //   this.game.playerList = [];
+  //   this.game.uiList = [];
+  //   this.game.screenMover.resetScreen();
+  //   this.game.soundPlayer.removeAllSound();
+  // };
   this.scenes[key] = scene;
 };
 
@@ -127,8 +127,10 @@ Scene.prototype.pauseUpdate = function () {
 };
 Scene.prototype.shutdown = function () {
   this.game.clearEntities();
+  this.game.screenMover.resetScreen();
+  this.game.soundPlayer.removeAllSound();
 };
-Scene.prototype.clearEntities = function () {
-  // this.entities =[];
-  this.game.entitiesList = [];
-};
+// Scene.prototype.clearEntities = function () {
+//   // this.entities =[];
+//   this.game.entitiesList = [];
+// };

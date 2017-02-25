@@ -28,8 +28,6 @@ function GameEngine() {
     this.entitiesList = [];
     this.uiList = [];
 
-    this.portals = [];  // will be removed
-    this.food = []; // will be removed
     this.ctx = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
@@ -222,7 +220,14 @@ GameEngine.prototype.loop = function () {
     this.draw();
 }
 GameEngine.prototype.clearEntities = function () {
-  this.sceneManager.clearEntities();
+    this.collisionBox = {
+        ground: [],
+    };
+    this.playerList = [];
+    this.enemyList = [];
+    this.entitiesList = [];
+    this.uiList = [];
+  //this.sceneManager.clearEntities();
 };
 
 function Timer() {

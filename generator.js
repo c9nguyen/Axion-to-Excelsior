@@ -49,7 +49,7 @@ Generator.prototype.draw = function() {
 
 EnemyGenerator = function(game, x, y, list = []) {
     Generator.call(this, game, x, y);
-    this.bucket = list;
+    this.bucket = [];
 
     this.frequency = 1;
     this.counter = 0;
@@ -58,6 +58,12 @@ EnemyGenerator = function(game, x, y, list = []) {
         var code = this.bucket[ran];
         spawnUnit(this.game, this.x, this.y, code, ENEMY);
     }
+
+    var that = this;
+    list.map(function(unit) {
+        for (var i = 0; i < unit.ticket; i++) that.bucket.push(unit.code);
+    });
+
     this.condition = function(that) {
         if (that.counter >= that.frequency) {
             that.counter = 0;
@@ -93,13 +99,19 @@ EnemyGenerator.prototype.update = function() {
 CardGenerator = function(game, x, y, list = [], numOfCard) {
     this.onHand = [];
     this.onHandLocation = [];
-    this.onHandCooldown = [0, 0, 0];
-    this.onDeck = list;
+    this.onHandCooldown = [];
+    this.onDeck = [];
     this.cooldown = 3;
+    this.numOfCard = numOfCard;
 
     Entity.call(this, game, x, y);
+    var that = this;
+    list.map(function(unit) {
+        for (var i = 0; i < unit.ticket; i++) that.onDeck.push(unit.code);
+    });
 
     for (var i = 0; i < numOfCard; i++) {
+        this.onHandCooldown[i] = 0;
         this.setLocation(i, {x: 100 + i * 60, y:535});
     }
 }
@@ -134,7 +146,7 @@ CardGenerator.prototype.drawCard = function(index) {
 
 CardGenerator.prototype.update = function() {
     var that = this;
-    for (var i = 0; i < this.onHand.length; i++) {
+    for (var i = 0; i < this.numOfCard; i++) {
         var card = this.onHand[i];
         if (card.removeFromWorld) {
             if (this.onHandCooldown[i] >= this.cooldown) {
