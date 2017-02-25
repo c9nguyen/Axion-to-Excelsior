@@ -164,6 +164,4 @@ AM.downloadAll(function () {
     gameEngine.start();
 
     gameEngine.sceneManager.startScene('mainmenu');
-
-
 });

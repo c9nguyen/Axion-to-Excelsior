@@ -15,21 +15,19 @@ Battle.prototype.create = function() {
     this.buildingBackground();
     this.buildTiles();
     
-    var list = [
-                "m000", "m000", "m000", "m000",
-                "m001", "m001", "m001", "m001", "m001", "m001", "m001", "m001", "m001",
-                "m002", "m002", "m002", "m002", "m002", "m002",
-                "m010"];
+    var list = [{code: "m000", ticket: 4},
+                {code: "m001", ticket: 9},
+                {code: "m002", ticket: 6},
+                {code: "m010", ticket: 1}];
 
     var gen = new EnemyGenerator(this.game, 1800, 400, list);
     gen.setFrequency(2);
     this.game.addEntity(gen);
 
-    var cards = [
-                "h000", "h000", "h000", 
-                "h001", "h001",
-                "h002", "h002", "h002", "h002", "h002",
-                "h003", "h003", "h003", "h003", "h003",];
+    var cards = [{code: "h000", ticket: 3},
+                 {code: "h001", ticket: 2},
+                 {code: "h002", ticket: 5},
+                 {code: "h003", ticket: 5}];
     var cardGen = new CardGenerator(this.game, 100, 400, cards, 5);
     cardGen.start();
     this.game.addEntity(cardGen);
