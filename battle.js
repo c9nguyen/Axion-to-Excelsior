@@ -15,11 +15,11 @@ Battle.prototype.create = function() {
     this.buildingBackground();
     this.buildTiles();
     
-    var list = [{code: "m000", ticket: 1},
-                {code: "m001", ticket: 1},
-                {code: "m002", ticket: 1},
-                {code: "m003", ticket: 1},
-                {code: "m010", ticket: 0}];
+    var list = [{code: "m000", ticket: 4},
+                {code: "m001", ticket: 8},
+                {code: "m002", ticket: 6},
+                {code: "m003", ticket: 2},
+                {code: "m010", ticket: 1}];
 
     var gen = new EnemyGenerator(this.game, 2300, 400, list);
     gen.setFrequency(2);
