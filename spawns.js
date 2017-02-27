@@ -147,12 +147,12 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 } else
                     that.changeAction("jump");
             }
+            var originGetHit = unit.getHit;
             unit.getHit = function (that, damage) {
-                if (unit.actions.skill.checkCooldown()) {
+                if (skill.checkCooldown()) {
                     that.changeAction("skill");
                 } else {
-                    that.health -= Math.max(damage - (that.def * damage), 1);
-                    if (that.takingEffect) that.takingEffect(that);
+                    originGetHit(that, damage);
                 }
 
             }
@@ -362,6 +362,10 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             }
             break;
 
+
+/* ================================= MONSTER =====================================================*/
+
+
         case "m000":
             unit = new Unit(game, x, y, unitcode, side);
             var groundPoints = [{x: 50, y: 105}];
@@ -515,45 +519,57 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
 
        case "m003":
             unit = new Unit(game, x, y, unitcode, side);
-            var groundPoints = [{x: 35, y: 88}];
-            var collisionBox = [{x: 7, y: 0, width: 77, height: 88}];
+            var groundPoints = [{x: 35, y: 125}];
+            var collisionBox = [{x: 0, y: 0, width: 125, height: 125}];
             var walk = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/walk.png"),
                                     4, 0.13, 4, groundPoints, collisionBox, true);
             walk.velocity.x = walk.unit.movementspeed;
             // walk.effects[0] = function(that) {that.unit.velocity.x = that.unit.movementspeed;};
             // walk.endEffect = function(that) {that.unit.velocity.x = 0};
                     
-            groundPoints = [{x: 35, y: 88}];
-            collisionBox = [{x: 7, y: 0, width: 77, height: 88}];
+            groundPoints = [{x: 20, y: 140}];
+            collisionBox = [{x: 0, y: 15, width: 125, height: 125}];
             var jump = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/jump.png"),
                                     1, 0.1, 1, groundPoints, collisionBox, true);
             jump.endEffect = function(that) {that.unit.velocity.x = 0};
 
-            groundPoints = [{x: 55, y: 101}];
-            collisionBox = [{x: 22, y: 15, width: 100, height: 100}];
-            var attack = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack.png"),
-                                    5, 0.2, 5, groundPoints, collisionBox, false);
-            attack.effects[1] = function(that) {
-                                    castSkill(that.game, that.x, that.y, that.unit, 00000, 1,
-                                    undefined, 100, 100, 0.4, true)};
+            groundPoints = [{x: 80, y: 135}];
+            collisionBox = [{x: 30, y: 0, width: 120, height: 130}];
+            var skill = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/skill.png"),
+                                    6, 0.2, 12, groundPoints, collisionBox, false, 5);
+            var effect = function(that) {castSkill(that.game, that.x - 148, that.y - 20, that.unit, 00000, 1,
+                                    undefined, 270, 140, 0.6, true, true, function(unit) {unit.takePassiveEffect("speed", 0.3)})};
+            skill.effects[4] = effect;
 
-            groundPoints = [{x: 35, y: 88}];
+            groundPoints = [{x: 18, y: 138}];
             collisionBox = [];
             var die = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/die.png"),
-                                    3, 0.1, 6, groundPoints, collisionBox, false, -1);
+                                    5, 0.1, 10, groundPoints, collisionBox, false, -1);
             die.endEffect = function() {this.unit.removeFromWorld = true};
+
+            groundPoints = [{x: 48, y: 132}];
+            collisionBox = [{x: 0, y: 0, width: 120, height: 130}];
+            var stand = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/stand.png"),
+                                    4, 0.1, 4, groundPoints, collisionBox, false);
 
             unit.actions["walk"] = walk;
             unit.actions["jump"] = jump;
-            unit.actions["attack"] = attack;
+            unit.actions["skill"] = skill;
             unit.actions["die"] = die;
+            unit.actions["stand"] = stand;
             unit.defaultAction = walk;
             unit.actionHandler = function(that) {
                 if (!that.gravity) {
                     if (that.currentAction.interruptible || that.currentAction.isDone()) {
-                        var collisedEnemy = that.checkEnemyInRange();
-                        if (collisedEnemy.has(0)) that.changeAction("attack");
-                        else that.changeAction("walk");
+
+                        var ally = that.checkAllyInRange(function(ally) {return ally.passiveEffect.speed.amount <= 0});
+                        if (ally.has(0) && skill.checkCooldown()) that.changeAction("skill");
+                        else {
+                            var collisedEnemy = that.checkEnemyInRange();
+                            if (collisedEnemy.has(0)) that.changeAction("stand");
+                            else that.changeAction("walk");
+                        } 
+                        
                     }
                 } else
                     that.changeAction("jump");
@@ -662,7 +678,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 50, y: 170}];
             collisionBox = [{x:30, y: 20, width:80, height: 160}];
             var stand = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/stand.png"),
-                                    11, 0.15, 11, groundPoints, collisionBox, true);
+                                    11, 0.13, 11, groundPoints, collisionBox, true);
             stand.effects[0] = function(that) {that.unit.velocity.x = 0};
 
             //attack.effects[0] = function() {this.unit.velocity.y = -800; this.unit.velocity.x = 200};

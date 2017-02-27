@@ -15,12 +15,13 @@ Battle.prototype.create = function() {
     this.buildingBackground();
     this.buildTiles();
     
-    var list = [{code: "m000", ticket: 4},
-                {code: "m001", ticket: 9},
-                {code: "m002", ticket: 6},
-                {code: "m010", ticket: 1}];
+    var list = [{code: "m000", ticket: 1},
+                {code: "m001", ticket: 1},
+                {code: "m002", ticket: 1},
+                {code: "m003", ticket: 1},
+                {code: "m010", ticket: 0}];
 
-    var gen = new EnemyGenerator(this.game, 1800, 400, list);
+    var gen = new EnemyGenerator(this.game, 2300, 400, list);
     gen.setFrequency(2);
     this.game.addEntity(gen);
 
@@ -62,7 +63,7 @@ Battle.prototype.create = function() {
     this.game.addEntity(button2);
 //    spawnUnit(this.game, 100, 400, "h003", PLAYER);
 
-    var enemyBoss = spawnUnit(this.game, 1800, 400, "m100", ENEMY);
+    var enemyBoss = spawnUnit(this.game, 2300, 400, "m100", ENEMY);
 
     var playerBoss = spawnUnit(this.game, 100, 400, "h100", PLAYER);
 

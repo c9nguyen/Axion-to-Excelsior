@@ -94,7 +94,7 @@ AM.queueDownload("./img/unit/m002/die.png");
 AM.queueDownload("./img/unit/m003/stand.png");
 AM.queueDownload("./img/unit/m003/walk.png");
 AM.queueDownload("./img/unit/m003/jump.png");
-AM.queueDownload("./img/unit/m003/attack.png");
+AM.queueDownload("./img/unit/m003/skill.png");
 AM.queueDownload("./img/unit/m003/die.png");
 
 AM.queueDownload("./img/unit/m010/stand.png");
@@ -152,6 +152,15 @@ AM.queueDownload("./img/effect/00000/stab.png");
 AM.queueDownload("./img/effect/00000/9.swingP1.2_0.png");
 AM.queueDownload("./img/effect/00001/shuriken.png");
 AM.queueDownload("./img/effect/00002/dummy.png");
+
+AM.queueDownload("./img/effect/passive/att.png");
+AM.queueDownload("./img/effect/passive/def.png");
+AM.queueDownload("./img/effect/passive/speed.png");
+AM.queueDownload("./img/effect/passive/stun.png");
+AM.queueDownload("./img/effect/passive/ice.png");
+AM.queueDownload("./img/effect/passive/heal.png");
+AM.queueDownload("./img/effect/passive/poison.png");
+AM.queueDownload("./img/effect/passive/push.png");
 
 
 AM.downloadAll(function () {
