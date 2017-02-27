@@ -2,7 +2,7 @@ function SoundPlayer(game){
     Entity.call(this, game, 0, 0);
     this.movable = false;
 
-    this.playMusic = false;
+    this.playMusic = true;
     this.playEffect = true;
     this.toggleMusic = false;
     this.toggleEffect = false;
