@@ -22,7 +22,7 @@ var unitData = {
         groundWidth: 35,
         groundHeight: 10,
         health: 60,
-        movementspeed: 200,
+        movementspeed: 260,
         att: 5,
         def: 0,
         flying: false,
@@ -103,16 +103,16 @@ var unitData = {
         range: [{x: -55, y: -85, width: 75, height: 85}],
     },
     m003: {
-        groundWidth: 75,
+        groundWidth: 85,
         groundHeight: 10,
         health: 80,
         movementspeed: -150,
-        att: 30,
-        def: 0.1,
+        att: 0,
+        def: 0.15,
         flying: false,
-        knockable: true,
+        knockable: false,
         //Attacking with x and y are offset from unit's ground hit box
-        range: [{x: -155, y: -300, width: 200, height: 320}],
+        range: [{x: -220, y: -140, width: 280, height: 160}],
     },
     m010: {
         groundWidth: 120,
@@ -136,6 +136,6 @@ var unitData = {
         flying: false,
         knockable: false,
         //Attacking with x and y are offset from unit's ground hit box
-        range: [{x: -100, y: -160, width: 200, height: 180}],
+        range: [{x: -120, y: -160, width: 200, height: 180}],
     }
 }

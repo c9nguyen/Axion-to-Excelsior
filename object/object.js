@@ -63,8 +63,9 @@ NonAnimatedObject.prototype.update = function () {
  * Object with animation
  */
 function AnimatedObject(game, spritesheet, x = 0, y = 0,
-                frameWidth, frameHeight,
                 sheetWidth, frameDuration, frames, loop, 
+                frameWidth = spritesheet.width / sheetWidth , 
+                frameHeight = spritesheet.height / Math.ceil(frames / sheetWidth),
                 scale = 1, width = frameWidth, height = frameHeight) { //default orignal size
                     
     NonAnimatedObject.call(this, game, spritesheet, x, y, frameWidth, frameHeight, 
@@ -137,7 +138,6 @@ AnimatedObject.prototype.draw = function () {
 }
 
 AnimatedObject.prototype.update = function () {
-    if (this.y > canvasHeight * 2) this.removeFromWorld = true;
     Entity.prototype.update.call(this);
 }
 
@@ -634,9 +634,7 @@ function Effect(game, x, y, unit, spritesheet,
     var frameWidth = spritesheet.width / sheetWidth;
     var frameHeight = spritesheet.height / Math.ceil(frames / sheetWidth);
     AnimatedObject.call(this, game, spritesheet, x, y,
-                        frameWidth, frameHeight,
-                        sheetWidth, frameDuration, frames, false, 
-                        scale = 1);
+                        sheetWidth, frameDuration, frames, false);
     //Effect percent based on unit's stat. Exp: If unit has 100 att and this effect has 0.5%. This effect will deal 50 damage
     this.percent = percent;
     this.aoe = aoe;

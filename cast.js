@@ -7,7 +7,7 @@
  */
 function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need this
                     additionalEffect = function() {}, // little addion
-                    width, height, durationTime, aoe, effect) {  //this for customized effect
+                    width, height, durationTime, aoe, positive = false, effect) {  //this for customized effect
     var skill;
     var nonAnimationSheet = {width: 0, height: 0};
     var action;
@@ -84,7 +84,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
 
     if (skill !== undefined) {
         game.addEntity(skill);
+        if (positive) skill.setPositive();
     } 
+
     else console.log("Wrong skillcode");
     return skill;
 }
