@@ -19,16 +19,25 @@ SceneManager.prototype.addScene = function (key, scene) {
     scene = new scene(this.game);
   }
 
-  scene.entities = [];
+  // scene.entities = [];
+  this.game.entitiesList = [];
   scene.addEntity = function (entity) {
-    scene.entities.push(entity);
+    // scene.entities.push(entity);
+    this.game.entitiesList.push(entity);
   };
   scene.getEntities = function(){
-    return scene.entities;
+    // return scene.entities;
+    return this.game.entitiesList;
   };
-  scene.clearEntities =function () {
-    scene.entities=[];
-  };
+  // scene.clearEntities =function () {
+  //   // scene.entities=[];
+  //   this.game.entitiesList = [];
+  //   this.game.enemyList = [];
+  //   this.game.playerList = [];
+  //   this.game.uiList = [];
+  //   this.game.screenMover.resetScreen();
+  //   this.game.soundPlayer.removeAllSound();
+  // };
   this.scenes[key] = scene;
 };
 
@@ -66,7 +75,9 @@ SceneManager.prototype.preUpdate = function(time) {
 };
 SceneManager.prototype.clearCurrentScene = function() {
   if(this.currentScene){
+    console.log("shutdown");
     if(this.currentScene.shutdown){
+      console.log("inside shutdown");
       this.currentScene.shutdown();
     }
   }
@@ -82,15 +93,14 @@ SceneManager.prototype.clearEntities = function () {
   this.currentScene.clearEntities();
 };
 
-
 function Scene(game)
 {
   this.game = game;
-  this.entities = [];
+  // this.entities = [];
 }
-Scene.prototype.init = function () {
+// Scene.prototype.init = function () {
 
-};
+// };
 Scene.prototype.preload = function () {
 
 };
@@ -98,7 +108,7 @@ Scene.prototype.loadUpdate = function () {
 
 };
 Scene.prototype.create = function () {
-
+  
 };
 Scene.prototype.update = function () {
 
@@ -116,8 +126,11 @@ Scene.prototype.pauseUpdate = function () {
 
 };
 Scene.prototype.shutdown = function () {
-
+  this.game.clearEntities();
+  this.game.screenMover.resetScreen();
+  this.game.soundPlayer.removeAllSound();
 };
-Scene.prototype.clearEntities = function () {
-    this,entities =[];
-};
+// Scene.prototype.clearEntities = function () {
+//   // this.entities =[];
+//   this.game.entitiesList = [];
+// };

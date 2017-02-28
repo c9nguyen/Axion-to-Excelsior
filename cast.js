@@ -7,7 +7,7 @@
  */
 function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need this
                     additionalEffect = function() {}, // little addion
-                    width, height, durationTime, aoe, effect) {  //this for customized effect
+                    width, height, durationTime, aoe, positive = false, effect) {  //this for customized effect
     var skill;
     var nonAnimationSheet = {width: 0, height: 0};
     var action;
@@ -19,7 +19,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 action = function(unit) {
                     var damage = this.percent * this.unit.att;
                     unit.takeDamage(damage);
-                    additionalEffect(unit);
+                    unit.takeEffect(additionalEffect);
                 };
             }
             skill = new Effect(game, x, y, unit, nonAnimationSheet,
@@ -30,7 +30,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             action = function(unit) {
                 var damage = percentAtt * this.unit.att;
                 unit.takeDamage(damage);
-                additionalEffect(unit);
+                unit.takeEffect(additionalEffect);
             };
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/00000/stab.png"),
                                 1, 0.1, 1, collisionBox, action, percentAtt, false);
@@ -40,7 +40,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             action = function(unit) {
                 var damage = percentAtt * this.unit.att;
                 unit.takeDamage(damage);
-                additionalEffect(unit);
+                unit.takeEffect(additionalEffect);
             };
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/00000/9.swingP1.2_0.png"),
                                 1, 0.1, 1, collisionBox, action, percentAtt, false);
@@ -50,7 +50,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             action = function(unit) {
                 var damage = percentAtt * this.unit.att;
                 unit.takeDamage(damage);
-                additionalEffect(unit);
+                unit.takeEffect(additionalEffect);
                 this.removeFromWorld = true;
             };
 
@@ -62,6 +62,11 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             skill.velocity.x = 600 * direction;
             random = Math.floor(Math.random() * 80 - 40);
             skill.velocity.y = random;
+            skill.hitEffect = function(that) {
+                var effect = new AnimatedObject(that.game, AM.getAsset("./img/effect/00000/shuriken_hit.png"),
+                                            that.x, that.y, 4, 0.1, 4, false);
+                that.game.addEntity(effect);
+            }
             break;
         case 00010: //dummy
             var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
@@ -84,7 +89,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
 
     if (skill !== undefined) {
         game.addEntity(skill);
+        if (positive) skill.setPositive();
     } 
+
     else console.log("Wrong skillcode");
     return skill;
 }

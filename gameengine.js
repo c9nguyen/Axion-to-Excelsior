@@ -12,20 +12,22 @@ window.requestAnimFrame = (function () {
 const NEUTRAL = 0;
 const PLAYER = 1;
 const ENEMY = -1;
+const UI = 10;
 
 const GRAVITY = 1800; //can change this to make gravity better
 
 function GameEngine() {
     this.sceneManager = new SceneManager(this);
     this.screenMover = new ScreenMover(this);
+    this.soundPlayer = null;
     this.collisionBox = {
         ground: [],
     };
     this.playerList = [];
     this.enemyList = [];
+    this.entitiesList = [];
+    this.uiList = [];
 
-    this.portals = [];  // will be removed
-    this.food = []; // will be removed
     this.ctx = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
@@ -58,6 +60,7 @@ GameEngine.prototype.init = function (ctx) {
     this.surfaceHeight = this.ctx.canvas.height;
     this.timer = new Timer();
     this.startInput();
+    this.soundPlayer = new SoundPlayer(this);
     console.log('game initialized');
 }
 
@@ -133,6 +136,10 @@ GameEngine.prototype.startInput = function () {
     // left = 37, up = 38, right = 39, down = 40
     this.right = new KeyBoard(this.ctx, "ArrowRight");
     this.left = new KeyBoard(this.ctx, "ArrowLeft");
+    this.keyW = new KeyBoard(this.ctx, "KeyW");
+    this.keyA = new KeyBoard(this.ctx, "KeyA");
+    this.keyS = new KeyBoard(this.ctx, "KeyS");
+    this.keyD = new KeyBoard(this.ctx, "KeyD");
     //end vinh
 
     // this.ctx.canvas.addEventListener("keyup", function (e) {
@@ -148,16 +155,22 @@ GameEngine.prototype.addEntity = function (entity) {
  //   console.log('added entity');
     if (entity.side === PLAYER) this.playerList.push(entity);
     else if (entity.side === ENEMY) this.enemyList.push(entity);
+    else if (entity.side === UI) this.uiList.push(entity);
     this.sceneManager.addEntityToScene(entity);
 }
 
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
     this.ctx.save();
+    var that = this;
     var entities = this.sceneManager.getCurrentEntities();
     for (var i = 0; i < entities.length; i++) {
         entities[i].draw(this.ctx);
     }
+    this.uiList.map(function(ui) {
+        ui.draw(that.ctx);
+    });
+    this.soundPlayer.draw();
     this.ctx.restore();
 }
 
@@ -166,6 +179,7 @@ GameEngine.prototype.update = function () {
 
     // Update Screen
     this.screenMover.update();
+    this.soundPlayer.update();
 
     for (var i = 0; i < entities.length; i++) {
         //If this enetity will be removed
@@ -177,11 +191,28 @@ GameEngine.prototype.update = function () {
             // entity.y += this.clockTick * entity.yVelocity;
 
             entity.update();
-            if (entities[i].removeFromWorld) {
+            if (entity.removeFromWorld) {
                 entities.splice(i, 1);
                 i--;
             }
     }
+
+    for (var i = 0; i < this.uiList.length; i++) {
+        //If this enetity will be removed
+            var entity = this.uiList[i];
+
+            //applying gravity
+            // if (entity.gravity) entity.yVelocity += this.clockTick * 1800;
+            // else entity.yVelocity = 0;      //Will be changed
+            // entity.y += this.clockTick * entity.yVelocity;
+
+            entity.update();
+            if (entity.removeFromWorld) {
+                this.uiList.splice(i, 1);
+                i--;
+            }
+    }
+
     this.mouse.reset();
 }
 
@@ -191,7 +222,14 @@ GameEngine.prototype.loop = function () {
     this.draw();
 }
 GameEngine.prototype.clearEntities = function () {
-  this.sceneManager.clearEntities();
+    this.collisionBox = {
+        ground: [],
+    };
+    this.playerList = [];
+    this.enemyList = [];
+    this.entitiesList = [];
+    this.uiList = [];
+  //this.sceneManager.clearEntities();
 };
 
 function Timer() {

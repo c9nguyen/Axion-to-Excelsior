@@ -11,8 +11,6 @@ function ScreenScroller(game, screenmove, x, y, boxX, boxY){
     this.mapSize = this.screenmove.mapSize;
     this.screenSize = this.screenmove.screenSize;
 
-    // SOUND
-    this.clickSound = new SoundPlayer("./sound/effects/smw_yoshi_runs_away.wav");
 }
 
 ScreenScroller.prototype = Object.create (Entity.prototype);
@@ -41,7 +39,7 @@ ScreenScroller.prototype.draw = function(){
 ScreenScroller.prototype.update = function(){
     if(collise(this.colliseBox, this.game.mouse)){
         if (this.game.mouse.click) {
-            console.log("Clicked  x: " + (this.game.mouse.x - this.x) + " y: " + (this.game.mouse.y - this.y));
+            // console.log("Clicked  x: " + (this.game.mouse.x - this.x) + " y: " + (this.game.mouse.y - this.y));
             var tempx = this.game.mouse.x - this.x;
             var screenPercentageMovement = -1;
 
@@ -60,7 +58,7 @@ ScreenScroller.prototype.update = function(){
             if(screenPercentageMovement >= 0){
                 this.screenmove.moveScreenHere(screenPercentageMovement);
                 // SOUND
-                this.clickSound.play();
+                this.game.soundPlayer.addToEffect("./sound/effects/smw_yoshi_runs_away.wav");
             }
             
             this.game.mouse.click = false;
@@ -70,9 +68,11 @@ ScreenScroller.prototype.update = function(){
 
 
 //---------------------------------- Arrow Key Move ------------------------------//
-function ScreenMoveArrow(game, screenmove){
+function ScreenMoveArrow(game, screenmove, listenerLeft, listenerRight){
     Entity.call(this, game, 0, 0); 
     this.screenmove = screenmove;
+    this.left = listenerLeft;
+    this.right = listenerRight;
     // ADJUST
     this.jump = 100;
 }
@@ -81,20 +81,58 @@ ScreenMoveArrow.prototype.constructor = ScreenMoveArrow;
 
 ScreenMoveArrow.prototype.update = function(){
     //Entity.prototype.update.call(this);
-    if(this.game.right.press){
+    if(this.right.press){
         //console.log("right");
         this.screenmove.myMoveAmount -= this.jump;
         //this.game.right.press = false;
-    } else if(this.game.left.press){
+    } else if(this.left.press){
         //console.log("left");
         this.screenmove.myMoveAmount += this.jump;
         //this.game.left.press = false;
-    } else if(this.game.right.stopIm || this.game.left.stopIm){
+    } else if(this.right.stopIm || this.left.stopIm){
         this.screenmove.myMoveAmount = 0;
-        this.game.right.stopIm = false;
-        this.game.left.stopIm = false;
+        this.right.stopIm = false;
+        this.left.stopIm = false;
     }
 
 }
 ScreenMoveArrow.prototype.draw = function(){
 }
+
+//---------------------------------- Mouse Over Move ------------------------------//
+function ScreenMouseOverMovement(game, screenmove, direction){
+
+    if(direction !== "right" && direction !== "left"){
+        return null;
+    }
+    this.direction = direction;
+    this.game = game;
+    this.screenmove = screenmove;
+    // ADJUST
+    this.jump = 10;
+    this.end = 0.1;
+    this.locationX = 0;
+    this.locationY = 275;
+    if(direction === "right"){
+        this.jump *= -1;
+        this.locationX = 1100;
+        this.end = 100;
+    }
+    var that = this;
+
+    var button = new Button(this.game, AM.getAsset("./img/ui/" + this.direction + "_arrow_button.png"), 
+                            this.locationX, this.locationY);
+    button.colliseBox = {x: button.x, y: button.y, 
+                        width: button.normal.width, height: button.normal.height}
+    button.addSheet(AM.getAsset("./img/ui/" + this.direction + "_arrow_hoverbutton.png"), "click");
+    button.addSheet(AM.getAsset("./img/ui/" + this.direction + "_arrow_pressbutton.png"), "mouseover");
+    button.addEventListener("mouseover", function(){
+        that.screenmove.myMoveAmount += that.jump / 2;
+    });
+    button.addEventListener("click", function() { 
+        that.screenmove.moveScreenHere(that.end);
+    });
+
+    return button;
+}
+
