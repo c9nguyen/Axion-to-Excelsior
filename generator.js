@@ -147,7 +147,7 @@ CardGenerator.prototype.useEnergy = function(energy) {
 CardGenerator.prototype.drawCard = function(index) {
     var ran = Math.floor(Math.random() * this.onDeck.length);
     var card = this.onDeck[ran];
-    this.onDeck.slice(ran, 1);
+    this.onDeck.splice(ran, 1);
     var location = this.onHandLocation[index];
     var newCard = new UnitCard(this, card, location.x, location.y, this.x, this.y);
     this.onHand[index] = newCard;
