@@ -40,7 +40,7 @@ Battle.prototype.create = function() {
     cardGen.start();
     this.game.addEntity(cardGen);
 
-    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 550, 400, 50);
+    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 575, 400, 25);
     this.game.addEntity(map);
     var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover, this.game.left, this.game.right);
     this.game.addEntity(rightAndLeftKey);
@@ -53,8 +53,8 @@ Battle.prototype.create = function() {
     var leftArrow = new ScreenMouseOverMovement(this.game, this.game.screenMover, "left");
     this.game.addEntity(leftArrow);
 
-    // Sound
-    this.game.soundPlayer.addToMusic("./sound/music/battle/KH-monstrous-monstro.mp3", undefined, undefined, 0.4);
+    // SOUND
+    this.addAllMusic();
 
     var that = this;
 
@@ -138,3 +138,16 @@ Battle.prototype.buildTiles = function() {
     var tile = new Tile(this.game, groundX, canvasHeight - 100, numOfTile, "snowrock");
     this.game.addEntity(tile);
 };
+
+Battle.prototype.addAllMusic = function(){
+    // Sound
+    this.game.soundPlayer.randomTrackInQueue = true;
+    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-monstrous-monstro.mp3", undefined, undefined, 0.4);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-squirming-evil.mp3", undefined, undefined, 0.4);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-scherzo-di-notte.mp3", undefined, undefined, 0.4);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-darknite.mp3", undefined, undefined, 0.4);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-lancastrians.mp3", undefined, undefined, 0.4);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-seto.mp3", undefined, undefined, 0.4);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-yugi.mp3", undefined, undefined, 0.4);
+
+}

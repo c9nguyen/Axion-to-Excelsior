@@ -109,7 +109,7 @@ function ScreenMouseOverMovement(game, screenmove, direction){
     this.game = game;
     this.screenmove = screenmove;
     // ADJUST
-    this.jump = 20;
+    this.jump = 15;
     this.end = 0.1;
     this.locationX = 0;
     this.locationY = 275;
@@ -122,6 +122,8 @@ function ScreenMouseOverMovement(game, screenmove, direction){
 
     var button = new Button(this.game, AM.getAsset("./img/ui/" + this.direction + "_arrow_button.png"), 
                             this.locationX, this.locationY);
+    button.colliseBox = {x: button.x, y: 100, 
+                        width: button.normal.width, height: 400}
     button.addSheet(AM.getAsset("./img/ui/" + this.direction + "_arrow_hoverbutton.png"), "click");
     button.addSheet(AM.getAsset("./img/ui/" + this.direction + "_arrow_pressbutton.png"), "mouseover");
     button.addEventListener("mouseover", function(){
