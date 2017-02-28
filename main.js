@@ -67,6 +67,10 @@ AM.queueDownload("./img/unit/h003/attack.png");
 AM.queueDownload("./img/unit/h003/attack2.png");
 AM.queueDownload("./img/unit/h003/die.png");
 
+AM.queueDownload("./img/unit/h100/card.png");
+AM.queueDownload("./img/unit/h100/card_click.png");
+AM.queueDownload("./img/unit/h100/card_mouseover.png");
+AM.queueDownload("./img/unit/h100/card_disable.png");
 AM.queueDownload("./img/unit/h100/stand.png");
 AM.queueDownload("./img/unit/h100/walk.png");
 AM.queueDownload("./img/unit/h100/jump.png");
@@ -114,6 +118,13 @@ AM.queueDownload("./img/unit/m100/jump.png");
 AM.queueDownload("./img/unit/m100/attack.png");
 AM.queueDownload("./img/unit/m100/attack2.png");
 AM.queueDownload("./img/unit/m100/die.png");
+
+AM.queueDownload("./img/unit/tower0/stand.png");
+AM.queueDownload("./img/unit/tower0/attack.png");
+AM.queueDownload("./img/unit/tower0/attack2.png");
+AM.queueDownload("./img/unit/tower0/die.png");
+AM.queueDownload("./img/unit/tower0/skill_icon.png");
+AM.queueDownload("./img/unit/tower0/skill2_icon.png");
 
 AM.queueDownload("./img/character/warrior/stand_right.png");
 AM.queueDownload("./img/character/warrior/walk_right.png");

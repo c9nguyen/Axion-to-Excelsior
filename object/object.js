@@ -66,6 +66,7 @@ NonAnimatedObject.prototype.update = function () {
         this.x = host.entity.x + host.offsetX;
         this.y = host.entity.y + host.offsetY;
         this.removeFromWorld = host.entity.removeFromWorld;
+        if (host.health) this.removeFromWorld = host.health <= 0;
     }
     Entity.prototype.update.call(this);
 };

@@ -361,7 +361,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                         var collisedEnemy = that.checkEnemyInRange();
                         if (collisedEnemy.has(0) && attack3.checkCooldown()) that.changeAction("attack3");
                         else if (collisedEnemy.has(1)) that.changeAction("attack");
-                        else that.changeAction("stand");
+                        else that.changeAction("walk");
                     }
                 } else
                     that.changeAction("jump");
@@ -599,7 +599,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             jump.endEffect = function(that) {that.unit.velocity.x = 0};
             
             groundPoints = [{x: 50, y: 140}];
-            collisionBox[0] = {x: 50, y: 20, width: 120, height: 120};
+            collisionBox = [{x: 50, y: 20, width: 120, height: 120}];
 
             var attack = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack.png"),
                                     4, 0.15, 12, groundPoints, collisionBox, false);
@@ -616,8 +616,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             die.endEffect = function() {
                 this.unit.removeFromWorld = true};
 
-            var groundPoints = [{x: 0, y: 130}];
-            var collisionBox = [{x: 10, y: 10, width: 120, height: 120}];
+            groundPoints = [{x: 0, y: 130}];
+            collisionBox = [{x: 10, y: 10, width: 120, height: 120}];
             var stand = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/stand.png"),
                                     3, 0.2, 6, groundPoints, collisionBox, true);
             stand.effects[0] = function(that) {that.unit.velocity.x = 0};
@@ -712,6 +712,10 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                     that.changeAction("jump");
             }
             break;
+
+/* ================================= TOWER =====================================================*/
+
+
     }
 
     if (unit !== undefined) game.addEntity(unit);

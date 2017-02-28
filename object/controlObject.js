@@ -5,6 +5,7 @@ function Button(game, spritesheet, x, y, scale = 1) {
 
     Entity.call(this, game, x, y, UI);
     this.movable = false;
+    this.cooldown = 0;
 
     this.status = this.NORMAL;
     var animatedObject = new NonAnimatedObject(game, spritesheet, x, y);
@@ -47,6 +48,10 @@ Button.prototype.addEventListener = function(eventType, action) {
     else if (eventType === "mouseover") this.mouseoverAction = action;
 }
 
+Button.prototype.setCooldown = function(cooldown) {
+    this.cooldown = cooldown;
+}
+
 Button.prototype.draw = function() {
     var drawObj;
     if (this.status === this.NORMAL) {
@@ -65,13 +70,25 @@ Button.prototype.draw = function() {
 
 }
 
+/**
+ * Check if the action is still on cooldown
+ * return true if action can be excecuted
+ */
+Button.prototype.checkCooldown = function() {
+   // var offCooldown = true;
+    return (this.timeLastStart === undefined || this.game.timer.gameTime - this.timeLastClick >= this.cooldown);
+}
+
 Button.prototype.update = function() {
     if (collise(this.colliseBox, this.game.mouse)) {
-        if (this.game.mouse.click) {      
-            this.clickAction(this);
-            // SOUND
-            this.game.soundPlayer.addToEffect("./sound/effects/smb_stomp.wav", false, 2.0);
-            this.game.mouse.click = false;
+        if (this.game.mouse.click) { 
+            if (this.checkCooldown()) {  
+                this.clickAction(this);
+                // SOUND
+                this.game.soundPlayer.addToEffect("./sound/effects/smb_stomp.wav", false, 2.0);
+                this.game.mouse.click = false;
+                this.timeLastClick = this.game.timer.gameTime;
+            }
         } else if (this.game.mouse.pressed) {
             this.status = this.PRESS;
             this.pressAction(this);
