@@ -62,6 +62,11 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             skill.velocity.x = 600 * direction;
             random = Math.floor(Math.random() * 80 - 40);
             skill.velocity.y = random;
+            skill.hitEffect = function(that) {
+                var effect = new AnimatedObject(that.game, AM.getAsset("./img/effect/00000/shuriken_hit.png"),
+                                            that.x, that.y, 4, 0.1, 4, false);
+                that.game.addEntity(effect);
+            }
             break;
         case 00010: //dummy
             var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];

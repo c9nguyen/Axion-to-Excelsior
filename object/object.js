@@ -37,6 +37,13 @@ NonAnimatedObject.prototype.setSize = function(width, height) {
     this.height = height;
 }
 
+/**
+ * Set up an entity that this entity will stick to it
+ */
+NonAnimatedObject.prototype.setStickTo = function(entity, offsetX, offsetY) {
+    this.stickTo = {entity: entity, offsetX: offsetX, offsetY: offsetY};
+}
+
 NonAnimatedObject.prototype.draw = function() {
     var drawX = this.x;
     if(this.movable){
@@ -54,8 +61,16 @@ NonAnimatedObject.prototype.draw = function() {
 }
 
 NonAnimatedObject.prototype.update = function () {
+    if (this.stickTo) {
+        var host = this.stickTo;
+        this.x = host.entity.x + host.offsetX;
+        this.y = host.entity.y + host.offsetY;
+        this.removeFromWorld = host.entity.removeFromWorld;
+        if (host.health) this.removeFromWorld = host.health <= 0;
+    }
     Entity.prototype.update.call(this);
 };
+
 
 /*===============================================================*/
 
@@ -84,7 +99,7 @@ function AnimatedObject(game, spritesheet, x = 0, y = 0,
     this.scale = scale;
 };
 
-AnimatedObject.prototype = Object.create(Entity.prototype);
+AnimatedObject.prototype = Object.create(NonAnimatedObject.prototype);
 AnimatedObject.prototype.constructor = AnimatedObject;
 
 // /**
@@ -138,7 +153,7 @@ AnimatedObject.prototype.draw = function () {
 }
 
 AnimatedObject.prototype.update = function () {
-    Entity.prototype.update.call(this);
+    NonAnimatedObject.prototype.update.call(this);
 }
 
 AnimatedObject.prototype.currentFrame = function () {
@@ -695,13 +710,13 @@ Effect.prototype.update = function() {//Updating the coordinate for the unit in 
                 var otherCollisionBox = opponent[i].getCollisionBox();
                 if (collise(this.collisionBox, otherCollisionBox)) {
                     this.collisingAction(opponent[i]);  //What happen to the opponent when collised this effect
+                    this.hitEffect(this);
                     if (!this.aoe) {
                         this.hit = true;
                         break;   //stop searching if this effect is not aoe
                     } else {
                         this.hitList.add(opponent[i]);
                     }
-                    this.hitEffect(this);
                 }
             }
         }

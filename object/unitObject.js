@@ -215,6 +215,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
         })
        // if (this.takingEffect) this.takingEffect(this);
     };
+    this.actionHandler = function() {};
 }
 
 Unit.prototype = Object.create(Entity.prototype);
@@ -517,3 +518,4 @@ Unit.prototype.draw = function() {
 
     
 }
+

@@ -305,9 +305,11 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x + 40, that.y, that.unit, 00000, 0.25,
                         undefined, 502, 304, 0.1, true);};
             var effect2 = function (that) {
-                if (that.game.moveAmount > 0)
-                    console.log(that.game.moveAmount);
-                castSkill(that.game, that.x, that.y, that.unit, 'h1000', 0);};
+                var attach = new AnimatedObject(that.game, AM.getAsset("./img/unit/" + unitcode + "/attack1.png"), that.x, that.y, 7, 0.1, 14, false);
+                attach.setStickTo(attack, 0, 0);
+                that.game.addEntity(attach);
+               // castSkill(that.game, that.x, that.y, that.unit, 'h1000', 0);
+            };
             attack.effects[0] = effect2;
             attack.effects[1] = effect;
             attack.effects[2] = effect;
@@ -327,7 +329,11 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x, that.y + 105, that.unit, 00000, 1,
                         undefined, 635, 166, 0.1, true);};
             effect2 = function (that) {
-                castSkill(that.game, that.x, that.y, that.unit, 'h1001', 0);};
+                var attach = new AnimatedObject(that.game, AM.getAsset("./img/unit/" + unitcode + "/attack3.png"), that.x, that.y, 13, 0.1, 13, false);
+                attach.setStickTo(attack3, 0, 0);
+                that.game.addEntity(attach);
+                //castSkill(that.game, that.x, that.y, that.unit, 'h1001', 0);
+            };
             attack3.effects[0] = effect2;   
             attack3.effects[4] = effect;
             attack3.effects[5] = effect;
@@ -355,7 +361,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                         var collisedEnemy = that.checkEnemyInRange();
                         if (collisedEnemy.has(0) && attack3.checkCooldown()) that.changeAction("attack3");
                         else if (collisedEnemy.has(1)) that.changeAction("attack");
-                        else that.changeAction("stand");
+                        else that.changeAction("walk");
                     }
                 } else
                     that.changeAction("jump");
@@ -593,7 +599,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             jump.endEffect = function(that) {that.unit.velocity.x = 0};
             
             groundPoints = [{x: 50, y: 140}];
-            collisionBox[0] = {x: 50, y: 20, width: 120, height: 120};
+            collisionBox = [{x: 50, y: 20, width: 120, height: 120}];
 
             var attack = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack.png"),
                                     4, 0.15, 12, groundPoints, collisionBox, false);
@@ -610,8 +616,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             die.endEffect = function() {
                 this.unit.removeFromWorld = true};
 
-            var groundPoints = [{x: 0, y: 130}];
-            var collisionBox = [{x: 10, y: 10, width: 120, height: 120}];
+            groundPoints = [{x: 0, y: 130}];
+            collisionBox = [{x: 10, y: 10, width: 120, height: 120}];
             var stand = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/stand.png"),
                                     3, 0.2, 6, groundPoints, collisionBox, true);
             stand.effects[0] = function(that) {that.unit.velocity.x = 0};
@@ -706,6 +712,10 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                     that.changeAction("jump");
             }
             break;
+
+/* ================================= TOWER =====================================================*/
+
+
     }
 
     if (unit !== undefined) game.addEntity(unit);

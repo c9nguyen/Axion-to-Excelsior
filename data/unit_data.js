@@ -9,6 +9,7 @@ var unitData = {
     h000: {
         groundWidth: 50,
         groundHeight: 10,
+        energy: 2,
         health: 100,
         movementspeed: 130,
         att: 20,
@@ -21,6 +22,7 @@ var unitData = {
     h001: {
         groundWidth: 35,
         groundHeight: 10,
+        energy: 2,
         health: 60,
         movementspeed: 260,
         att: 5,
@@ -33,6 +35,7 @@ var unitData = {
     h002: {
         groundWidth: 40,
         groundHeight: 10,
+        energy: 1,
         health: 80,
         movementspeed: 130,
         att: 20,
@@ -45,6 +48,7 @@ var unitData = {
     h003: {
         groundWidth: 40,
         groundHeight: 10,
+        energy: 1,
         health: 80,
         movementspeed: 130,
         att: 30,
@@ -57,14 +61,15 @@ var unitData = {
     h100: {
         groundWidth: 50,
         groundHeight: 10,
-        health: 500,
+        energy: 5,
+        health: 120,
         movementspeed: 130,
-        att: 10,
+        att: 5,
         def: 0.15,
         flying: false,
         knockable: false,
         //Attacking with x and y are offset from unit's ground hit box
-        range: [{x: 0, y: -200, width: 300, height: 250}, {x: 0, y: -200, width: 370, height: 250}],
+        range: [{x: 0, y: -200, width: 200, height: 250}, {x: 0, y: -200, width: 300, height: 250}],
     },
     m000: {
         groundWidth: 55,
