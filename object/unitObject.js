@@ -468,6 +468,7 @@ Unit.prototype.draw = function() {
     healthPercent = Math.max(healthPercent, 0);
     var height = this.height / 2;
     //var healthBar = {x: this.x, y: this.y, width: this.width * healthPercent, height: height};
+    ctx.beginPath();
     ctx.fillStyle = 'red';
     ctx.fillRect(drawX, this.y, this.width, height);
     ctx.fillStyle = 'green';

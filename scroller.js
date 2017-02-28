@@ -11,31 +11,30 @@ function ScreenScroller(game, screenmove, x, y, boxX, boxY){
     this.mapSize = this.screenmove.mapSize;
     this.screenSize = this.screenmove.screenSize;
 
+    if(this.game.sceneManager.currentScene !== undefined
+            && this.game.sceneManager.currentScene.background !== undefined){
+        this.back = this.game.sceneManager.currentScene.background;
+        this.backObject = new NonAnimatedObject(this.game, AM.getAsset(this.back),
+                                    this.x, this.y, 
+                                    undefined, undefined, undefined, undefined, undefined,
+                                    0.1);
+
+    }
+
 }
 
 ScreenScroller.prototype = Object.create (Entity.prototype);
 ScreenScroller.prototype.constructor = ScreenScroller;
-
+//--- Draw and update
 ScreenScroller.prototype.draw = function(){
-    this.game.ctx.beginPath();
-    this.game.ctx.lineWidth="4";
-    this.game.ctx.strokeStyle="green";
-    this.game.ctx.rect(this.x, this.y, this.colliseBox.width, this.colliseBox.height);
-    this.game.ctx.stroke();
 
-    this.game.ctx.beginPath();
-    this.game.ctx.lineWidth="2";
-    this.game.ctx.strokeStyle="red";
-    this.game.ctx.rect(this.x, this.y, this.returnPoint, this.colliseBox.height);
-    this.game.ctx.stroke();
-
-    this.game.ctx.beginPath();
-    this.game.ctx.strokeStyle="red";
-    this.game.ctx.rect(this.x + this.colliseBox.width - this.returnPoint, this.y, 
-                        this.returnPoint, this.colliseBox.height);
-    this.game.ctx.stroke();
+    // if(this.back !== undefined){
+    //     this.drawMinimap();
+    // } else {
+    //     this.drawOldBox();
+    // }
+    this.drawOldBox();
 }
-
 ScreenScroller.prototype.update = function(){
     if(collise(this.colliseBox, this.game.mouse)){
         if (this.game.mouse.click) {
@@ -65,7 +64,31 @@ ScreenScroller.prototype.update = function(){
         }
     }
 }
+//--- end draw and update
+//--- helper methods for draw
+ScreenScroller.prototype.drawMinimap = function(){
+    this.backObject.draw();
+}
+ScreenScroller.prototype.drawOldBox = function(){
+    this.game.ctx.beginPath();
+    this.game.ctx.lineWidth="4";
+    this.game.ctx.strokeStyle="green";
+    this.game.ctx.rect(this.x, this.y, this.colliseBox.width, this.colliseBox.height);
+    this.game.ctx.stroke();
 
+    this.game.ctx.beginPath();
+    this.game.ctx.lineWidth="2";
+    this.game.ctx.strokeStyle="red";
+    this.game.ctx.rect(this.x, this.y, this.returnPoint, this.colliseBox.height);
+    this.game.ctx.stroke();
+
+    this.game.ctx.beginPath();
+    this.game.ctx.strokeStyle="red";
+    this.game.ctx.rect(this.x + this.colliseBox.width - this.returnPoint, this.y, 
+                        this.returnPoint, this.colliseBox.height);
+    this.game.ctx.stroke();
+}
+//--- end helper methods for draw
 
 //---------------------------------- Arrow Key Move ------------------------------//
 function ScreenMoveArrow(game, screenmove, listenerLeft, listenerRight){
