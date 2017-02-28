@@ -103,8 +103,9 @@ CardGenerator = function(game, x, y, list = [], numOfCard) {
     this.onDeck = [];
     this.cooldown = 3;
     this.numOfCard = numOfCard;
+    this.energy = 3;
 
-    Entity.call(this, game, x, y);
+    Entity.call(this, game, x, y, UI);
     var that = this;
     list.map(function(unit) {
         for (var i = 0; i < unit.ticket; i++) that.onDeck.push(unit.code);
@@ -134,18 +135,28 @@ CardGenerator.prototype.setCooldown = function(cooldown) {
     this.cooldown = cooldown;
 }
 
+CardGenerator.prototype.checkEnergy = function(energy) {
+    return this.energy >= energy;
+}
+
+CardGenerator.prototype.useEnergy = function(energy) {
+    this.energy -= energy;
+    this.energy = Math.max(this.energy, 0);
+}
+
 CardGenerator.prototype.drawCard = function(index) {
     var ran = Math.floor(Math.random() * this.onDeck.length);
     var card = this.onDeck[ran];
     this.onDeck.slice(ran, 1);
     var location = this.onHandLocation[index];
-    var newCard = new UnitCard(this.game, card, location.x, location.y, this.x, this.y);
+    var newCard = new UnitCard(this, card, location.x, location.y, this.x, this.y);
     this.onHand[index] = newCard;
     this.game.addEntity(newCard);
 }
 
 CardGenerator.prototype.update = function() {
     var that = this;
+    this.energy = Math.min(this.energy + this.game.clockTick * 0.5, 10);
     for (var i = 0; i < this.numOfCard; i++) {
         var card = this.onHand[i];
         if (card.removeFromWorld) {
@@ -162,5 +173,24 @@ CardGenerator.prototype.update = function() {
 }
 
 CardGenerator.prototype.draw = function() {
+    var x = this.numOfCard * 60 + 100;
+        var ctx = this.game.ctx;
+    var energyPercent = this.energy / 10;
+    var energyBarWidth = 200;
+    energyPercent = Math.max(energyPercent, 0);
+    var height = 20;
+    //var healthBar = {x: this.x, y: this.y, width: this.width * energyPercent, height: height};
+    ctx.fillStyle = 'red';
+    ctx.fillRect(x, 535, energyBarWidth, height);
+    ctx.fillStyle = 'green';
+    ctx.fillRect(x, 535, energyBarWidth * energyPercent, height);
+    ctx.strokeStyle = 'black';
+    ctx.rect(x, 535, energyBarWidth, height);
+    for (var i = 0; i < 9; i++) {
+        ctx.strokeStyle = 'black';
+        ctx.rect(x + i * (energyBarWidth/10), 535, energyBarWidth / 10, height);
+    }
 
+    ctx.stroke();
+    ctx.fillStyle = 'black';
 }

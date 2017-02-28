@@ -305,9 +305,11 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x + 40, that.y, that.unit, 00000, 0.25,
                         undefined, 502, 304, 0.1, true);};
             var effect2 = function (that) {
-                if (that.game.moveAmount > 0)
-                    console.log(that.game.moveAmount);
-                castSkill(that.game, that.x, that.y, that.unit, 'h1000', 0);};
+                var attach = new AnimatedObject(that.game, AM.getAsset("./img/unit/" + unitcode + "/attack1.png"), that.x, that.y, 7, 0.1, 14, false);
+                attach.setStickTo(attack, 0, 0);
+                that.game.addEntity(attach);
+               // castSkill(that.game, that.x, that.y, that.unit, 'h1000', 0);
+            };
             attack.effects[0] = effect2;
             attack.effects[1] = effect;
             attack.effects[2] = effect;
@@ -327,7 +329,11 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x, that.y + 105, that.unit, 00000, 1,
                         undefined, 635, 166, 0.1, true);};
             effect2 = function (that) {
-                castSkill(that.game, that.x, that.y, that.unit, 'h1001', 0);};
+                var attach = new AnimatedObject(that.game, AM.getAsset("./img/unit/" + unitcode + "/attack3.png"), that.x, that.y, 13, 0.1, 13, false);
+                attach.setStickTo(attack3, 0, 0);
+                that.game.addEntity(attach);
+                //castSkill(that.game, that.x, that.y, that.unit, 'h1001', 0);
+            };
             attack3.effects[0] = effect2;   
             attack3.effects[4] = effect;
             attack3.effects[5] = effect;

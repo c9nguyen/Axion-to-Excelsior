@@ -87,25 +87,32 @@ Button.prototype.update = function() {
 
 /*=========================================================================*/
 
-function UnitCard(game, unitcode, x, y, unitX, unitY) {
+function UnitCard(generator, unitcode, x, y, unitX, unitY) {
     this.NORMAL = 0;
     this.PRESS = 1;
     this.MOUSEOVER = 2;
+    this.DISABLE = -1;
+    this.generator = generator;
 
-    Entity.call(this, game, x, y, UI);
+    Entity.call(this, this.generator.game, x, y, UI);
     this.movable = false;
     this.unitcode = unitcode;
+    this.energy = unitData[this.unitcode].energy;
+    this.active = this.generator.checkEnergy(this.energy);
 
     this.status = this.NORMAL;
-    var animatedObject = new NonAnimatedObject(game, AM.getAsset("./img/unit/" + unitcode + "/card.png"), x, y);
+    var animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/" + unitcode + "/card.png"), x, y);
     animatedObject.movable = false;
     this.normal = animatedObject;
-    animatedObject = new NonAnimatedObject(game, AM.getAsset("./img/unit/" + unitcode + "/card_click.png"), x, y);
+    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/" + unitcode + "/card_click.png"), x, y);
     animatedObject.movable = false;
     this.press = animatedObject;
-    animatedObject = new NonAnimatedObject(game, AM.getAsset("./img/unit/" + unitcode + "/card_mouseover.png"), x, y);
+    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/" + unitcode + "/card_mouseover.png"), x, y);
     animatedObject.movable = false;
     this.mouseover = animatedObject;
+    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/" + unitcode + "/card_disable.png"), x, y);
+    animatedObject.movable = false;
+    this.disable = animatedObject;
 
     this.colliseBox = {x: x, y: y, width: this.normal.width, height: this.normal.height};
 
@@ -130,6 +137,10 @@ UnitCard.prototype.draw = function() {
         this.mouseover.x = this.x - 10;
         this.mouseover.y = this.y - 15;
         drawObj = this.mouseover;
+    } else if (this.status === this.DISABLE) {
+        this.disable.x = this.x;
+        this.disable.y = this.y;
+        drawObj = this.disable;
     }
 
     drawObj.draw();
@@ -137,22 +148,28 @@ UnitCard.prototype.draw = function() {
 }
 
 UnitCard.prototype.update = function() {
+    this.active = this.generator.checkEnergy(this.energy);
+    if (this.active) {
+        if (collise(this.colliseBox, this.game.mouse)) {
+            if (this.game.mouse.click) {
+                if (this.generator.checkEnergy(this.energy)) {
+                    this.clickAction(this);
+                    this.generator.useEnergy(this.energy);
+                    // SOUND
+                    this.game.soundPlayer.addToEffect("./sound/effects/smb_stomp.wav", false, 2.0);
+                    this.removeFromWorld = true;
+                }   
 
+                this.game.mouse.click = false;
+            } else if (this.game.mouse.pressed) {
+                this.status = this.PRESS;
 
-    if (collise(this.colliseBox, this.game.mouse)) {
-        if (this.game.mouse.click) {      
-            this.clickAction(this);
-            // SOUND
-            this.game.soundPlayer.addToEffect("./sound/effects/smb_stomp.wav", false, 2.0);
-            this.removeFromWorld = true;
-            this.game.mouse.click = false;
-        } else if (this.game.mouse.pressed) {
-            this.status = this.PRESS;
-
-        } else {
-            this.status = this.MOUSEOVER;
-        }
-    } else this.status = this.NORMAL;
-
+            } else {
+                this.status = this.MOUSEOVER;
+            }
+        } else this.status = this.NORMAL;
+    } else {
+        this.status = this.DISABLE;
+    }
     Entity.prototype.update.call(this);
 }

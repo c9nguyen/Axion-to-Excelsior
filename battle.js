@@ -15,6 +15,7 @@ Battle.prototype.create = function() {
     this.buildingBackground();
     this.buildTiles();
     
+    //Initializing enemy generator
     var list = [{code: "m000", ticket: 4},
                 {code: "m001", ticket: 8},
                 {code: "m002", ticket: 6},
@@ -25,11 +26,12 @@ Battle.prototype.create = function() {
     gen.setFrequency(2);
     this.game.addEntity(gen);
 
+    //Initializing cards on hand
     var cards = [{code: "h000", ticket: 3},
                  {code: "h001", ticket: 2},
                  {code: "h002", ticket: 5},
                  {code: "h003", ticket: 5}];
-    var cardGen = new CardGenerator(this.game, 100, 400, cards, 5);
+    var cardGen = new CardGenerator(this.game, 100, 400, cards, 6);
     cardGen.start();
     this.game.addEntity(cardGen);
 
@@ -40,6 +42,7 @@ Battle.prototype.create = function() {
     var ADKey = new ScreenMoveArrow(this.game, this.game.screenMover, this.game.keyA, this.game.keyD);
     this.game.addEntity(ADKey);
 
+    //SCreen mover using mouse
     var rightArrow =  new ScreenMouseOverMovement(this.game, this.game.screenMover, "right");
     this.game.addEntity(rightArrow);
     var leftArrow = new ScreenMouseOverMovement(this.game, this.game.screenMover, "left");
@@ -50,21 +53,21 @@ Battle.prototype.create = function() {
 
     var that = this;
 
-    var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 600, 520);
-    button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
-    button2.addSheet(AM.getAsset("./img/unit/m000/card_mouseover.png"), "mouseover");
-    button2.addEventListener("click", function() { 
-        gen.switch(); 
-        // SAMPLE
-        // endGame.gameOver(true); 
-        //endGame.gameOver(false); 
-    });
+    //Enemy button for debugging
+    // var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 700, 520);
+    // button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
+    // button2.addSheet(AM.getAsset("./img/unit/m000/card_mouseover.png"), "mouseover");
+    // button2.addEventListener("click", function() { 
+    //     gen.switch(); 
+    //     // SAMPLE
+    //     // endGame.gameOver(true); 
+    //     //endGame.gameOver(false); 
+    // });
+    // this.game.addEntity(button2);
 
-    this.game.addEntity(button2);
 //    spawnUnit(this.game, 100, 400, "h003", PLAYER);
 
     var enemyBoss = spawnUnit(this.game, 2300, 400, "m100", ENEMY);
-
     var playerBoss = spawnUnit(this.game, 100, 400, "h100", PLAYER);
 
     var endGame = new EndGame(this.game);

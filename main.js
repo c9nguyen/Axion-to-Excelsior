@@ -6,6 +6,7 @@ var AM = new AssetManager();
 AM.queueDownload("./img/back/cloud.png");
 AM.queueDownload("./img/back/sky.png");
 AM.queueDownload("./img/back/back.png");
+AM.queueDownload("./img/back/intro.png");
 AM.queueDownload("./img/back/1.png");
 AM.queueDownload("./img/back/2.png");
 
@@ -22,6 +23,7 @@ AM.queueDownload("./img/tiles/02/bsc_spritesheet.png");
 AM.queueDownload("./img/unit/h000/card.png");
 AM.queueDownload("./img/unit/h000/card_click.png");
 AM.queueDownload("./img/unit/h000/card_mouseover.png");
+AM.queueDownload("./img/unit/h000/card_disable.png");
 AM.queueDownload("./img/unit/h000/stand_right.png");
 AM.queueDownload("./img/unit/h000/walk_right.png");
 AM.queueDownload("./img/unit/h000/jump_right.png");
@@ -35,6 +37,7 @@ AM.queueDownload("./img/unit/h000/die_right.png");
 AM.queueDownload("./img/unit/h001/card.png");
 AM.queueDownload("./img/unit/h001/card_click.png");
 AM.queueDownload("./img/unit/h001/card_mouseover.png");
+AM.queueDownload("./img/unit/h001/card_disable.png");
 AM.queueDownload("./img/unit/h001/stand.png");
 AM.queueDownload("./img/unit/h001/walk.png");
 AM.queueDownload("./img/unit/h001/jump.png");
@@ -45,6 +48,7 @@ AM.queueDownload("./img/unit/h001/die.png");
 AM.queueDownload("./img/unit/h002/card.png");
 AM.queueDownload("./img/unit/h002/card_click.png");
 AM.queueDownload("./img/unit/h002/card_mouseover.png");
+AM.queueDownload("./img/unit/h002/card_disable.png");
 AM.queueDownload("./img/unit/h002/stand.png");
 AM.queueDownload("./img/unit/h002/walk.png");
 AM.queueDownload("./img/unit/h002/jump.png");
@@ -55,6 +59,7 @@ AM.queueDownload("./img/unit/h002/die.png");
 AM.queueDownload("./img/unit/h003/card.png");
 AM.queueDownload("./img/unit/h003/card_click.png");
 AM.queueDownload("./img/unit/h003/card_mouseover.png");
+AM.queueDownload("./img/unit/h003/card_disable.png");
 AM.queueDownload("./img/unit/h003/stand.png");
 AM.queueDownload("./img/unit/h003/walk.png");
 AM.queueDownload("./img/unit/h003/jump.png");
@@ -150,8 +155,11 @@ AM.queueDownload("./img/ui/left_arrow_pressbutton.png");
 
 AM.queueDownload("./img/effect/00000/stab.png");
 AM.queueDownload("./img/effect/00000/9.swingP1.2_0.png");
+AM.queueDownload("./img/effect/00000/shuriken_hit.png");
 AM.queueDownload("./img/effect/00001/shuriken.png");
 AM.queueDownload("./img/effect/00002/dummy.png");
+
+
 
 AM.queueDownload("./img/effect/passive/att.png");
 AM.queueDownload("./img/effect/passive/def.png");

@@ -9,6 +9,7 @@ var unitData = {
     h000: {
         groundWidth: 50,
         groundHeight: 10,
+        energy: 2,
         health: 100,
         movementspeed: 130,
         att: 20,
@@ -21,6 +22,7 @@ var unitData = {
     h001: {
         groundWidth: 35,
         groundHeight: 10,
+        energy: 2,
         health: 60,
         movementspeed: 260,
         att: 5,
@@ -33,6 +35,7 @@ var unitData = {
     h002: {
         groundWidth: 40,
         groundHeight: 10,
+        energy: 1,
         health: 80,
         movementspeed: 130,
         att: 20,
@@ -45,6 +48,7 @@ var unitData = {
     h003: {
         groundWidth: 40,
         groundHeight: 10,
+        energy: 1,
         health: 80,
         movementspeed: 130,
         att: 30,
@@ -57,6 +61,7 @@ var unitData = {
     h100: {
         groundWidth: 50,
         groundHeight: 10,
+        energy: 5,
         health: 500,
         movementspeed: 130,
         att: 10,
