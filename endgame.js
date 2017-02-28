@@ -41,7 +41,7 @@ EndGame.prototype.update = function(){
             this.game.soundPlayer.removeAllSound();
             this.game.soundPlayer.randomTrackInQueue = false;
             this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-won.mp3", undefined, undefined, 0.5);
-            this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-go-for-it.mp3", true, undefined, 0.4);
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/mappedstoryUpbeat.mp3", true, undefined, 0.4);
             this.enableSound = false;
         }
     } else if (this.lostCondition()) {
