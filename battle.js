@@ -2,6 +2,7 @@ function Battle(game)
 {
 	// this.game = game;
     Scene.call(this, game);
+    this.background = "./img/map/01/back.png";
 }
 
 Battle.prototype = Object.create(Scene.prototype);
@@ -103,7 +104,7 @@ Battle.prototype.buildingBackground = function() {
 	canvasHeight = this.game.ctx.canvas.clientHeight;
 	canvasWidth = this.game.ctx.canvas.clientWidth;
 
-    var back = new NonAnimatedObject(this.game, AM.getAsset("./img/map/01/back.png"),0, 0);
+    var back = new NonAnimatedObject(this.game, AM.getAsset(this.background),0, 0);
     //back.setSize(canvasWidth, canvasHeight);
     this.game.addEntity(back);
 
