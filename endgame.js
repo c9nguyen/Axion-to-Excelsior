@@ -4,6 +4,8 @@ function EndGame(game){
     this.playerWin = false;
     this.font = "100px Arial";
 
+    this.enableSound = true;
+
     this.winCondition = function() {};
     this.lostCondition = function() {};
 }
@@ -35,8 +37,22 @@ EndGame.prototype.draw = function(){
 EndGame.prototype.update = function(){
     if(this.winCondition()) {
         this.gameOver(true);
+        if(this.enableSound){
+            this.game.soundPlayer.removeAllSound();
+            this.game.soundPlayer.randomTrackInQueue = false;
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-won.mp3", undefined, undefined, 0.5);
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-go-for-it.mp3", true, undefined, 0.4);
+            this.enableSound = false;
+        }
     } else if (this.lostCondition()) {
         this.gameOver(false);
+        if(this.enableSound){
+            this.game.soundPlayer.removeAllSound();
+            this.game.soundPlayer.randomTrackInQueue = false;
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-lost.mp3", undefined, undefined, 0.5);
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-end-of-the-world.mp3", true, undefined, 0.4);
+            this.enableSound = false;
+        }
     }
 }
 //--- end draw and update
