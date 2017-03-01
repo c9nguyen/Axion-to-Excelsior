@@ -72,17 +72,26 @@ Battle.prototype.create = function() {
     // this.game.addEntity(button2);
 
 //    spawnUnit(this.game, 100, 400, "h003", PLAYER);
-
+    that = this;
     var enemyBoss = spawnUnit(this.game, 2300, 400, "m100", ENEMY);
+    enemyBoss.actions["die"].endEffect = function(me) {
+        cardGen.removeAll();
+        cardGen.removeFromWorld = true;
+        gen.setEndgame(true);
+        that.endGame(true);
+        enemyBoss.removeFromWorld = true;
+    }; 
+    enemyBoss.health = -1;
+
     //var playerBoss = spawnUnit(this.game, 100, 400, "h100", PLAYER);
 
-    var endGame = new EndGame(this.game);
+    // var endGame = new EndGame(this.game);
     // endGame.isGameOver = true;
     // endGame.playerWin = true;
-    endGame.winCondition = function() { return enemyBoss.removeFromWorld === true};
-    endGame.lostCondition = function() { return playerBoss.removeFromWorld === true};
-    gen.setEndgame(endGame);
-    this.game.addEntity(endGame);
+    // endGame.winCondition = function() { return enemyBoss.removeFromWorld === true};
+    // endGame.lostCondition = function() { return playerBoss.removeFromWorld === true};
+    // gen.setEndgame(endGame);
+    // this.game.addEntity(endGame);
 
 	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
 	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
@@ -91,11 +100,6 @@ Battle.prototype.create = function() {
         this.game.soundPlayer.removeAllSound();
 		this.game.sceneManager.startScene('mainmenu');
 	});
-
-    endGame.endGameActions.push(function() {
-        cardGen.removeAll();
-        cardGen.removeFromWorld = true;
-    });
 
 	this.game.addEntity(exit_button);
 };
@@ -157,3 +161,34 @@ Battle.prototype.addAllMusic = function(){
     this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-yugi.mp3", undefined, undefined, 0.4);
 
 }
+
+//--- endGame
+// ONLY CALL WHEN GAME END CONDITION IS APPLIED
+// Add EXTRA ACTION when end game is called if you want
+Battle.prototype.endGame = function(playerWon, extraAction = undefined){
+    
+    //-ADJUST: put more things here if you want extra end game stuff...
+    //- or use the extraAction function
+    if(playerWon){
+        this.game.soundPlayer.removeAllSound();
+        this.game.soundPlayer.randomTrackInQueue = false;
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-won.mp3", undefined, undefined, 0.5);
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/mappedstoryUpbeat.mp3", true, undefined, 0.4);
+        this.enableSound = false;
+    } else {
+        this.game.soundPlayer.removeAllSound();
+        this.game.soundPlayer.randomTrackInQueue = false;
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-lost.mp3", undefined, undefined, 0.5);
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-end-of-the-world.mp3", true, undefined, 0.4);
+        this.enableSound = false;
+    }
+    if(extraAction !== undefined){
+        extraAction();
+    }
+    //-end ADJUST
+
+    //-Adding logo
+    var endGameEntity = new EndGame(this.game, playerWon);
+    this.addEntity(endGameEntity);
+}
+//--- end endGame

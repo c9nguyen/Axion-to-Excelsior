@@ -87,7 +87,7 @@ EnemyGenerator.prototype.setEndgame = function (endgame) {
 }
 
 EnemyGenerator.prototype.update = function() {
-    if (this.active && (this.endgame === undefined || !this.endgame.isGameOver)) {
+    if (this.active && /*(this.endgame === undefined || !this.endgame.isGameOver)*/ !this.endgame) {
         if (this.frequency > 1)
             this.frequency -= 0.01 * this.game.clockTick;
         Generator.prototype.update.call(this);
