@@ -93,8 +93,45 @@ EnemyGenerator.prototype.addToBossQueue = function(unitCode) {
     this.bossQueue.push(unitCode);
 }
 
+EnemyGenerator.prototype.assignHealthBar = function(unit) {
+    this.currentBoss = unit;
+}
+
+EnemyTower.prototype.draw = function() {
+    var x = 700;
+    var y = 10;
+    var width = 400;
+    var height = 20;
+    var fill = 0;
+    if (this.currentBoss) {
+        fill = this.unitToDisplay.health / this.unitToDisplay.data.health;
+        fill = Math.max(fill * width, 0);
+    }
+
+    var ctx = this.game.ctx;
+    ctx.beginPath();
+    ctx.lineWidth = "1";
+    ctx.fillStyle = 'red';
+    ctx.fillRect(x, y, width, height);
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, fill, height);
+    ctx.strokeStyle = 'black';
+    ctx.rect(x, y, width, height);
+    ctx.fillStyle = 'black';
+    ctx.stroke();
+}
+
 EnemyGenerator.prototype.update = function() {
     if (this.active && (this.endgame === undefined || !this.endgame.isGameOver)) {
+        if (this.currentBoss.health <= 0) {
+            if (this.bossQueue.length > 0) {
+                spawnUnit(this.game, 2400, 500, this.bossQueue[0], ENEMY);
+            } else {
+                //Lose
+            }
+        }
+
+
         if (this.frequency > 1)
             this.frequency -= 0.01 * this.game.clockTick;
         Generator.prototype.update.call(this);
