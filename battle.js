@@ -41,7 +41,7 @@ Battle.prototype.create = function() {
     cardGen.start();
     this.game.addEntity(cardGen);
 
-    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 575, 400, 25);
+    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 525, 400);
     this.game.addEntity(map);
     var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover, this.game.left, this.game.right);
     this.game.addEntity(rightAndLeftKey);
