@@ -1,14 +1,7 @@
 function EndGame(game, playerWon){
     Entity.call(this, game);
-    // this.isGameOver = false;
     this.playerWin = playerWon;
     this.font = "100px Arial";
-
-    // this.enableSound = true;
-
-    // this.winCondition = function() {};
-    // this.lostCondition = function() {};
-    // this.endGameActions = [];
 }
 
 EndGame.prototype = Object.create(Entity.prototype);
@@ -16,33 +9,30 @@ EndGame.prototype.constructor = EndGame;
 
 //--- Draw and update
 EndGame.prototype.draw = function(){
-    // if(this.isGameOver){
-        var gradient = this.game.ctx.createLinearGradient(0, 0, 800, 0);
-        gradient.addColorStop("0", "magenta");
-        gradient.addColorStop("0.5", "red");
-        gradient.addColorStop("1.0", "blue");
-        var tempGradient = this.game.ctx.fillStyle;
-        var tempFont = this.game.ctx.font;
-        this.game.ctx.fillStyle = gradient;
-        this.game.ctx.font = this.font;
 
-        if(this.playerWin){
-            this.game.ctx.fillText("YOU WIN!", 400, 350);
-        } else {
-            this.game.ctx.fillText("GAME OVER!", 325, 350);
-        }
-        this.game.ctx.fillStyle = tempGradient;
-        this.game.ctx.font = tempFont;
-        
-    // }
+    var gradient = this.game.ctx.createLinearGradient(0, 0, 800, 0);
+    gradient.addColorStop("0", "magenta");
+    gradient.addColorStop("0.5", "red");
+    gradient.addColorStop("1.0", "blue");
+    var tempGradient = this.game.ctx.fillStyle;
+    var tempFont = this.game.ctx.font;
+    this.game.ctx.fillStyle = gradient;
+    this.game.ctx.font = this.font;
+
+    if(this.playerWin){
+        this.game.ctx.fillText("YOU WIN!", 400, 350);
+    } else {
+        this.game.ctx.fillText("GAME OVER!", 325, 350);
+    }
+    this.game.ctx.fillStyle = tempGradient;
+    this.game.ctx.font = tempFont;
+
 }
 EndGame.prototype.update = function(){
-    // if(this.winCondition()) {
+
     if(this.playerWin){
-        // this.gameOver(true);
         this.killEntities(this.game.enemyList);
         
-    // } else if (this.lostCondition()) {
     } else {
         this.killEntities(this.game.playerList);
     }
@@ -55,8 +45,6 @@ EndGame.prototype.killEntities = function(units){
         units[i].health = 0;
     }
 }
-
-
 //--- end killEntities
 
 //--- You win and You lose
