@@ -74,7 +74,7 @@ Battle.prototype.create = function() {
 //    spawnUnit(this.game, 100, 400, "h003", PLAYER);
     that = this;
     var enemyBoss = spawnUnit(this.game, 2300, 400, "m100", ENEMY);
-    enemyBoss.actions["die"].endEffect = function(me) {
+    enemyBoss.actions["die"].endEffect = function() {
         cardGen.removeAll();
         cardGen.removeFromWorld = true;
         gen.setEndgame(true);
