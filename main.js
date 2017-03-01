@@ -138,12 +138,14 @@ AM.queueDownload("./img/unit/tower2/stand.png");
 AM.queueDownload("./img/unit/tower2/die.png");
 AM.queueDownload("./img/unit/tower2/die_after.png");
 AM.queueDownload("./img/unit/tower2/attack2.png");
+AM.queueDownload("./img/unit/tower2/attack2_effect.png");
 AM.queueDownload("./img/unit/tower2/attack3.png");
 
 AM.queueDownload("./img/unit/tower3/stand.png");
 AM.queueDownload("./img/unit/tower3/die.png");
 AM.queueDownload("./img/unit/tower3/die_after.png");
 AM.queueDownload("./img/unit/tower3/attack.png");
+AM.queueDownload("./img/unit/tower3/attack_effect.png");
 AM.queueDownload("./img/unit/tower3/attack3.png");
 
 

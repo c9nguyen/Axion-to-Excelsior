@@ -165,15 +165,17 @@ Tower.prototype.draw = function() {
     // }
     // }
 
-
-    // var rangeBox = this.rangeBox[0];
-    // var box = {};
-    // box.x = this.x + rangeBox.x + this.game.mapX;;
-    // box.y = this.y + rangeBox.y;
-    // box.width = rangeBox.width;
-    // box.height = rangeBox.height;
-    // this.game.ctx.strokeStyle = "red";
-    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    // if (this.rangeBox[0]) {
+    //     var rangeBox = this.rangeBox[0];
+    //     var box = {};
+    //     box.x = this.x + rangeBox.x + this.game.mapX;;
+    //     box.y = this.y + rangeBox.y;
+    //     box.width = rangeBox.width;
+    //     box.height = rangeBox.height;
+    //     this.game.ctx.strokeStyle = "red";
+    //     this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    // }
+   
 
 
     //this.game.ctx.fillRect(rangeBox.x, rangeBox.y, rangeBox.width, rangeBox.height);
@@ -339,7 +341,13 @@ EnemyTower.prototype.leftGuardian = function() {
     var collisionBox = [];
     var groundPoints = [{x: 157, y: 854}];
     var attack = new Action(this.game, this.leftG, AM.getAsset("./img/unit/tower2/attack2.png"),
-                            5, 0.1, 20, groundPoints, collisionBox, false);
+                            5, 0.1, 20, groundPoints, collisionBox, false, 2);
+    attack.effects[9] = function(that) {
+        if (that.unit.lockedTarget) {
+            castSkill(that.game, that.unit.lockedTarget.x - 50, -272, that.unit, 10002, 1);
+        }
+    };
+ 
     groundPoints = [{x: 151, y: 465}];
     var attack3 = new Action(this.game, this.leftG, AM.getAsset("./img/unit/tower2/attack3.png"),
                             6, 0.1, 18, groundPoints, collisionBox, false);
@@ -366,10 +374,14 @@ EnemyTower.prototype.leftGuardian = function() {
     this.leftG.actions["attack3"] = attack3;
     this.leftG.actions["die"] = die;
     this.leftG.currentAction = stand;
+    this.leftG.defaultAction = stand;
     this.leftG.actionHandler = function(that) {
             if (that.currentAction.interruptible || that.currentAction.isDone()) {
                 var collisedEnemy = that.checkEnemyInRange();
-                if (collisedEnemy.has(0)) that.changeAction("attack");
+                if (collisedEnemy.has(0)) 
+                console.log(attack.checkCooldown());
+                if (collisedEnemy.has(0) && attack.checkCooldown()) 
+                that.changeAction("attack");
                 else that.changeAction("stand");
             }
 
@@ -383,7 +395,12 @@ EnemyTower.prototype.rightGuardian = function() {
     var groundPoints = [{x: 43, y: 603}];
     var attack = new Action(this.game, this.rightG, AM.getAsset("./img/unit/tower3/attack.png"),
                             6, 0.1, 18, groundPoints, collisionBox, false);
-                            
+    attack.effects[11] = function(that) {
+        if (that.unit.lockedTarget) {
+            castSkill(that.game, that.unit.lockedTarget.x - 50, 385, that.unit, 10003, 1);
+        }
+    };                
+
     groundPoints = [{x: 151, y: 465}];
     var attack3 = new Action(this.game, this.rightG, AM.getAsset("./img/unit/tower3/attack3.png"),
                             6, 0.1, 18, groundPoints, collisionBox, false);
@@ -410,6 +427,7 @@ EnemyTower.prototype.rightGuardian = function() {
     this.rightG.actions["attack3"] = attack3;
     this.rightG.actions["die"] = die;
     this.rightG.currentAction = stand;
+    this.rightG.defaultAction = stand;
     this.rightG.actionHandler = function(that) {
             if (that.currentAction.interruptible || that.currentAction.isDone()) {
                 var collisedEnemy = that.checkEnemyInRange();

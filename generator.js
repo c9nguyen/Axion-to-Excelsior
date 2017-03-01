@@ -66,10 +66,13 @@ Generator.prototype.draw = function() {
 EnemyGenerator = function(game, x, y, list = []) {
     Generator.call(this, game, x, y);
     this.bucket = [];
+    this.list = list;
     this.bossQueue = [];
 
     this.frequency = 1;
+    this.impFrequency = 20;
     this.counter = 0;
+    this.impCounter = 0;
     this.action = function(that) {
         var ran = Math.floor(Math.random() * this.bucket.length);
         var code = this.bucket[ran];
@@ -77,7 +80,7 @@ EnemyGenerator = function(game, x, y, list = []) {
     }
 
     var that = this;
-    list.map(function(unit) {
+    this.list.map(function(unit) {
         for (var i = 0; i < unit.ticket; i++) that.bucket.push(unit.code);
     });
 
@@ -99,6 +102,10 @@ EnemyGenerator.prototype.setFrequency = function (frequency) {
     this.frequency = frequency;
 }
 
+EnemyGenerator.prototype.setImprovementFrequency = function(frequency) {
+    this.impFrequency = frequency;
+}
+
 EnemyGenerator.prototype.setEndgame = function (endgame) {
     this.endgame = endgame;
 }
@@ -106,6 +113,8 @@ EnemyGenerator.prototype.setEndgame = function (endgame) {
 EnemyGenerator.prototype.addToBossQueue = function(unitCode) {
     this.bossQueue.push(unitCode);
 }
+
+
 
 // /**
 //  * Set the current boss
@@ -145,6 +154,8 @@ EnemyGenerator.prototype.draw = function() {
     ctx.stroke();
 }
 
+
+
 EnemyGenerator.prototype.update = function() {
     if (this.active) {
         if (this.currentBoss.health <= 0) {
@@ -156,7 +167,16 @@ EnemyGenerator.prototype.update = function() {
             }
         } else {
             if (this.frequency > 1)
-            this.frequency -= 0.01 * this.game.clockTick;
+                this.frequency -= 0.01 * this.game.clockTick;
+            if (this.impCounter >= this.impFrequency) {
+                this.impCounter = 0;
+                var that = this;
+                this.list.map(function(unit) {
+                    that.bucket.push(unit.code);
+                });
+            } else {
+                this.impCounter += this.game.clockTick;
+            }
             Generator.prototype.update.call(this);
         }
     }
