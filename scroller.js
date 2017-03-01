@@ -128,7 +128,6 @@ ScreenScroller.prototype.privateDrawDots = function(list, style){
         var tempX = frontPadding + list[i].x * this.scale;
         var tempWidth = Math.floor(list[i].data.groundWidth * this.scale / 2);
         var locX = this.x + tempX;
-        console.log("x: " + this.x + " locX:" + locX);
         if(locX < this.x){
             tempWidth = tempWidth + tempX;
             locX = this.x;
