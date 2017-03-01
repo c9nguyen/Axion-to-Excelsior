@@ -30,8 +30,6 @@ function ScreenScroller(game, screenmove, x, y, boxX, boxY = boxX / 4){
                     (this.backObject.width - this.frontEdge - this.backEdge) * this.scale * screenPercentage;
 
         this.cameraBoxX = 0;
-        this.blueDots = [];
-        this.redDots = [];
 
     }
 
@@ -79,27 +77,20 @@ ScreenScroller.prototype.update = function(){
         }
     }
     // Update stuff to draw
-    this.cameraBoxX = (-1 * this.game.mapX) * this.scale;
-    var redL = this.game.enemyList;
-    var blueL = this.game.playerList;
-    var frontPadding = this.scale * this.frontEdge; 
-    redDots = [];
-    blueDots = [];
-    for(var i = 0; i < redL.length; i++){
-        var dotX = frontPadding + redL[i].x * this.scale;
-        redDots.push(dotX);
-    }
-    for(var i = 0; i < blueL.length; i++){
-        var dotX = frontPadding + blueL[i].x * this.scale;
-        blueDots.push(dotX);
-    }
+    this.cameraBoxX = (-1 * this.game.mapX) * this.scale; 
+    
 }
 //--- end draw and update
 //--- helper methods for draw
 ScreenScroller.prototype.drawMinimap = function(){
     this.backObject.draw();
-    this.privateDrawDots(blueDots, "DarkBlue");
-    this.privateDrawDots(redDots, "DarkRed");
+    this.game.ctx.beginPath();
+    this.game.ctx.lineWidth="4";
+    this.game.ctx.strokeStyle="black";
+    this.game.ctx.rect(this.x, this.y, this.backObject.width * this.scale, this.backObject.height * this.scale);
+    this.game.ctx.stroke();
+    this.privateDrawDots(this.game.playerList, "DarkBlue");
+    this.privateDrawDots(this.game.enemyList, "DarkRed");
     var savedWidth = this.game.ctx.lineWidth;
     this.game.ctx.beginPath();
     this.game.ctx.lineWidth="6";
@@ -120,7 +111,7 @@ ScreenScroller.prototype.drawMinimap = function(){
 }
 ScreenScroller.prototype.privateDrawDots = function(list, style){
     var savedWidth = this.game.ctx.lineWidth;
-    this.game.ctx.lineWidth = "2";
+    var frontPadding = this.scale * this.frontEdge;
     for(var i = 0; i < list.length; i++){
         this.game.ctx.strokeStyle=style;
         this.game.ctx.beginPath();
@@ -128,8 +119,11 @@ ScreenScroller.prototype.privateDrawDots = function(list, style){
         // this.game.ctx.arc(this.x + list[i], this.y + this.colliseBox.height * (5 / 8), 
         //                     4, 0, 2 * Math.PI);
         //-- Lines
-        this.game.ctx.moveTo(this.x + list[i], this.y + this.colliseBox.height * (5 / 8));
-        this.game.ctx.lineTo(this.x + list[i], this.y + this.colliseBox.height * (7 / 8));
+        var tempX = frontPadding + list[i].x * this.scale;
+        var tempWidth = list[i].data.groundWidth * this.scale / 2;
+        this.game.ctx.lineWidth = Math.floor(tempWidth).toString();
+        this.game.ctx.moveTo(this.x + tempX, this.y + this.colliseBox.height * (5 / 8));
+        this.game.ctx.lineTo(this.x + tempX, this.y + this.colliseBox.height * (7 / 8));
         this.game.ctx.stroke();
     }
     this.game.ctx.lineWidth = savedWidth;

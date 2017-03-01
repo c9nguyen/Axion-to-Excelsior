@@ -376,7 +376,10 @@ Unit.prototype.checkAllyInRange = function(condition = function() {return true;}
 
 Unit.prototype.update = function() {
     Entity.prototype.update.call(this);
-    if (this.y > canvasHeight * 2) this.health = -1;
+    if (this.y > canvasHeight * 2){
+        this.removeFromWorld = true;
+        return;
+    } 
     this.velocity.x = this.push;
     this.push = this.push - this.push * this.game.clockTick;
     this.push = this.push >= 0 ? this.push < 10 ? 0 : Math.floor(this.push) : this.push > -10 ? 0 : Math.ceil(this.push);
