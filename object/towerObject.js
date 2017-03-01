@@ -184,21 +184,57 @@ Tower.prototype.draw = function() {
 
 function MainTower(game) {
     Tower.call(this, game, 0, 520, "tower0", PLAYER);
+    var that = this;
 
     this.skill = new Button(this.game, AM.getAsset("./img/unit/tower0/skill_icon.png"), 20, 20);
     this.skill.addEventListener("click", function() {
-        console.log("Bum");
+        if (that.currentAction.interruptible || that.currentAction.isDone()) {
+            that.changeAction("attack");
+        }
+        castSkill(that.game, that.getClosestEnemy() - 50, -140 , that, 10000, 1);
+
     });
-    this.skill.setCooldown(20);
+    this.skill.setCooldown(10);
     this.skill.timeLastClick = this.game.timer.gameTime;
+
+    this.skill2 = new Button(this.game, AM.getAsset("./img/unit/tower0/skill2_icon.png"), 130, 20);
+    this.skill2.addEventListener("click", function() {
+        if (that.currentAction.interruptible || that.currentAction.isDone()) {
+            that.changeAction("attack2");
+        }
+        castSkill(that.game, that.getClosestEnemy() - 100, 50, that, 10001, 0.5);
+
+    });
+    this.skill2.setCooldown(30);
+    this.skill2.timeLastClick = this.game.timer.gameTime;
 
     this.initActions();
     var that = this;
-    this.actionHandler = function() {that.changeAction("stand");}
+    this.actionHandler = function(that) {                 
+        if (that.currentAction.interruptible || that.currentAction.isDone()) {
+            that.changeAction("stand");
+    }};
 }
 
 MainTower.prototype = Object.create(Tower.prototype);
 MainTower.prototype.constructor = Unit;
+
+MainTower.prototype.getClosestEnemy = function() {
+    var enemy = this.game.enemyList ;
+    var x = 1400;
+    for (var i in enemy) {
+        if (enemy[i].removeFromWorld){
+            enemy.splice(i, 1);
+            i--;
+        } else {
+            var otherCollisionBox = enemy[i].getCollisionBox();
+            if (x === 0 || x > otherCollisionBox.x)
+                x = otherCollisionBox.x;
+        }
+    }
+
+    return Math.min(x, 1400);
+}
 
 MainTower.prototype.initActions = function() {
     var groundPoints = [{x: 0, y: 557}];
@@ -225,11 +261,12 @@ MainTower.prototype.initActions = function() {
     this.actions["attack2"] = attack2;
     this.actions["die"] = die;
     this.actions["stand"] = stand;
-
+    this.currentAction = stand;
 }
 
 MainTower.prototype.update = function() {
     this.skill.update();
+    this.skill2.update();
     Tower.prototype.update.call(this);
 }
 
@@ -238,25 +275,36 @@ Tower.prototype.draw = function() {
     if(this.currentAction !== undefined)
         this.currentAction.draw();
     this.skill.draw();
+    this.skill2.draw();
 
     //Health bar
     var percent = this.health / this.data.health;
     percent = Math.max(percent, 0);
     var width = 500;
-    this.drawBar(600, 10, width, 20, width * percent);
+    this.drawBar(600, 10, width, 20, width * percent, "green");
 
     //skill 1 cd
-    percent = this.game.timer.gameTime - this.skill.timeLastClick / this.skill.cooldown;
+    percent = (this.game.timer.gameTime - this.skill.timeLastClick) / this.skill.cooldown;
+    //console.log(this.game.timer.gameTime - this.skill.timeLastClick + "  " + this.skill.cooldown);
     percent = Math.min(percent, 1);
     width = this.skill.normal.width
-    this.drawBar(this.skill.x, this.skill.y + this.skill.normal.height, width, 10, width * percent);
+    this.drawBar(this.skill.x, this.skill.y + this.skill.normal.height, width, 10, width * percent, "blue");
+
+    //skill 2 cd
+    percent = (this.game.timer.gameTime - this.skill2.timeLastClick) / this.skill2.cooldown;
+    //console.log(this.game.timer.gameTime - this.skill.timeLastClick + "  " + this.skill.cooldown);
+    percent = Math.min(percent, 1);
+    width = this.skill2.normal.width
+    this.drawBar(this.skill2.x, this.skill2.y + this.skill2.normal.height, width, 10, width * percent, "blue");
 }
 
-Tower.prototype.drawBar = function(x, y, width, height, fill) {
+Tower.prototype.drawBar = function(x, y, width, height, fill, color) {
     var ctx = this.game.ctx;
+    ctx.beginPath();
+    ctx.lineWidth = "1";
     ctx.fillStyle = 'red';
     ctx.fillRect(x, y, width, height);
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = color;
     ctx.fillRect(x, y, fill, height);
     ctx.strokeStyle = 'black';
     ctx.rect(x, y, width, height);

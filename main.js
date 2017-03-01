@@ -124,7 +124,9 @@ AM.queueDownload("./img/unit/tower0/attack.png");
 AM.queueDownload("./img/unit/tower0/attack2.png");
 AM.queueDownload("./img/unit/tower0/die.png");
 AM.queueDownload("./img/unit/tower0/skill_icon.png");
+AM.queueDownload("./img/unit/tower0/attack_effect.png");
 AM.queueDownload("./img/unit/tower0/skill2_icon.png");
+AM.queueDownload("./img/unit/tower0/attack2_effect.png");
 
 AM.queueDownload("./img/character/warrior/stand_right.png");
 AM.queueDownload("./img/character/warrior/walk_right.png");

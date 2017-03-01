@@ -273,7 +273,8 @@ Unit.prototype.applyPassiveEffect = function() {
     this.health = Math.max(this.health - this.passiveEffect.poison.amount * this.game.clockTick, 1);
     this.health = Math.min(this.health + this.passiveEffect.heal.amount * this.game.clockTick, this.data.health);
     this.speedPercent = 1 + this.passiveEffect.speed.amount;
-    for (var effect in this.passiveEffect) {
+    for (var i in this.passiveEffect) {
+        var effect = this.passiveEffect[i];
         effect.duration -= this.game.clockTick;
         if (effect.duration < 0) {
             effect.amount = 0;
@@ -469,6 +470,7 @@ Unit.prototype.draw = function() {
     var height = this.height / 2;
     //var healthBar = {x: this.x, y: this.y, width: this.width * healthPercent, height: height};
     ctx.beginPath();
+    ctx.lineWidth = "1";
     ctx.fillStyle = 'red';
     ctx.fillRect(drawX, this.y, this.width, height);
     ctx.fillStyle = 'green';

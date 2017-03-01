@@ -8,6 +8,7 @@ function EndGame(game){
 
     this.winCondition = function() {};
     this.lostCondition = function() {};
+    this.endGameActions = [];
 }
 
 EndGame.prototype = Object.create(Entity.prototype);
@@ -32,6 +33,7 @@ EndGame.prototype.draw = function(){
         }
         this.game.ctx.fillStyle = tempGradient;
         this.game.ctx.font = tempFont;
+        
     }
 }
 EndGame.prototype.update = function(){
@@ -63,7 +65,13 @@ EndGame.prototype.killEntities = function(units){
         // units[i].changeAction("die"); // BUGGED
         units[i].health = 0;
     }
+
+    this.endGameActions.map(function(action) {
+        action();
+    });
 }
+
+
 //--- end killEntities
 
 //--- You win and You lose
