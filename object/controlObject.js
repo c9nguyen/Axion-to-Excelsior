@@ -2,6 +2,7 @@ function Button(game, spritesheet, x, y, scale = 1) {
     this.NORMAL = 0;
     this.PRESS = 1;
     this.MOUSEOVER = 2;
+    this.DISABLE = -1;
 
     Entity.call(this, game, x, y, UI);
     this.movable = false;
@@ -13,6 +14,7 @@ function Button(game, spritesheet, x, y, scale = 1) {
     this.normal = animatedObject;
     this.press = animatedObject;
     this.mouseover = animatedObject;
+    this.disable = animatedObject;
 
     this.colliseBox = {x: x, y: y, width: this.normal.width, height: this.normal.height};
 
@@ -33,11 +35,15 @@ Button.prototype.addSheet = function(spritesheet, sheetType) {
             break;
         case "mouseover":
             this.mouseover = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
-           this.mouseover.movable = false;
+            this.mouseover.movable = false;
             break;
         case "normal":
             this.normal = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
             this.normal.movable = false;
+            break;
+        case "disable":
+            this.disable = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
+            this.disable.movable = false;
             break;
     }
 }
@@ -60,6 +66,8 @@ Button.prototype.draw = function() {
         drawObj = this.press;
     } else if (this.status === this.MOUSEOVER) {
         drawObj = this.mouseover;
+    } else if (this.status === this.DISABLE) {
+        drawObj = this.disable;
     }
 
     if (drawObj !== undefined) {
@@ -76,28 +84,29 @@ Button.prototype.draw = function() {
  */
 Button.prototype.checkCooldown = function() {
    // var offCooldown = true;
-    return (this.timeLastStart === undefined || this.game.timer.gameTime - this.timeLastClick >= this.cooldown);
+    return (this.timeLastClick === undefined || this.game.timer.gameTime - this.timeLastClick >= this.cooldown);
 }
 
 Button.prototype.update = function() {
-    if (collise(this.colliseBox, this.game.mouse)) {
-        if (this.game.mouse.click) { 
-            if (this.checkCooldown()) {  
+    if (this.checkCooldown()) {
+        if (collise(this.colliseBox, this.game.mouse)) {
+            if (this.game.mouse.click) { 
                 this.clickAction(this);
-                // SOUND
+                    // SOUND
                 this.game.soundPlayer.addToEffect("./sound/effects/smb_stomp.wav", false, 2.0);
                 this.game.mouse.click = false;
                 this.timeLastClick = this.game.timer.gameTime;
+            } else if (this.game.mouse.pressed) {
+                this.status = this.PRESS;
+                this.pressAction(this);
+            } else {
+                this.status = this.MOUSEOVER;
+                this.mouseoverAction(this);
             }
-        } else if (this.game.mouse.pressed) {
-            this.status = this.PRESS;
-            this.pressAction(this);
-        } else {
-            this.status = this.MOUSEOVER;
-            this.mouseoverAction(this);
-        }
-    } else this.status = this.NORMAL;
-
+        } else this.status = this.NORMAL;
+    } else {
+        this.status = this.DISABLE;
+    }
     Entity.prototype.update.call(this);
 }
 

@@ -96,9 +96,9 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         this.effectCasted = new Set();
         if (!this.checkCooldown() || !this.loop) {
             this.endEffect(this);
-            // this.unit.currentAction = this.unit.defaultAction;
-            // this.unit.currentAction.start();
-            // this.unit.currentAction.update();
+            this.unit.currentAction = this.unit.defaultAction;
+            this.unit.currentAction.start();
+            this.unit.currentAction.update();
             return;
          }
     }
@@ -148,9 +148,13 @@ Action.prototype.getFrameGroundPoint = function(frame) {
  */
 Action.prototype.getFrameHitbox = function(frame) {
     var hitbox;
-    if (this.collisionBoxes[frame] === undefined && this.previousHitbox !== undefined)
-        hitbox = this.previousHitbox;
-    else
+    if (this.collisionBoxes[frame] === undefined) {
+        if (this.previousHitbox !== undefined) {
+            hitbox = this.previousHitbox;
+        } else {
+            hitbox = {x: 0, y: 0, width: 0, height: 0};
+        }
+    } else
         hitbox = this.collisionBoxes[frame];
 
     this.previousHitbox = hitbox;
@@ -273,7 +277,8 @@ Unit.prototype.applyPassiveEffect = function() {
     this.health = Math.max(this.health - this.passiveEffect.poison.amount * this.game.clockTick, 1);
     this.health = Math.min(this.health + this.passiveEffect.heal.amount * this.game.clockTick, this.data.health);
     this.speedPercent = 1 + this.passiveEffect.speed.amount;
-    for (var effect in this.passiveEffect) {
+    for (var i in this.passiveEffect) {
+        var effect = this.passiveEffect[i];
         effect.duration -= this.game.clockTick;
         if (effect.duration < 0) {
             effect.amount = 0;
@@ -375,7 +380,10 @@ Unit.prototype.checkAllyInRange = function(condition = function() {return true;}
 
 Unit.prototype.update = function() {
     Entity.prototype.update.call(this);
-    if (this.y > canvasHeight * 2) this.health = -1;
+    if (this.y > canvasHeight * 2){
+        this.removeFromWorld = true;
+        return;
+    } 
     this.velocity.x = this.push;
     this.push = this.push - this.push * this.game.clockTick;
     this.push = this.push >= 0 ? this.push < 10 ? 0 : Math.floor(this.push) : this.push > -10 ? 0 : Math.ceil(this.push);
@@ -468,6 +476,8 @@ Unit.prototype.draw = function() {
     healthPercent = Math.max(healthPercent, 0);
     var height = this.height / 2;
     //var healthBar = {x: this.x, y: this.y, width: this.width * healthPercent, height: height};
+    ctx.beginPath();
+    ctx.lineWidth = "1";
     ctx.fillStyle = 'red';
     ctx.fillRect(drawX, this.y, this.width, height);
     ctx.fillStyle = 'green';

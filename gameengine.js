@@ -19,7 +19,7 @@ const GRAVITY = 1800; //can change this to make gravity better
 function GameEngine() {
     this.sceneManager = new SceneManager(this);
     this.screenMover = new ScreenMover(this);
-    this.soundPlayer = new SoundPlayer(this);
+    this.soundPlayer = null;
     this.collisionBox = {
         ground: [],
     };
@@ -60,6 +60,7 @@ GameEngine.prototype.init = function (ctx) {
     this.surfaceHeight = this.ctx.canvas.height;
     this.timer = new Timer();
     this.startInput();
+    this.soundPlayer = new SoundPlayer(this);
     console.log('game initialized');
 }
 
@@ -169,6 +170,7 @@ GameEngine.prototype.draw = function () {
     this.uiList.map(function(ui) {
         ui.draw(that.ctx);
     });
+    this.soundPlayer.draw();
     this.ctx.restore();
 }
 
