@@ -80,30 +80,6 @@ Battle.prototype.create = function() {
     // this.game.addEntity(button2);
 
 //    spawnUnit(this.game, 100, 400, "h003", PLAYER);
-// <<<<<<< HEAD
-
-// =======
-//     that = this;
-//     var enemyBoss = spawnUnit(this.game, 2300, 400, "m100", ENEMY);
-//     enemyBoss.actions["die"].endEffect = function() {
-//         cardGen.removeAll();
-//         cardGen.removeFromWorld = true;
-//         gen.setEndgame(true);
-//         that.endGame(true);
-//         enemyBoss.removeFromWorld = true;
-//     }; 
-//     // enemyBoss.health = -1;
-// >>>>>>> 1e1d2c7748f28ddef09d9b41df3ccc2b75b9e6df
-
-    //var playerBoss = spawnUnit(this.game, 100, 400, "h100", PLAYER);
-
-    // var endGame = new EndGame(this.game);
-    // endGame.isGameOver = true;
-    // endGame.playerWin = true;
-    // endGame.winCondition = function() { return enemyBoss.removeFromWorld === true};
-    // endGame.lostCondition = function() { return playerBoss.removeFromWorld === true};
-    // gen.setEndgame(endGame);
-    // this.game.addEntity(endGame);
 
 	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
 	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
