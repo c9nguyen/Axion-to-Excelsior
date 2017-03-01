@@ -81,7 +81,7 @@ Battle.prototype.create = function() {
         that.endGame(true);
         enemyBoss.removeFromWorld = true;
     }; 
-    enemyBoss.health = -1;
+    // enemyBoss.health = -1;
 
     //var playerBoss = spawnUnit(this.game, 100, 400, "h100", PLAYER);
 
