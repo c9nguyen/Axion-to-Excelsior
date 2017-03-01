@@ -40,6 +40,20 @@ Generator.prototype.setFrequency = function (frequency) {
     this.frequency = frequency;
 }
 
+/**
+ * Set the current boss
+ */
+Generator.prototype.assignCurrentBoss = function(unit) {
+    this.currentBoss = unit;
+}
+
+/**
+ * Assign the action happens when all boss dies
+ */
+Generator.prototype.setBossesDiedAction = function(callback) {
+    this.allBossDied = callback;
+}
+
 Generator.prototype.update = function() {
     if (this.active && this.condition(this)) this.action(this);
 }
@@ -93,18 +107,28 @@ EnemyGenerator.prototype.addToBossQueue = function(unitCode) {
     this.bossQueue.push(unitCode);
 }
 
-EnemyGenerator.prototype.assignHealthBar = function(unit) {
-    this.currentBoss = unit;
-}
+// /**
+//  * Set the current boss
+//  */
+// EnemyGenerator.prototype.assignCurrentBoss = function(unit) {
+//     this.currentBoss = unit;
+// }
 
-EnemyTower.prototype.draw = function() {
+// /**
+//  * Assign the action happens when all boss dies
+//  */
+// EnemyGenerator.prototype.setBossesDiedAction = function(callback) {
+//     this.allBossDied = callback;
+// }
+
+EnemyGenerator.prototype.draw = function() {
     var x = 700;
     var y = 10;
     var width = 400;
     var height = 20;
     var fill = 0;
     if (this.currentBoss) {
-        fill = this.unitToDisplay.health / this.unitToDisplay.data.health;
+        fill = this.currentBoss.health / this.currentBoss.data.health;
         fill = Math.max(fill * width, 0);
     }
 
@@ -113,7 +137,7 @@ EnemyTower.prototype.draw = function() {
     ctx.lineWidth = "1";
     ctx.fillStyle = 'red';
     ctx.fillRect(x, y, width, height);
-    ctx.fillStyle = color;
+    ctx.fillStyle = "yellow";
     ctx.fillRect(x, y, fill, height);
     ctx.strokeStyle = 'black';
     ctx.rect(x, y, width, height);
@@ -122,19 +146,19 @@ EnemyTower.prototype.draw = function() {
 }
 
 EnemyGenerator.prototype.update = function() {
-    if (this.active && (this.endgame === undefined || !this.endgame.isGameOver)) {
+    if (this.active) {
         if (this.currentBoss.health <= 0) {
             if (this.bossQueue.length > 0) {
                 spawnUnit(this.game, 2400, 500, this.bossQueue[0], ENEMY);
             } else {
-                //Lose
+                this.allBossDied(true);
+                this.removeFromWorld = true;
             }
-        }
-
-
-        if (this.frequency > 1)
+        } else {
+            if (this.frequency > 1)
             this.frequency -= 0.01 * this.game.clockTick;
-        Generator.prototype.update.call(this);
+            Generator.prototype.update.call(this);
+        }
     }
 }
 
@@ -216,21 +240,40 @@ CardGenerator.prototype.drawCard = function(index) {
     this.game.addEntity(newCard);
 }
 
+/**
+ * Set the current boss
+ */
+CardGenerator.prototype.assignCurrentBoss = function(unit) {
+    this.currentBoss = unit;
+}
+
+/**
+ * Assign the action happens when all boss dies
+ */
+CardGenerator.prototype.setBossesDiedAction = function(callback) {
+    this.allBossDied = callback;
+}
 
 
 CardGenerator.prototype.update = function() {
-    var that = this;
-    this.energy = Math.min(this.energy + this.game.clockTick * this.energyRate, 10);
-    for (var i = 0; i < this.numOfCard; i++) {
-        var card = this.onHand[i];
-        if (card.removeFromWorld) {
-            if (this.onHandCooldown[i] >= this.cooldown) {
-                var oldCardCode = card.unitcode;
-                this.drawCard(i);
-                this.onDeck.push(oldCardCode);
-                this.onHandCooldown[i] = 0;
-            } else {
-                this.onHandCooldown[i] += this.game.clockTick;
+    if (this.currentBoss.health <= 0) {
+        this.removeAll();
+        this.allBossDied(false);
+        this.removeFromWorld = true;
+    } else {
+        var that = this;
+        this.energy = Math.min(this.energy + this.game.clockTick * this.energyRate, 10);
+        for (var i = 0; i < this.numOfCard; i++) {
+            var card = this.onHand[i];
+            if (card.removeFromWorld) {
+                if (this.onHandCooldown[i] >= this.cooldown) {
+                    var oldCardCode = card.unitcode;
+                    this.drawCard(i);
+                    this.onDeck.push(oldCardCode);
+                    this.onHandCooldown[i] = 0;
+                } else {
+                    this.onHandCooldown[i] += this.game.clockTick;
+                }
             }
         }
     }
