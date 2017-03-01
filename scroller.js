@@ -1,5 +1,5 @@
 
-function ScreenScroller(game, screenmove, x, y, boxX, boxY){
+function ScreenScroller(game, screenmove, x, y, boxX, boxY = boxX / 4){
     Entity.call(this, game, x, y);
     this.movable = false;
     this.screenmove = screenmove;
@@ -10,6 +10,7 @@ function ScreenScroller(game, screenmove, x, y, boxX, boxY){
     this.returnPoint = boxX / 7;
     this.mapSize = this.screenmove.mapSize;
     this.screenSize = this.screenmove.screenSize;
+    this.scale = 0.15;
 
     if(this.game.sceneManager.currentScene !== undefined
             && this.game.sceneManager.currentScene.background !== undefined){
@@ -17,7 +18,16 @@ function ScreenScroller(game, screenmove, x, y, boxX, boxY){
         this.backObject = new NonAnimatedObject(this.game, AM.getAsset(this.back),
                                     this.x, this.y, 
                                     undefined, undefined, undefined, undefined, undefined,
-                                    0.1);
+                                    this.scale);
+        this.backObject.movable = false;
+        this.colliseBox = {x: x, y: y, 
+                width: this.backObject.width * this.scale, height: this.backObject.height * this.scale};
+        
+        var frontEdge = 100;
+        var backEdge = 100;
+        var screenPercentage = 1.0 * (this.screenSize / 2) / this.mapSize;
+        this.returnPoint = frontEdge * this.scale + 
+                    (this.backObject.width - frontEdge - backEdge) * this.scale * screenPercentage;
 
     }
 
@@ -33,6 +43,7 @@ ScreenScroller.prototype.draw = function(){
     // } else {
     //     this.drawOldBox();
     // }
+    this.drawMinimap();
     this.drawOldBox();
 }
 ScreenScroller.prototype.update = function(){
