@@ -15,8 +15,11 @@ Battle.prototype.create = function() {
 	this.loadCharacter();
     this.buildingBackground();
 
+    //Two main towers:
     var playerBoss = new MainTower(this.game);
     this.game.addEntity(playerBoss);
+    var enemyBoss = new EnemyTower(this.game);
+    this.game.addEntity(enemyBoss);
 
     this.buildTiles();
     
@@ -28,7 +31,7 @@ Battle.prototype.create = function() {
                 {code: "m010", ticket: 1}];
 
     var gen = new EnemyGenerator(this.game, 2300, 400, list);
-    gen.setFrequency(2);
+    gen.setFrequency(4);
     this.game.addEntity(gen);
 
     //Initializing cards on hand
@@ -38,6 +41,7 @@ Battle.prototype.create = function() {
                  {code: "h003", ticket: 5},
                  {code: "h100", ticket: 1}];
     var cardGen = new CardGenerator(this.game, 100, 400, cards, 6);
+    cardGen.setEnergyRate(0.4);
     cardGen.start();
     this.game.addEntity(cardGen);
 
@@ -73,7 +77,7 @@ Battle.prototype.create = function() {
 
 //    spawnUnit(this.game, 100, 400, "h003", PLAYER);
 
-    var enemyBoss = spawnUnit(this.game, 2300, 400, "m100", ENEMY);
+
     //var playerBoss = spawnUnit(this.game, 100, 400, "h100", PLAYER);
 
     var endGame = new EndGame(this.game);

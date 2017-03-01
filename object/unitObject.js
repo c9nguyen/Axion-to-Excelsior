@@ -148,9 +148,13 @@ Action.prototype.getFrameGroundPoint = function(frame) {
  */
 Action.prototype.getFrameHitbox = function(frame) {
     var hitbox;
-    if (this.collisionBoxes[frame] === undefined && this.previousHitbox !== undefined)
-        hitbox = this.previousHitbox;
-    else
+    if (this.collisionBoxes[frame] === undefined) {
+        if (this.previousHitbox !== undefined) {
+            hitbox = this.previousHitbox;
+        } else {
+            hitbox = {x: 0, y: 0, width: 0, height: 0};
+        }
+    } else
         hitbox = this.collisionBoxes[frame];
 
     this.previousHitbox = hitbox;

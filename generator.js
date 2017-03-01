@@ -47,9 +47,12 @@ Generator.prototype.update = function() {
 Generator.prototype.draw = function() {
 }
 
+/* ================================================================================================= */
+
 EnemyGenerator = function(game, x, y, list = []) {
     Generator.call(this, game, x, y);
     this.bucket = [];
+    this.bossQueue = [];
 
     this.frequency = 1;
     this.counter = 0;
@@ -86,6 +89,10 @@ EnemyGenerator.prototype.setEndgame = function (endgame) {
     this.endgame = endgame;
 }
 
+EnemyGenerator.prototype.addToBossQueue = function(unitCode) {
+    this.bossQueue.push(unitCode);
+}
+
 EnemyGenerator.prototype.update = function() {
     if (this.active && (this.endgame === undefined || !this.endgame.isGameOver)) {
         if (this.frequency > 1)
@@ -96,14 +103,17 @@ EnemyGenerator.prototype.update = function() {
 
 
 
+/* ================================================================================================= */
+
 CardGenerator = function(game, x, y, list = [], numOfCard) {
     this.onHand = [];
     this.onHandLocation = [];
     this.onHandCooldown = [];
     this.onDeck = [];
-    this.cooldown = 3;
+    this.cooldown = 2;
     this.numOfCard = numOfCard;
     this.energy = 3;
+    this.energyRate = 0.5;
 
     Entity.call(this, game, x, y, UI);
     var that = this;
@@ -149,6 +159,10 @@ CardGenerator.prototype.useEnergy = function(energy) {
     this.energy = Math.max(this.energy, 0);
 }
 
+CardGenerator.prototype.setEnergyRate = function(rate) {
+    this.energyRate = rate;
+}
+
 CardGenerator.prototype.removeAll = function() {
     this.onHand.map(function(card) {
         card.removeFromWorld = true;
@@ -165,9 +179,11 @@ CardGenerator.prototype.drawCard = function(index) {
     this.game.addEntity(newCard);
 }
 
+
+
 CardGenerator.prototype.update = function() {
     var that = this;
-    this.energy = Math.min(this.energy + this.game.clockTick * 0.5, 10);
+    this.energy = Math.min(this.energy + this.game.clockTick * this.energyRate, 10);
     for (var i = 0; i < this.numOfCard; i++) {
         var card = this.onHand[i];
         if (card.removeFromWorld) {
