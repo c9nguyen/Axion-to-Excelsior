@@ -544,7 +544,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var skill = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/skill.png"),
                                     6, 0.2, 12, groundPoints, collisionBox, false, 5);
             var effect = function(that) {castSkill(that.game, that.x - 148, that.y - 20, that.unit, 00000, 1,
-                                    undefined, 270, 140, 0.6, true, true, function(unit) {unit.takePassiveEffect("speed", 0.3)})};
+                                    undefined, 270, 140, 0.6, true, true, function(that, otherUnit) {otherUnit.takePassiveEffect("speed", 0.3)})};
             skill.effects[4] = effect;
 
             groundPoints = [{x: 18, y: 138}];
@@ -608,7 +608,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             attack.effects[4] = function(that) {
                 castSkill(that.game, that.x, that.y + 30, that.unit, 00000, 1,
                             function(unit) { unit.getKnockback(300);},
-                            160, 100, 0.4, true)};
+                            160, 100, 0.4, true);
+                that.game.soundPlayer.addToEffect("./sound/effects/smw_thud.wav")};
 
             groundPoints = [{x: 0, y: 130}];
             var die = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/die.png"),

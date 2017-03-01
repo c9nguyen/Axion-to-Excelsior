@@ -91,9 +91,13 @@ Battle.prototype.create = function() {
         this.game.soundPlayer.removeAllSound();
 		this.game.sceneManager.startScene('mainmenu');
 	});
+
+    endGame.endGameActions.push(function() {
+        cardGen.removeAll();
+        cardGen.removeFromWorld = true;
+    });
+
 	this.game.addEntity(exit_button);
-
-
 };
 
 Battle.prototype.update = function() {

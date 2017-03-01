@@ -76,7 +76,7 @@ Button.prototype.draw = function() {
  */
 Button.prototype.checkCooldown = function() {
    // var offCooldown = true;
-    return (this.timeLastStart === undefined || this.game.timer.gameTime - this.timeLastClick >= this.cooldown);
+    return (this.timeLastClick === undefined || this.game.timer.gameTime - this.timeLastClick >= this.cooldown);
 }
 
 Button.prototype.update = function() {
