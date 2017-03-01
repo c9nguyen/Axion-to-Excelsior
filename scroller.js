@@ -1,5 +1,5 @@
 
-function ScreenScroller(game, screenmove, x, y, boxX, boxY){
+function ScreenScroller(game, screenmove, x, y, boxX, boxY = boxX / 4){
     Entity.call(this, game, x, y);
     this.movable = false;
     this.screenmove = screenmove;
@@ -10,32 +10,46 @@ function ScreenScroller(game, screenmove, x, y, boxX, boxY){
     this.returnPoint = boxX / 7;
     this.mapSize = this.screenmove.mapSize;
     this.screenSize = this.screenmove.screenSize;
+    this.scale = 0.15;
+
+    if(this.game.sceneManager.currentScene !== undefined
+            && this.game.sceneManager.currentScene.background !== undefined){
+        this.back = this.game.sceneManager.currentScene.background;
+        this.backObject = new NonAnimatedObject(this.game, AM.getAsset(this.back),
+                                    this.x, this.y, 
+                                    undefined, undefined, undefined, undefined, undefined,
+                                    this.scale);
+        this.backObject.movable = false;
+        this.colliseBox = {x: x, y: y, 
+                width: this.backObject.width * this.scale, height: this.backObject.height * this.scale};
+        
+        this.frontEdge = 100;
+        this.backEdge = 100;
+        var screenPercentage = 1.0 * (this.screenSize / 2) / this.mapSize;
+        this.returnPoint = this.frontEdge * this.scale + 
+                    (this.backObject.width - this.frontEdge - this.backEdge) * this.scale * screenPercentage;
+
+        this.cameraBoxX = 0;
+        this.blueDots = [];
+        this.redDots = [];
+
+    }
 
 }
 
 ScreenScroller.prototype = Object.create (Entity.prototype);
 ScreenScroller.prototype.constructor = ScreenScroller;
-
+//--- Draw and update
 ScreenScroller.prototype.draw = function(){
-    this.game.ctx.beginPath();
-    this.game.ctx.lineWidth="4";
-    this.game.ctx.strokeStyle="green";
-    this.game.ctx.rect(this.x, this.y, this.colliseBox.width, this.colliseBox.height);
-    this.game.ctx.stroke();
 
-    this.game.ctx.beginPath();
-    this.game.ctx.lineWidth="2";
-    this.game.ctx.strokeStyle="red";
-    this.game.ctx.rect(this.x, this.y, this.returnPoint, this.colliseBox.height);
-    this.game.ctx.stroke();
-
-    this.game.ctx.beginPath();
-    this.game.ctx.strokeStyle="red";
-    this.game.ctx.rect(this.x + this.colliseBox.width - this.returnPoint, this.y, 
-                        this.returnPoint, this.colliseBox.height);
-    this.game.ctx.stroke();
+    if(this.back !== undefined){
+        this.drawMinimap();
+    } else {
+        this.drawOldBox();
+    }
+    // this.drawMinimap();
+    // this.drawOldBox();
 }
-
 ScreenScroller.prototype.update = function(){
     if(collise(this.colliseBox, this.game.mouse)){
         if (this.game.mouse.click) {
@@ -64,10 +78,84 @@ ScreenScroller.prototype.update = function(){
             this.game.mouse.click = false;
         }
     }
+    // Update stuff to draw
+    this.cameraBoxX = (-1 * this.game.mapX) * this.scale;
+    var redL = this.game.enemyList;
+    var blueL = this.game.playerList;
+    var frontPadding = this.scale * this.frontEdge; 
+    redDots = [];
+    blueDots = [];
+    for(var i = 0; i < redL.length; i++){
+        var dotX = frontPadding + redL[i].x * this.scale;
+        redDots.push(dotX);
+    }
+    for(var i = 0; i < blueL.length; i++){
+        var dotX = frontPadding + blueL[i].x * this.scale;
+        blueDots.push(dotX);
+    }
 }
+//--- end draw and update
+//--- helper methods for draw
+ScreenScroller.prototype.drawMinimap = function(){
+    this.backObject.draw();
+    this.privateDrawDots(blueDots, "DarkBlue");
+    this.privateDrawDots(redDots, "DarkRed");
+    var savedWidth = this.game.ctx.lineWidth;
+    this.game.ctx.beginPath();
+    this.game.ctx.lineWidth="6";
+    this.game.ctx.strokeStyle="#6600cc"; // Purple
+    this.game.ctx.rect(this.x + this.cameraBoxX, this.y, 
+                        this.scale * (this.screenSize + this.frontEdge + this.backEdge), 
+                        this.colliseBox.height);
+    this.game.ctx.stroke();
+    this.game.ctx.beginPath();
+    this.game.ctx.lineWidth="2";
+    this.game.ctx.strokeStyle="#a64dff"; // Light-Purple
+    this.game.ctx.rect(this.x + this.cameraBoxX + 1, this.y + 1, 
+                        this.scale * (this.screenSize + this.frontEdge + this.backEdge) - 1, 
+                        this.colliseBox.height) - 1;
+    this.game.ctx.stroke();
+    this.game.ctx.lineWidth = savedWidth;
 
+}
+ScreenScroller.prototype.privateDrawDots = function(list, style){
+    var savedWidth = this.game.ctx.lineWidth;
+    this.game.ctx.lineWidth = "2";
+    for(var i = 0; i < list.length; i++){
+        this.game.ctx.strokeStyle=style;
+        this.game.ctx.beginPath();
+        //-- Circles 
+        // this.game.ctx.arc(this.x + list[i], this.y + this.colliseBox.height * (5 / 8), 
+        //                     4, 0, 2 * Math.PI);
+        //-- Lines
+        this.game.ctx.moveTo(this.x + list[i], this.y + this.colliseBox.height * (5 / 8));
+        this.game.ctx.lineTo(this.x + list[i], this.y + this.colliseBox.height * (7 / 8));
+        this.game.ctx.stroke();
+    }
+    this.game.ctx.lineWidth = savedWidth;
+}
+ScreenScroller.prototype.drawOldBox = function(){
+    this.game.ctx.beginPath();
+    this.game.ctx.lineWidth="4";
+    this.game.ctx.strokeStyle="green";
+    this.game.ctx.rect(this.x, this.y, this.colliseBox.width, this.colliseBox.height);
+    this.game.ctx.stroke();
 
-//---------------------------------- Arrow Key Move ------------------------------//
+    this.game.ctx.beginPath();
+    this.game.ctx.lineWidth="2";
+    this.game.ctx.strokeStyle="red";
+    this.game.ctx.rect(this.x, this.y, this.returnPoint, this.colliseBox.height);
+    this.game.ctx.stroke();
+
+    this.game.ctx.beginPath();
+    this.game.ctx.strokeStyle="red";
+    this.game.ctx.rect(this.x + this.colliseBox.width - this.returnPoint, this.y, 
+                        this.returnPoint, this.colliseBox.height);
+    this.game.ctx.stroke();
+}
+//--- end helper methods for draw
+
+//---------------------------------- Arrow Key Move ------------------------------------------//
 function ScreenMoveArrow(game, screenmove, listenerLeft, listenerRight){
     Entity.call(this, game, 0, 0); 
     this.screenmove = screenmove;
@@ -99,7 +187,7 @@ ScreenMoveArrow.prototype.update = function(){
 ScreenMoveArrow.prototype.draw = function(){
 }
 
-//---------------------------------- Mouse Over Move ------------------------------//
+//---------------------------------- Mouse Over Move ---------------------------------------//
 function ScreenMouseOverMovement(game, screenmove, direction){
 
     if(direction !== "right" && direction !== "left"){

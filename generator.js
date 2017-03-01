@@ -144,6 +144,17 @@ CardGenerator.prototype.useEnergy = function(energy) {
     this.energy = Math.max(this.energy, 0);
 }
 
+CardGenerator.prototype.useEnergy = function(energy) {
+    this.energy -= energy;
+    this.energy = Math.max(this.energy, 0);
+}
+
+CardGenerator.prototype.removeAll = function() {
+    this.onHand.map(function(card) {
+        card.removeFromWorld = true;
+    });
+}
+
 CardGenerator.prototype.drawCard = function(index) {
     var ran = Math.floor(Math.random() * this.onDeck.length);
     var card = this.onDeck[ran];
@@ -179,10 +190,11 @@ CardGenerator.prototype.draw = function() {
     var energyBarWidth = 200;
     energyPercent = Math.max(energyPercent, 0);
     var height = 20;
-    //var healthBar = {x: this.x, y: this.y, width: this.width * energyPercent, height: height};
+
+    //enerygy bar
     ctx.fillStyle = 'red';
     ctx.fillRect(x, 535, energyBarWidth, height);
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = 'blue';
     ctx.fillRect(x, 535, energyBarWidth * energyPercent, height);
     ctx.strokeStyle = 'black';
     ctx.rect(x, 535, energyBarWidth, height);

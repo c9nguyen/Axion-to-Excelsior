@@ -2,6 +2,7 @@ function Battle(game)
 {
 	// this.game = game;
     Scene.call(this, game);
+    this.background = "./img/map/01/back.png";
 }
 
 Battle.prototype = Object.create(Scene.prototype);
@@ -40,7 +41,7 @@ Battle.prototype.create = function() {
     cardGen.start();
     this.game.addEntity(cardGen);
 
-    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 575, 400, 25);
+    var map = new ScreenScroller(this.game, this.game.screenMover, 800, 525, 400);
     this.game.addEntity(map);
     var rightAndLeftKey = new ScreenMoveArrow(this.game, this.game.screenMover, this.game.left, this.game.right);
     this.game.addEntity(rightAndLeftKey);
@@ -90,9 +91,13 @@ Battle.prototype.create = function() {
         this.game.soundPlayer.removeAllSound();
 		this.game.sceneManager.startScene('mainmenu');
 	});
+
+    endGame.endGameActions.push(function() {
+        cardGen.removeAll();
+        cardGen.removeFromWorld = true;
+    });
+
 	this.game.addEntity(exit_button);
-
-
 };
 
 Battle.prototype.update = function() {
@@ -103,7 +108,7 @@ Battle.prototype.buildingBackground = function() {
 	canvasHeight = this.game.ctx.canvas.clientHeight;
 	canvasWidth = this.game.ctx.canvas.clientWidth;
 
-    var back = new NonAnimatedObject(this.game, AM.getAsset("./img/map/01/back.png"),0, 0);
+    var back = new NonAnimatedObject(this.game, AM.getAsset(this.background),0, 0);
     //back.setSize(canvasWidth, canvasHeight);
     this.game.addEntity(back);
 
