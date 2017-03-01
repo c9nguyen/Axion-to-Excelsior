@@ -480,7 +480,8 @@ EnemyTower.prototype.update = function() {
 
 EnemyTower.prototype.draw = function() {
     this.leftG.draw();
-    this.currentAction.draw();
+    if(this.currentAction !== undefined)
+        this.currentAction.draw();
     this.rightG.draw();
 
     //Health bar

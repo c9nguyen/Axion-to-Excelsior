@@ -97,8 +97,11 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         if (!this.checkCooldown() || !this.loop) {
             this.endEffect(this);
             this.unit.currentAction = this.unit.defaultAction;
-            this.unit.currentAction.start();
-            this.unit.currentAction.update();
+            if(this.unit.currentAction !== undefined){
+                this.unit.currentAction.start();
+                this.unit.currentAction.update();
+            }
+            
             return;
          }
     }

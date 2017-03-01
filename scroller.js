@@ -106,12 +106,13 @@ ScreenScroller.prototype.drawMinimap = function(){
                         this.scale * (this.screenSize + this.frontEdge + this.backEdge), 
                         this.colliseBox.height);
     this.game.ctx.stroke();
+    
     this.game.ctx.beginPath();
     this.game.ctx.lineWidth="2";
     this.game.ctx.strokeStyle="#a64dff"; // Light-Purple
     this.game.ctx.rect(this.x + this.cameraBoxX + 1, this.y + 1, 
                         this.scale * (this.screenSize + this.frontEdge + this.backEdge) - 1, 
-                        this.colliseBox.height) - 1;
+                        this.colliseBox.height - 1);
     this.game.ctx.stroke();
     this.game.ctx.lineWidth = savedWidth;
     this.game.ctx.fillStyle = savedFilled;
