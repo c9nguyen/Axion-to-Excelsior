@@ -84,14 +84,21 @@ ScreenScroller.prototype.update = function(){
 //--- helper methods for draw
 ScreenScroller.prototype.drawMinimap = function(){
     this.backObject.draw();
+
+    var savedWidth = this.game.ctx.lineWidth;
+    var savedFilled = this.game.ctx.fillStyle;
+    var savedStyle = this.game.ctx.strokeStyle;
+
+    this.privateDrawDots(this.game.playerList, "DarkBlue");
+    this.privateDrawDots(this.game.enemyList, "DarkRed");
+    
+    // OUTLINE
     this.game.ctx.beginPath();
     this.game.ctx.lineWidth="4";
     this.game.ctx.strokeStyle="black";
     this.game.ctx.rect(this.x, this.y, this.backObject.width * this.scale, this.backObject.height * this.scale);
     this.game.ctx.stroke();
-    this.privateDrawDots(this.game.playerList, "DarkBlue");
-    this.privateDrawDots(this.game.enemyList, "DarkRed");
-    var savedWidth = this.game.ctx.lineWidth;
+
     this.game.ctx.beginPath();
     this.game.ctx.lineWidth="6";
     this.game.ctx.strokeStyle="#6600cc"; // Purple
@@ -99,32 +106,41 @@ ScreenScroller.prototype.drawMinimap = function(){
                         this.scale * (this.screenSize + this.frontEdge + this.backEdge), 
                         this.colliseBox.height);
     this.game.ctx.stroke();
+    
     this.game.ctx.beginPath();
     this.game.ctx.lineWidth="2";
     this.game.ctx.strokeStyle="#a64dff"; // Light-Purple
     this.game.ctx.rect(this.x + this.cameraBoxX + 1, this.y + 1, 
                         this.scale * (this.screenSize + this.frontEdge + this.backEdge) - 1, 
-                        this.colliseBox.height) - 1;
+                        this.colliseBox.height - 1);
     this.game.ctx.stroke();
     this.game.ctx.lineWidth = savedWidth;
+    this.game.ctx.fillStyle = savedFilled;
+    this.game.ctx.strokeStyle = savedStyle;
 
 }
 ScreenScroller.prototype.privateDrawDots = function(list, style){
     var savedWidth = this.game.ctx.lineWidth;
     var frontPadding = this.scale * this.frontEdge;
     for(var i = 0; i < list.length; i++){
-        this.game.ctx.strokeStyle=style;
-        this.game.ctx.beginPath();
-        //-- Circles 
-        // this.game.ctx.arc(this.x + list[i], this.y + this.colliseBox.height * (5 / 8), 
-        //                     4, 0, 2 * Math.PI);
-        //-- Lines
+        this.game.ctx.fillStyle=style;
+        
+        //--Box
         var tempX = frontPadding + list[i].x * this.scale;
-        var tempWidth = list[i].data.groundWidth * this.scale / 2;
-        this.game.ctx.lineWidth = Math.floor(tempWidth).toString();
-        this.game.ctx.moveTo(this.x + tempX, this.y + this.colliseBox.height * (5 / 8));
-        this.game.ctx.lineTo(this.x + tempX, this.y + this.colliseBox.height * (7 / 8));
-        this.game.ctx.stroke();
+        var tempWidth = Math.floor(list[i].data.groundWidth * this.scale / 2);
+        var locX = this.x + tempX;
+        if(locX < this.x){
+            tempWidth = tempWidth + tempX;
+            locX = this.x;
+        } else if(locX + tempWidth > this.x + this.backObject.width * this.scale){
+            tempWidth = this.x + this.backObject.width * this.scale - locX;
+        }
+        if(tempWidth > 0) {
+            this.game.ctx.beginPath();
+            this.game.ctx.fillRect(locX, this.y + this.colliseBox.height * (5 / 8),
+                                    tempWidth, this.colliseBox.height * (2 / 8));
+            this.game.ctx.stroke();
+        }
     }
     this.game.ctx.lineWidth = savedWidth;
 }

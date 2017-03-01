@@ -103,6 +103,28 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             skill.subEffects[16] = function() {skill.hitList = new Set()};
             skill.subEffects[22] = function() {skill.hitList = new Set()};
             break;
+       case 10002:
+            var collisionBox = [{x: 25, y: 0, width: 110, height: 815}];
+            collisionBox[4] = {x: 0, y: 0, width: 0, height: 0};
+            action = function(that, otherUnit) {
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/unit/tower2/attack2_effect.png"),
+                                5, 0.1, 5, collisionBox, action, percentAtt, true);
+            break;
+       case 10003:
+            var collisionBox = [{x: 47, y: 0, width: 35, height: 125}];
+            collisionBox[2] = {x: 0, y: 0, width: 0, height: 0};
+            action = function(that, otherUnit) {
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/unit/tower3/attack_effect.png"),
+                                7, 0.1, 7, collisionBox, action, percentAtt, false);
+            break;
     }
 
     if (skill !== undefined) {

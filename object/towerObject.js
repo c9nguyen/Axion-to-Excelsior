@@ -165,15 +165,17 @@ Tower.prototype.draw = function() {
     // }
     // }
 
-
-    // var rangeBox = this.rangeBox[0];
-    // var box = {};
-    // box.x = this.x + rangeBox.x + this.game.mapX;;
-    // box.y = this.y + rangeBox.y;
-    // box.width = rangeBox.width;
-    // box.height = rangeBox.height;
-    // this.game.ctx.strokeStyle = "red";
-    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    // if (this.rangeBox[0]) {
+    //     var rangeBox = this.rangeBox[0];
+    //     var box = {};
+    //     box.x = this.x + rangeBox.x + this.game.mapX;;
+    //     box.y = this.y + rangeBox.y;
+    //     box.width = rangeBox.width;
+    //     box.height = rangeBox.height;
+    //     this.game.ctx.strokeStyle = "red";
+    //     this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+    // }
+   
 
 
     //this.game.ctx.fillRect(rangeBox.x, rangeBox.y, rangeBox.width, rangeBox.height);
@@ -181,9 +183,10 @@ Tower.prototype.draw = function() {
     
 }
 
+/* ================================================================================================= */
 
 function MainTower(game) {
-    Tower.call(this, game, 0, 520, "tower0", PLAYER);
+    Tower.call(this, game, -50, 520, "tower0", PLAYER);
     var that = this;
 
     this.skill = new Button(this.game, AM.getAsset("./img/unit/tower0/skill_icon.png"), 20, 20);
@@ -195,6 +198,7 @@ function MainTower(game) {
 
     });
     this.skill.setCooldown(10);
+    this.skill.addSheet(AM.getAsset("./img/unit/tower0/skill_icon_disable.png"), "disable");
     this.skill.timeLastClick = this.game.timer.gameTime;
 
     this.skill2 = new Button(this.game, AM.getAsset("./img/unit/tower0/skill2_icon.png"), 130, 20);
@@ -203,9 +207,9 @@ function MainTower(game) {
             that.changeAction("attack2");
         }
         castSkill(that.game, that.getClosestEnemy() - 100, 50, that, 10001, 0.5);
-
     });
     this.skill2.setCooldown(30);
+    this.skill2.addSheet(AM.getAsset("./img/unit/tower0/skill2_icon_disable.png"), "disable");
     this.skill2.timeLastClick = this.game.timer.gameTime;
 
     this.initActions();
@@ -255,7 +259,7 @@ MainTower.prototype.initActions = function() {
     groundPoints = [{x: 0, y: 554}];
     var die = new Action(this.game, this, AM.getAsset("./img/unit/tower0/die.png"),
                         7, 0.1, 7, groundPoints, collisionBox, false, -1);
-    die.endEffect = function() { this.unit.removeFromWorld = true};
+    die.endEffect = function(that) { that.unit.removeFromWorld = true};
 
     this.actions["attack"] = attack;
     this.actions["attack2"] = attack2;
@@ -270,7 +274,7 @@ MainTower.prototype.update = function() {
     Tower.prototype.update.call(this);
 }
 
-Tower.prototype.draw = function() {
+MainTower.prototype.draw = function() {
 
     if(this.currentAction !== undefined)
         this.currentAction.draw();
@@ -280,8 +284,8 @@ Tower.prototype.draw = function() {
     //Health bar
     var percent = this.health / this.data.health;
     percent = Math.max(percent, 0);
-    var width = 500;
-    this.drawBar(600, 10, width, 20, width * percent, "green");
+    var width = 400;
+    this.drawBar(250, 10, width, 20, width * percent, "green");
 
     //skill 1 cd
     percent = (this.game.timer.gameTime - this.skill.timeLastClick) / this.skill.cooldown;
@@ -298,7 +302,7 @@ Tower.prototype.draw = function() {
     this.drawBar(this.skill2.x, this.skill2.y + this.skill2.normal.height, width, 10, width * percent, "blue");
 }
 
-Tower.prototype.drawBar = function(x, y, width, height, fill, color) {
+MainTower.prototype.drawBar = function(x, y, width, height, fill, color) {
     var ctx = this.game.ctx;
     ctx.beginPath();
     ctx.lineWidth = "1";
@@ -310,4 +314,275 @@ Tower.prototype.drawBar = function(x, y, width, height, fill, color) {
     ctx.rect(x, y, width, height);
     ctx.stroke();
     ctx.fillStyle = 'black';
+}
+
+/* ================================================================================================= */
+
+function EnemyTower(game) {
+    Tower.call(this, game, 2080, 510, "tower1", ENEMY);
+    var that = this;
+
+    this.initActions();
+    this.leftGuardian();
+    this.rightGuardian();
+    var that = this;
+    this.actionHandler = function(that) {                 
+        if (that.currentAction.interruptible || that.currentAction.isDone()) {
+            that.changeAction("stand");
+    }};
+}
+
+EnemyTower.prototype = Object.create(Tower.prototype);
+EnemyTower.prototype.constructor = Unit;
+
+EnemyTower.prototype.leftGuardian = function() {
+
+    this.leftG = new Tower(this.game, this.x - 100, this.y, "tower2", ENEMY);
+    var collisionBox = [];
+    var groundPoints = [{x: 157, y: 854}];
+    var attack = new Action(this.game, this.leftG, AM.getAsset("./img/unit/tower2/attack2.png"),
+                            5, 0.1, 20, groundPoints, collisionBox, false, 2);
+    attack.effects[9] = function(that) {
+        if (that.unit.lockedTarget) {
+            castSkill(that.game, that.unit.lockedTarget.x - 50, -272, that.unit, 10002, 1);
+        }
+    };
+ 
+    groundPoints = [{x: 151, y: 465}];
+    var attack3 = new Action(this.game, this.leftG, AM.getAsset("./img/unit/tower2/attack3.png"),
+                            6, 0.1, 18, groundPoints, collisionBox, false);
+
+    groundPoints = [{x: 43, y: 448}];
+    var stand = new Action(this.game, this.leftG, AM.getAsset("./img/unit/tower2/stand.png"),
+                            1, 0.1, 1, groundPoints, collisionBox, true);
+
+
+    groundPoints = [{x: 53, y: 460}];
+    collisionBox = [];
+    var dieafter = new Action(this.game, this.leftG, AM.getAsset("./img/unit/tower2/die_after.png"),
+                        1, 0.1, 1, groundPoints, collisionBox, false);
+
+    groundPoints = [{x: 53, y: 460}];
+    var die = new Action(this.game, this.leftG, AM.getAsset("./img/unit/tower2/die.png"),
+                        5, 0.1, 10, groundPoints, collisionBox, false, -1);
+    die.endEffect = function(that) {that.unit.update = function() {};
+                                    that.unit.currentAction = dieafter;
+    };
+
+    this.leftG.actions["stand"] = stand;
+    this.leftG.actions["attack"] = attack;
+    this.leftG.actions["attack3"] = attack3;
+    this.leftG.actions["die"] = die;
+    this.leftG.currentAction = stand;
+    this.leftG.defaultAction = stand;
+    this.leftG.actionHandler = function(that) {
+            if (that.currentAction.interruptible || that.currentAction.isDone()) {
+                var collisedEnemy = that.checkEnemyInRange();
+                if (collisedEnemy.has(0)) 
+                console.log(attack.checkCooldown());
+                if (collisedEnemy.has(0) && attack.checkCooldown()) 
+                that.changeAction("attack");
+                else that.changeAction("stand");
+            }
+
+    }
+}
+
+EnemyTower.prototype.rightGuardian = function() {
+
+    this.rightG = new Tower(this.game, this.x + 150, this.y, "tower3", ENEMY);
+    var collisionBox = [];
+    var groundPoints = [{x: 43, y: 603}];
+    var attack = new Action(this.game, this.rightG, AM.getAsset("./img/unit/tower3/attack.png"),
+                            6, 0.1, 18, groundPoints, collisionBox, false);
+    attack.effects[11] = function(that) {
+        if (that.unit.lockedTarget) {
+            castSkill(that.game, that.unit.lockedTarget.x - 50, 385, that.unit, 10003, 1);
+        }
+    };                
+
+    groundPoints = [{x: 151, y: 465}];
+    var attack3 = new Action(this.game, this.rightG, AM.getAsset("./img/unit/tower3/attack3.png"),
+                            6, 0.1, 18, groundPoints, collisionBox, false);
+
+    groundPoints = [{x: 43, y: 448}];
+    var stand = new Action(this.game, this.rightG, AM.getAsset("./img/unit/tower3/stand.png"),
+                            1, 0.1, 1, groundPoints, collisionBox, true);
+
+
+    groundPoints = [{x: 53, y: 460}];
+    collisionBox = [];
+    var dieafter = new Action(this.game, this.rightG, AM.getAsset("./img/unit/tower3/die_after.png"),
+                        1, 0.1, 1, groundPoints, collisionBox, false);
+
+    groundPoints = [{x: 53, y: 460}];
+    var die = new Action(this.game, this.rightG, AM.getAsset("./img/unit/tower3/die.png"),
+                        5, 0.1, 10, groundPoints, collisionBox, false, -1);
+    die.endEffect = function(that) {that.unit.update = function() {};
+                                    that.unit.currentAction = dieafter;
+    };
+
+    this.rightG.actions["stand"] = stand;
+    this.rightG.actions["attack"] = attack;
+    this.rightG.actions["attack3"] = attack3;
+    this.rightG.actions["die"] = die;
+    this.rightG.currentAction = stand;
+    this.rightG.defaultAction = stand;
+    this.rightG.actionHandler = function(that) {
+            if (that.currentAction.interruptible || that.currentAction.isDone()) {
+                var collisedEnemy = that.checkEnemyInRange();
+                if (collisedEnemy.has(0)) that.changeAction("attack");
+                else that.changeAction("stand");
+            }
+
+    }
+}
+
+EnemyTower.prototype.initActions = function() {
+    var groundPoints = [{x: 50, y: 418}];
+    var collisionBox = [{x: 75, y: 205, width: 155, height: 215}];
+    var stand = new Action(this.game, this, AM.getAsset("./img/unit/tower1/stand.png"),
+                                    6, 0.1, 12, groundPoints, collisionBox, true);
+
+
+    groundPoints = [{x: 85, y: 418}];
+    collisionBox = [];
+    var dieafter = new Action(this.game, this, AM.getAsset("./img/unit/tower1/die_after.png"),
+                        1, 0.1, 1, groundPoints, collisionBox, true);
+
+    groundPoints = [{x: 85, y: 418}];
+    var die = new Action(this.game, this, AM.getAsset("./img/unit/tower1/die.png"),
+                        6, 0.1, 18, groundPoints, collisionBox, false, -1);
+    die.addEffect(0, function(that) {
+        that.unit.leftG.health = -1;
+        that.unit.rightG.health = -1;
+    });   
+    die.endEffect = function(that) {that.unit.update = function() {};
+                                    that.unit.currentAction = dieafter;
+    };
+
+
+
+    // var dieafter = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/tower1/die_after.png"), die.x, die.y);
+    // this.game.addEntity(dieafter);
+
+    this.actions["die"] = die;
+    this.actions["stand"] = stand;
+    this.actions["dieafter"] = dieafter;
+    this.currentAction = stand;
+}
+
+EnemyTower.prototype.update = function() {
+    this.rightG.update();
+    this.leftG.update();
+    Tower.prototype.update.call(this);
+}
+
+EnemyTower.prototype.draw = function() {
+    this.leftG.draw();
+    if(this.currentAction !== undefined)
+        this.currentAction.draw();
+    this.rightG.draw();
+
+    //Health bar
+    var percent = this.health / this.data.health;
+    percent = Math.max(percent, 0);
+    var width = 400;
+    this.drawBar(700, 10, width, 20, width * percent, "yellow");
+}
+
+EnemyTower.prototype.drawBar = function(x, y, width, height, fill, color) {
+    var ctx = this.game.ctx;
+    ctx.beginPath();
+    ctx.lineWidth = "1";
+    ctx.fillStyle = 'red';
+    ctx.fillRect(x, y, width, height);
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, fill, height);
+    ctx.strokeStyle = 'black';
+    ctx.rect(x, y, width, height);
+    ctx.fillStyle = 'black';
+    ctx.stroke();
+}
+
+
+
+/* ================================================================================================= */
+
+function spawnTower(game, x, y, towerCode, side = NEUTRAL) {
+    var tower;
+    switch (towerCode) {
+        // case "h000":
+        //     unit = new Unit(game, x, y, unitcode, side);
+        //     var groundPoints = [{x: 50, y: 95}];
+        //     var collisionBox = [{x: 40, y: 20, width: 50, height: 75}];
+        //     var walk = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/walk_right.png"),
+        //                             2, 0.1, 4, groundPoints, collisionBox, true);
+        //     walk.velocity.x = walk.unit.movementspeed;       
+        //     // walk.effects[0] = function(that) {that.unit.velocity.x = that.unit.movementspeed;};
+        //     // walk.endEffect = function(that) {that.unit.velocity.x = 0};
+
+        //     groundPoints = [{x: 50, y: 95}];
+        //     collisionBox = [{x: 40, y: 20, width: 50, height: 75}];
+        //     var jump = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/jump_right.png"),
+        //                             1, 0.1, 1, groundPoints, collisionBox, true);
+        //     jump.effects[0] = function(that) {
+        //         that.velocity.x = that.unit.velocity.x;};
+
+        //     groundPoints = [{x: 15, y: 90}];
+        //     collisionBox = [{x: 0, y: 20, width: 60, height: 70}];
+        //     var attack = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/stab_right.png"),
+        //                             3, 0.2, 3, groundPoints, collisionBox, false);
+        //     attack.effects[2] = function(that) {
+        //         castSkill(that.game, that.x + 50, that.y + 47, that.unit, 00000, 1,
+        //                 undefined, 93, 45, 0.1, false);};
+
+        //     groundPoints = [{x: 55, y: 120}];
+        //     groundPoints[2] = {x: 55, y: 150};
+        //     groundPoints[3] = {x: 55, y: 120};
+        //     collisionBox = [{x: 45, y: 45, width: 70, height: 70}];
+        //     var attack2 = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/jumpattack_right.png"),
+        //                             4, 0.2, 4, groundPoints, collisionBox, false, 5);
+        //     attack2.addEffect (2, function (that) {
+        //         var minus = that.unit.lockedTarget.velocity.x;
+        //         attack2.velocity.x = that.unit.movementspeed * 7 + (minus * 2);
+        //     });
+        //     attack2.addEffect (3, function (that) {
+        //         attack2.velocity.x = 0;
+        //         castSkill(that.game, that.x + 34, that.y + 13, that.unit, 00002, 1.5);
+        //     });
+
+        //     groundPoints = [{x: 50, y: 95}];
+        //     var die = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/die_right.png"),
+        //                             5, 0.1, 5, groundPoints, collisionBox, false, -1);
+        //     die.effects[0] = function(that) {that.unit.velocity.x = -that.unit.movementspeed;
+        //                                     that.unit.velocity.y = -350;
+        //                                     that.unit.gravity = true};
+        //     die.endEffect = function() {this.unit.removeFromWorld = true;};
+
+        //     unit.actions["walk"] = walk;
+        //     unit.actions["jump"] = jump;
+        //     unit.actions["attack"] = attack;
+        //     unit.actions["attack2"] = attack2;
+        //     unit.actions["die"] = die;
+        //     unit.defaultAction = walk;
+        //     unit.actionHandler = function(that) {
+        //         if (!that.gravity) {
+        //             if (that.currentAction.interruptible || that.currentAction.isDone()) {
+        //                 var collisedEnemy = that.checkEnemyInRange();
+        //                 if (collisedEnemy.has(0)) that.changeAction("attack");
+        //                 else if (collisedEnemy.has(1) && attack2.checkCooldown()) that.changeAction("attack2");
+        //                 else that.changeAction("walk");
+        //             }
+        //         } else
+        //             that.changeAction("jump");
+        //     }
+        //     break;
+
+       
+    }
+
+    if (tower !== undefined) game.addEntity(tower);
+    else console.log("Wrong tower code");
+    return tower;
 }

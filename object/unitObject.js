@@ -96,9 +96,12 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
         this.effectCasted = new Set();
         if (!this.checkCooldown() || !this.loop) {
             this.endEffect(this);
-            // this.unit.currentAction = this.unit.defaultAction;
-            // this.unit.currentAction.start();
-            // this.unit.currentAction.update();
+            this.unit.currentAction = this.unit.defaultAction;
+            if(this.unit.currentAction !== undefined){
+                this.unit.currentAction.start();
+                this.unit.currentAction.update();
+            }
+            
             return;
          }
     }
@@ -148,9 +151,13 @@ Action.prototype.getFrameGroundPoint = function(frame) {
  */
 Action.prototype.getFrameHitbox = function(frame) {
     var hitbox;
-    if (this.collisionBoxes[frame] === undefined && this.previousHitbox !== undefined)
-        hitbox = this.previousHitbox;
-    else
+    if (this.collisionBoxes[frame] === undefined) {
+        if (this.previousHitbox !== undefined) {
+            hitbox = this.previousHitbox;
+        } else {
+            hitbox = {x: 0, y: 0, width: 0, height: 0};
+        }
+    } else
         hitbox = this.collisionBoxes[frame];
 
     this.previousHitbox = hitbox;

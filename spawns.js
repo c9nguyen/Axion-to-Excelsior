@@ -567,8 +567,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             unit.actionHandler = function(that) {
                 if (!that.gravity) {
                     if (that.currentAction.interruptible || that.currentAction.isDone()) {
-
-                        var ally = that.checkAllyInRange(function(ally) {return ally.passiveEffect.speed.amount <= 0});
+                        var ally = that.checkAllyInRange(function(ally) {return ally.passiveEffect && ally.passiveEffect.speed.amount <= 0});
                         if (ally.has(0) && skill.checkCooldown()) that.changeAction("skill");
                         else {
                             var collisedEnemy = that.checkEnemyInRange();
@@ -614,8 +613,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 0, y: 130}];
             var die = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/die.png"),
                                     3, 0.1, 9, groundPoints, collisionBox, false, -1);
-            die.endEffect = function() {
-                this.unit.removeFromWorld = true};
+            die.endEffect = function(that) {
+                that.unit.removeFromWorld = true};
 
             groundPoints = [{x: 0, y: 130}];
             collisionBox = [{x: 10, y: 10, width: 120, height: 120}];
