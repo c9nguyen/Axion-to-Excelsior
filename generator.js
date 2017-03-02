@@ -166,8 +166,15 @@ EnemyGenerator.prototype.update = function() {
                 this.removeFromWorld = true;
             }
         } else {
-            if (this.frequency > 1)
-                this.frequency -= 0.01 * this.game.clockTick;
+            if (this.frequency > 1){
+                if(this.frequency > 3){
+                    this.frequency -= 0.02 * this.game.clockTick;
+                } else if (this.frequency > 2){
+                    this.frequency -= 0.01 * this.game.clockTick;
+                } else {
+                    this.frequency -= 0.005 * this.game.clockTick;
+                }
+            }
             if (this.impCounter >= this.impFrequency) {
                 this.impCounter = 0;
                 var that = this;
