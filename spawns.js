@@ -437,6 +437,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             unit.actions["attack"] = attack;
             unit.actions["die"] = die;
             unit.defaultAction = walk;
+            unit.currentAction = walk;
             unit.actionHandler = function(that) {
                 if (!that.gravity) {
                     if (that.currentAction.interruptible || that.currentAction.isDone()) {
