@@ -24,11 +24,13 @@ Battle.prototype.create = function() {
     this.buildTiles();
     
     //Initializing enemy generator
-    var list = [{code: "m000", ticket: 4},
+    var list = [
+                {code: "m000", ticket: 4},
                 {code: "m001", ticket: 8},
                 {code: "m002", ticket: 6},
                 {code: "m003", ticket: 2},
-                {code: "m010", ticket: 1}];
+                {code: "m010", ticket: 1}
+                ];
 
     var gen = new EnemyGenerator(this.game, 2300, 400, list);
     gen.setFrequency(4);
@@ -38,11 +40,13 @@ Battle.prototype.create = function() {
     this.game.addEntity(gen);
 
     //Initializing cards on hand
-    var cards = [{code: "h000", ticket: 3},
+    var cards = [
+                 {code: "h000", ticket: 3},
                  {code: "h001", ticket: 2},
                  {code: "h002", ticket: 5},
                  {code: "h003", ticket: 5},
-                 {code: "h100", ticket: 1}];
+                 {code: "h100", ticket: 1}
+                 ];
     var cardGen = new CardGenerator(this.game, 100, 400, cards, 6);
     cardGen.assignCurrentBoss(playerBoss);
     cardGen.setBossesDiedAction(this.endGame);
@@ -151,15 +155,20 @@ Battle.prototype.buildTiles = function() {
 
 Battle.prototype.addAllMusic = function(){
     // Sound
+
+    var musicVolume = 0.25;
     this.game.soundPlayer.randomTrackInQueue = true;
-    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-monstrous-monstro.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-squirming-evil.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-scherzo-di-notte.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-go-for-it.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-darknite.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-lancastrians.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-seto.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-yugi.mp3", undefined, undefined, 0.4);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-monstrous-monstro.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-scherzo-di-notte.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-go-for-it.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-lancastrians.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-seto.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-yugi.mp3", undefined, undefined, musicVolume);
+
+
+    // FOR BOSS
+    // this.game.soundPlayer.addToQueue("./sound/music/battle/KH-squirming-evil.mp3", undefined, undefined, 0.4);
+    // this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-darknite.mp3", undefined, undefined, 0.4);
 
 }
 
@@ -173,14 +182,14 @@ Battle.prototype.endGame = function(playerWon, extraAction = undefined){
     if(playerWon){
         this.game.soundPlayer.removeAllSound();
         this.game.soundPlayer.randomTrackInQueue = false;
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-won.mp3", undefined, undefined, 0.5);
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/mappedstoryUpbeat.mp3", true, undefined, 0.4);
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-won.mp3", undefined, undefined, 0.4);
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/mappedstoryUpbeat.mp3", true, undefined, 0.3);
         this.enableSound = false;
     } else {
         this.game.soundPlayer.removeAllSound();
         this.game.soundPlayer.randomTrackInQueue = false;
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-lost.mp3", undefined, undefined, 0.5);
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-end-of-the-world.mp3", true, undefined, 0.4);
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-lost.mp3", undefined, undefined, 0.4);
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-end-of-the-world.mp3", true, undefined, 0.3);
         this.enableSound = false;
     }
     if(extraAction !== undefined){

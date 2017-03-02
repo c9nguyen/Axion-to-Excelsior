@@ -38,6 +38,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var attack = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/stab_right.png"),
                                     3, 0.2, 3, groundPoints, collisionBox, false);
             attack.effects[2] = function(that) {
+                that.game.soundPlayer.addToEffect("./sound/effects/swords/swordclash01.wav");
                 castSkill(that.game, that.x + 50, that.y + 47, that.unit, 00000, 1,
                         undefined, 93, 45, 0.1, false);};
 
@@ -53,7 +54,10 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             });
             attack2.addEffect (3, function (that) {
                 attack2.velocity.x = 0;
+                // SOUND
+                that.game.soundPlayer.addToEffect("./sound/effects/swords/swordslice14.wav");
                 castSkill(that.game, that.x + 34, that.y + 13, that.unit, 00002, 3);
+
             });
 
             groundPoints = [{x: 50, y: 95}];
@@ -180,6 +184,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var attack = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack.png"),
                                     3, 0.2, 6, groundPoints, collisionBox, false);
             attack.effects[3] = function(that) {
+                // SOUND
+                that.game.soundPlayer.addToEffect("./sound/effects/swords/swordslice.wav");
                 castSkill(that.game, that.x + 70, that.y + 70, that.unit, 00000, 1,
                         undefined, 150, 50, 0.4, false);};
 
@@ -187,6 +193,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             collisionBox = [{x: 65, y: 40, width: 75, height: 75}];
             var attack2 = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack2.png"),
                                     3, 0.2, 6, groundPoints, collisionBox, false);
+            attack2.effects[2] = function(that){
+                that.game.soundPlayer.addToEffect("./sound/effects/swords/quicksworddraw.wav");}; 
             attack2.effects[3] = function(that) {
                 castSkill(that.game, that.x + 80, that.y + 25, that.unit, 00000, 1,
                         undefined, 150, 110, 0.4, false);};
@@ -236,6 +244,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             collisionBox = [{x: 33, y: 45, width: 50, height: 70}];
             var attack = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack.png"),
                                     4, 0.1, 8, groundPoints, collisionBox, false);
+            attack.effects[2] = function(that){
+                that.game.soundPlayer.addToEffect("./sound/effects/swords/swordclash03.wav");};
             attack.effects[3] = function(that) {
                 castSkill(that.game, that.x + 70, that.y + 45, that.unit, 00000, 1,
                         undefined, 55, 75, 0.3, false);};
@@ -244,6 +254,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             collisionBox = [{x: 25, y: 45, width: 50, height: 70}];
             var attack2 = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack2.png"),
                                     7, 0.1, 7, groundPoints, collisionBox, false);
+            attack2.effects[2] = function(that){
+                that.game.soundPlayer.addToEffect("./sound/effects/swords/swordclash25.wav");};
             attack2.effects[3] = function(that) {
                 castSkill(that.game, that.x + 65, that.y + 40, that.unit, 00000, 1,
                         undefined, 65, 80, 0.3, false);};
@@ -609,7 +621,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x, that.y + 30, that.unit, 00000, 1,
                             function(unit) { unit.getKnockback(300);},
                             160, 100, 0.4, true);
-                that.game.soundPlayer.addToEffect("./sound/effects/smw_thud.wav")};
+                that.game.soundPlayer.addToEffect("./sound/effects/rock/thud6.wav")};
 
             groundPoints = [{x: 0, y: 130}];
             var die = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/die.png"),

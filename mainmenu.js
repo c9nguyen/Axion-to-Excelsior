@@ -36,7 +36,7 @@ MainMenu.prototype.create = function () {
   // shopbutton.addSheet( AM.getAsset("./img/ui/shop_hoverbutton.png"),'mouseover');
   // shopbutton.addSheet( AM.getAsset("./img/ui/shop_pressbutton.png"),'press');
 
-  this.game.soundPlayer.addToMusic("./sound/music/KH-dearly-beloved.mp3");
+  this.game.soundPlayer.addToMusic("./sound/music/KH-dearly-beloved.mp3", undefined, undefined, 0.5);
 
   this.game.addEntity(back);
   // this.game.addEntity(shopbutton);
