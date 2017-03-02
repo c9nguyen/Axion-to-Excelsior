@@ -218,7 +218,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
         that.health -= Math.max(damage - (that.def * damage), 1);
         that.takingEffect.map(function(effect) {
             effect(that);
-        })
+        });
        // if (this.takingEffect) this.takingEffect(this);
     };
     this.actionHandler = function() {};
@@ -245,14 +245,14 @@ Unit.prototype.passiveEffectInit = function() {
     this.passiveEffectImage["poison"].setSize(20, 20); 
     this.passiveEffect["speed"] = {amount: 0, duration: 0};  
     this.passiveEffectImage["speed"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/speed.png"));
-    this.passiveEffectImage["poison"].setSize(20, 20);
+    this.passiveEffectImage["speed"].setSize(20, 20);
     // this.passiveEffect["stun"] = {amount: 0, duration: 0};
     // this.passiveEffectImage["stun"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/stun.png"));
     // this.passiveEffectImage["stun"].setSize(20, 20);
 }
 
-Unit.prototype.takePassiveEffect = function(effectType, amount, duration = 5) {
-    this.passiveEffect[effectType] = {amount: amount, duration: duration}; 
+Unit.prototype.takePassiveEffect = function(effectType, amount) {
+    this.passiveEffect[effectType] = {amount: amount, duration: 5}; 
 }
 
 Unit.prototype.getCollisionBox = function() {
@@ -420,11 +420,12 @@ Unit.prototype.update = function() {
          this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
     } else {
         this.applyPassiveEffect();
-        if (this.takingDamage > 0 || this.healing > 0) {
+        if (this.takingDamage > 0 || this.healing > 0 || this.takingEffect.length > 0) {
             this.getHit(this, this.takingDamage);
             this.health = Math.min(this.health + this.healing, this.data.health);
             this.healing = 0;
             this.takingDamage = 0;
+            this.takingEffect = [];
         }
 
        

@@ -206,7 +206,7 @@ function MainTower(game) {
         if (that.currentAction.interruptible || that.currentAction.isDone()) {
             that.changeAction("attack2");
         }
-        castSkill(that.game, that.getClosestEnemy() - 100, 50, that, 10001, 0.5);
+        castSkill(that.game, that.getClosestEnemy() - 100, 50, that, 10001, 0.2);
     });
     this.skill2.setCooldown(1);
     this.skill2.addSheet(AM.getAsset("./img/unit/tower0/skill2_icon_disable.png"), "disable");
@@ -354,6 +354,14 @@ EnemyTower.prototype.leftGuardian = function() {
     groundPoints = [{x: 151, y: 465}];
     var attack3 = new Action(this.game, this.leftG, AM.getAsset("./img/unit/tower2/attack3.png"),
                             6, 0.1, 18, groundPoints, collisionBox, false);
+    var pushEffect = function(that) {
+            castSkill(that.game, that.x - 1000, 0, that.unit, 00000, 0,
+                    function(enemyUnit) { enemyUnit.push -= 200;},
+                    1500, 600, 0.1, true);
+    };  
+    attack3.effects[8] = pushEffect;
+    attack3.effects[10] = pushEffect;
+    attack3.effects[12] = pushEffect;
 
     groundPoints = [{x: 43, y: 448}];
     var stand = new Action(this.game, this.leftG, AM.getAsset("./img/unit/tower2/stand.png"),
@@ -381,7 +389,6 @@ EnemyTower.prototype.leftGuardian = function() {
     this.leftG.actionHandler = function(that) {
             if (that.currentAction.interruptible || that.currentAction.isDone()) {
                 var collisedEnemy = that.checkEnemyInRange();
-                if (collisedEnemy.has(0)) 
                 if (collisedEnemy.has(0) && attack.checkCooldown()) 
                 that.changeAction("attack");
                 else that.changeAction("stand");
@@ -406,11 +413,18 @@ EnemyTower.prototype.rightGuardian = function() {
     groundPoints = [{x: 151, y: 465}];
     var attack3 = new Action(this.game, this.rightG, AM.getAsset("./img/unit/tower3/attack3.png"),
                             6, 0.1, 18, groundPoints, collisionBox, false);
+    var pushEffect = function(that) {
+            castSkill(that.game, that.x - 1000, 0, that.unit, 00000, 0,
+                    function(enemyUnit) { enemyUnit.push -= 200;},
+                    1500, 600, 0.1, true);
+    };  
+    attack3.effects[8] = pushEffect;
+    attack3.effects[10] = pushEffect;
+    attack3.effects[12] = pushEffect;
 
     groundPoints = [{x: 43, y: 448}];
     var stand = new Action(this.game, this.rightG, AM.getAsset("./img/unit/tower3/stand.png"),
                             1, 0.1, 1, groundPoints, collisionBox, true);
-
 
     groundPoints = [{x: 53, y: 460}];
     collisionBox = [];
@@ -474,6 +488,7 @@ EnemyTower.prototype.initActions = function() {
     this.currentAction = stand;
     this.defaultAction = stand;
 }
+
 
 EnemyTower.prototype.update = function() {
     this.rightG.update();

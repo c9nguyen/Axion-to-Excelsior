@@ -32,11 +32,22 @@ Battle.prototype.create = function() {
                 {code: "m010", ticket: 1}
                 ];
 
-    var gen = new EnemyGenerator(this.game, 2300, 400, list);
-    gen.setFrequency(4);
+    var gen = new EnemyGenerator(this.game, 2400, 500, list);
+    gen.setFrequency(400);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
-    gen.addToBossQueue("m100");
+    gen.addToBossQueue("m105");
+    gen.addConditionAndAction(
+        function() {
+            return enemyBoss.health / enemyBoss.data.health < 0.5;
+        },
+        function() {
+            enemyBoss.leftG.changeAction("attack3");
+            enemyBoss.rightG.changeAction("attack3");
+            spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
+        },
+        false
+    );
     this.game.addEntity(gen);
 
     //Initializing cards on hand
@@ -47,7 +58,7 @@ Battle.prototype.create = function() {
                  {code: "h003", ticket: 5},
                  {code: "h100", ticket: 1}
                  ];
-    var cardGen = new CardGenerator(this.game, 100, 400, cards, 6);
+    var cardGen = new CardGenerator(this.game, -50, 500, cards, 6);
     cardGen.assignCurrentBoss(playerBoss);
     cardGen.setBossesDiedAction(this.endGame);
     var enemyTowerHealthMark = 0.75;
@@ -58,11 +69,11 @@ Battle.prototype.create = function() {
             return enemyBoss.health / enemyBoss.data.health < enemyTowerHealthMark;
         },
         function() {
-            cards.setEnergyRate;
-            energyRate += 0.2;
+            energyRate += 0.1;
             enemyTowerHealthMark -= 0.25;
-            
-        }
+            cardGen.setEnergyRate(energyRate);
+        },
+        true
     );
     cardGen.setEnergyRate(energyRate);
     cardGen.start();
@@ -84,7 +95,7 @@ Battle.prototype.create = function() {
     // SOUND
     this.addAllMusic();
 
-    //spawnUnit(this.game, 500, 400, "m100", ENEMY);
+    //spawnUnit(this.game, 2000, 400, "m105", ENEMY);
 
     //Enemy button for debugging
     // var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 700, 520);

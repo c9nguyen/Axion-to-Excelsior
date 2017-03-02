@@ -57,8 +57,8 @@ Generator.prototype.setBossesDiedAction = function(callback) {
 /**
  * Add a condition and action pair
  */
-Generator.prototype.addConditionAndAction = function(theCondition, theAction) {
-    this.conditionAndAction.push({condition: theCondition, acion: theAction});
+Generator.prototype.addConditionAndAction = function(theCondition, theAction, theRepeat = false) {
+    this.conditionAndAction.push({condition: theCondition, action: theAction, repeat: theRepeat});
 }
 
 Generator.prototype.update = function() {
@@ -196,9 +196,13 @@ EnemyGenerator.prototype.update = function() {
                 this.removeFromWorld = true;
             }
         } else {
-            this.conditionAndAction.map(function(pair) {
-                if (pair.condition()) pair.action();
-            });
+            for (var i = 0; i < this.conditionAndAction.length; i++) {
+                var pair = this.conditionAndAction[i];
+                if (pair.condition()) {
+                    pair.action();
+                    if (!pair.repeat) this.conditionAndAction.splice(i, 1);
+                } 
+            }
 
 
             if (this.frequency > 1){
@@ -338,8 +342,8 @@ CardGenerator.prototype.setBossesDiedAction = function(callback) {
 /**
  * Add a condition and action pair
  */
-CardGenerator.prototype.addConditionAndAction = function(theCondition, theAction) {
-    this.conditionAndAction.push({condition: theCondition, action: theAction});
+CardGenerator.prototype.addConditionAndAction = function(theCondition, theAction, theRepeat = false) {
+    this.conditionAndAction.push({condition: theCondition, action: theAction, repeat: theRepeat});
 }
 
 
@@ -349,9 +353,13 @@ CardGenerator.prototype.update = function() {
         this.allBossDied(false);
         this.removeFromWorld = true;
     } else {
-        this.conditionAndAction.map(function(pair) {
-            if (pair.condition()) pair.action();
-        });
+        for (var i = 0; i < this.conditionAndAction.length; i++) {
+            var pair = this.conditionAndAction[i];
+            if (pair.condition()) {
+                pair.action();
+                if (!pair.repeat) this.conditionAndAction.splice(i, 1);
+            } 
+        }
         var that = this;
         this.energy = Math.min(this.energy + this.game.clockTick * this.energyRate, 10);
         for (var i = 0; i < this.numOfCard; i++) {

@@ -121,6 +121,14 @@ AM.queueDownload("./img/unit/m100/attack3.png");
 AM.queueDownload("./img/unit/m100/attack4.png");
 AM.queueDownload("./img/unit/m100/die.png");
 
+AM.queueDownload("./img/unit/m105/stand.png");
+AM.queueDownload("./img/unit/m105/walk.png");
+AM.queueDownload("./img/unit/m105/jump.png");
+AM.queueDownload("./img/unit/m105/attack.png");
+AM.queueDownload("./img/unit/m105/attack2.png");
+AM.queueDownload("./img/unit/m105/attack3.png");
+AM.queueDownload("./img/unit/m105/die.png");
+
 AM.queueDownload("./img/unit/tower0/stand.png");
 AM.queueDownload("./img/unit/tower0/attack.png");
 AM.queueDownload("./img/unit/tower0/attack2.png");
