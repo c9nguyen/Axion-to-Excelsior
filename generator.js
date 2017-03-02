@@ -5,7 +5,7 @@ Generator = function(game, x, y, active = true) {
     this.active = active;
     this.action = function() {};    //the action that will be generated
     this.condition = function() {return true};  //the condition for the action to generate
-    this.conditionPair = []
+    this.conditionPair = [];
 }
 
 Generator.prototype = Object.create(Entity.prototype);
