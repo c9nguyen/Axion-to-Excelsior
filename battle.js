@@ -34,6 +34,7 @@ Battle.prototype.create = function() {
     gen.setFrequency(4);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
+    gen.addToBossQueue("m100");
     this.game.addEntity(gen);
 
     //Initializing cards on hand
@@ -45,7 +46,21 @@ Battle.prototype.create = function() {
     var cardGen = new CardGenerator(this.game, 100, 400, cards, 6);
     cardGen.assignCurrentBoss(playerBoss);
     cardGen.setBossesDiedAction(this.endGame);
-    cardGen.setEnergyRate(0.4);
+    var enemyTowerHealthMark = 0.75;
+    var energyRate = 0.4;
+    //Setting a condition that lower the enemy tower health, higher energy rate
+    cardGen.addConditionAndAction(
+        function() {
+            return enemyBoss.health / enemyBoss.data.health < enemyTowerHealthMark;
+        },
+        function() {
+            cards.setEnergyRate;
+            energyRate += 0.2;
+            enemyTowerHealthMark -= 0.25;
+            
+        }
+    );
+    cardGen.setEnergyRate(energyRate);
     cardGen.start();
     this.game.addEntity(cardGen);
 
@@ -65,7 +80,7 @@ Battle.prototype.create = function() {
     // SOUND
     this.addAllMusic();
 
-    var that = this;
+    //spawnUnit(this.game, 500, 400, "m100", ENEMY);
 
     //Enemy button for debugging
     // var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 700, 520);
@@ -79,11 +94,9 @@ Battle.prototype.create = function() {
     // });
     // this.game.addEntity(button2);
 
-//    spawnUnit(this.game, 100, 400, "h003", PLAYER);
+
 
 	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
-	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
-	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
 	exit_button.addEventListener('click', function() {
         this.game.soundPlayer.removeAllSound();
 		this.game.sceneManager.startScene('mainmenu');

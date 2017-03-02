@@ -101,7 +101,6 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
                 this.unit.currentAction.start();
                 this.unit.currentAction.update();
             }
-            
             return;
          }
     }

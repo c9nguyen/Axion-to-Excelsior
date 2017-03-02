@@ -117,6 +117,8 @@ AM.queueDownload("./img/unit/m100/walk.png");
 AM.queueDownload("./img/unit/m100/jump.png");
 AM.queueDownload("./img/unit/m100/attack.png");
 AM.queueDownload("./img/unit/m100/attack2.png");
+AM.queueDownload("./img/unit/m100/attack3.png");
+AM.queueDownload("./img/unit/m100/attack4.png");
 AM.queueDownload("./img/unit/m100/die.png");
 
 AM.queueDownload("./img/unit/tower0/stand.png");

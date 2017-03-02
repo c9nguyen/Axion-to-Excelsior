@@ -208,7 +208,7 @@ function MainTower(game) {
         }
         castSkill(that.game, that.getClosestEnemy() - 100, 50, that, 10001, 0.5);
     });
-    this.skill2.setCooldown(30);
+    this.skill2.setCooldown(1);
     this.skill2.addSheet(AM.getAsset("./img/unit/tower0/skill2_icon_disable.png"), "disable");
     this.skill2.timeLastClick = this.game.timer.gameTime;
 
@@ -223,6 +223,9 @@ function MainTower(game) {
 MainTower.prototype = Object.create(Tower.prototype);
 MainTower.prototype.constructor = Unit;
 
+/**
+ * Get the closest enemy
+ */
 MainTower.prototype.getClosestEnemy = function() {
     var enemy = this.game.enemyList ;
     var x = 1400;
@@ -366,7 +369,7 @@ EnemyTower.prototype.leftGuardian = function() {
     var die = new Action(this.game, this.leftG, AM.getAsset("./img/unit/tower2/die.png"),
                         5, 0.1, 10, groundPoints, collisionBox, false, -1);
     die.endEffect = function(that) {that.unit.update = function() {};
-                                    that.unit.currentAction = dieafter;
+                                    that.unit.defaultAction = dieafter;
     };
 
     this.leftG.actions["stand"] = stand;
@@ -379,7 +382,6 @@ EnemyTower.prototype.leftGuardian = function() {
             if (that.currentAction.interruptible || that.currentAction.isDone()) {
                 var collisedEnemy = that.checkEnemyInRange();
                 if (collisedEnemy.has(0)) 
-                console.log(attack.checkCooldown());
                 if (collisedEnemy.has(0) && attack.checkCooldown()) 
                 that.changeAction("attack");
                 else that.changeAction("stand");
@@ -419,7 +421,7 @@ EnemyTower.prototype.rightGuardian = function() {
     var die = new Action(this.game, this.rightG, AM.getAsset("./img/unit/tower3/die.png"),
                         5, 0.1, 10, groundPoints, collisionBox, false, -1);
     die.endEffect = function(that) {that.unit.update = function() {};
-                                    that.unit.currentAction = dieafter;
+                                    that.unit.defaultAction = dieafter;
     };
 
     this.rightG.actions["stand"] = stand;
@@ -458,7 +460,7 @@ EnemyTower.prototype.initActions = function() {
         that.unit.rightG.health = -1;
     });   
     die.endEffect = function(that) {that.unit.update = function() {};
-                                    that.unit.currentAction = dieafter;
+                                    that.unit.defaultAction = dieafter;
     };
 
 
@@ -470,6 +472,7 @@ EnemyTower.prototype.initActions = function() {
     this.actions["stand"] = stand;
     this.actions["dieafter"] = dieafter;
     this.currentAction = stand;
+    this.defaultAction = stand;
 }
 
 EnemyTower.prototype.update = function() {
@@ -480,8 +483,8 @@ EnemyTower.prototype.update = function() {
 
 EnemyTower.prototype.draw = function() {
     this.leftG.draw();
-    if(this.currentAction !== undefined)
-        this.currentAction.draw();
+    //if(this.currentAction !== undefined)
+    this.currentAction.draw();
     this.rightG.draw();
 
     //Health bar
