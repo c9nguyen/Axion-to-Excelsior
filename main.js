@@ -218,6 +218,17 @@ AM.queueDownload("./img/effect/passive/push.png");
 AM.queueDownload("./sound/effects/smb_stomp.wav", true);
 AM.queueDownload("./sound/effects/smw_thud.wav", true);
 AM.queueDownload("./sound/effects/smw_yoshi_runs_away.wav", true);
+AM.queueDownload("./sound/effects/swords/quicksworddraw.wav", true);
+AM.queueDownload("./sound/effects/swords/slowsworddraw.wav", true);
+AM.queueDownload("./sound/effects/swords/fastwind.wav", true);
+AM.queueDownload("./sound/effects/swords/epicswordclash.wav", true);
+AM.queueDownload("./sound/effects/swords/swordclash00.wav", true);
+AM.queueDownload("./sound/effects/swords/swordclash01.wav", true);
+AM.queueDownload("./sound/effects/swords/swordclash03.wav", true);
+AM.queueDownload("./sound/effects/swords/swordclash25.wav", true);
+AM.queueDownload("./sound/effects/swords/swordslice.wav", true);
+AM.queueDownload("./sound/effects/swords/swordslice14.wav", true);
+AM.queueDownload("./sound/effects/rock/thud6.wav", true);
 
 AM.queueDownload("./sound/music/battle/KH-squirming-evil.mp3", true);
 AM.queueDownload("./sound/music/battle/YGO-vs-darknite.mp3", true);
