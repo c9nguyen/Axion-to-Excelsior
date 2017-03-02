@@ -97,6 +97,7 @@ Battle.prototype.create = function() {
     // SOUND
     this.addAllMusic();
 
+    spawnUnit(this.game, 100, 400, "h004", PLAYER);
     //spawnUnit(this.game, 1100, 400, "m105", ENEMY);
 
 
