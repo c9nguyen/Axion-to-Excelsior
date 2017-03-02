@@ -416,6 +416,7 @@ Unit.prototype.update = function() {
 
     if (this.health <= 0) {
          this.changeAction("die");
+         this.health = 0;
     //     this.velocity.x = 0;
          this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
     } else {

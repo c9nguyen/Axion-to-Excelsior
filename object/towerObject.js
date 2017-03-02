@@ -119,6 +119,7 @@ Tower.prototype.update = function() {
     if (this.y > canvasHeight * 2) this.health = -1;
     if (this.health <= 0) {
          this.changeAction("die");
+         this.health = 0;
          this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
     } else {
         if (this.takingDamage > 0) {
@@ -470,10 +471,16 @@ EnemyTower.prototype.initActions = function() {
     var die = new Action(this.game, this, AM.getAsset("./img/unit/tower1/die.png"),
                         6, 0.1, 18, groundPoints, collisionBox, false, -1);
     die.addEffect(0, function(that) {
-        that.unit.leftG.health = -1;
-        that.unit.rightG.health = -1;
+        //Push one last time before die
+        that.unit.leftG.actions["attack3"].endEffect = function() {that.unit.leftG.health = -1;};
+        that.unit.rightG.actions["attack3"].endEffect = function() {that.unit.rightG.health = -1;};
+        that.unit.leftG.changeAction("attack3");
+        that.unit.rightG.changeAction("attack3");
     });   
-    die.endEffect = function(that) {that.unit.update = function() {};
+    die.endEffect = function(that) {that.unit.update = function() {    
+                                                            that.unit.rightG.update();
+                                                            that.unit.leftG.update();
+                                                        };
                                     that.unit.defaultAction = dieafter;
     };
 

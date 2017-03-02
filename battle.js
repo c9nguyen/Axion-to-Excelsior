@@ -25,11 +25,12 @@ Battle.prototype.create = function() {
     
     //Initializing enemy generator
     var list = [
-                {code: "m000", ticket: 4},
-                {code: "m001", ticket: 8},
-                {code: "m002", ticket: 6},
-                {code: "m003", ticket: 2},
-                {code: "m010", ticket: 1}
+                {code: "m000", ticket: 2},
+                {code: "m001", ticket: 6},
+                {code: "m002", ticket: 4},
+                {code: "m003", ticket: 1},
+                {code: "m005", ticket: 1},
+                {code: "m010", ticket: -1}
                 ];
 
     var gen = new EnemyGenerator(this.game, 2400, 500, list);
@@ -44,6 +45,7 @@ Battle.prototype.create = function() {
         function() {
             enemyBoss.leftG.changeAction("attack3");
             enemyBoss.rightG.changeAction("attack3");
+            gen.boostSpawnRate(2);
             spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
         },
         false
@@ -69,7 +71,7 @@ Battle.prototype.create = function() {
             return enemyBoss.health / enemyBoss.data.health < enemyTowerHealthMark;
         },
         function() {
-            energyRate += 0.1;
+            energyRate += 0.075;
             enemyTowerHealthMark -= 0.25;
             cardGen.setEnergyRate(energyRate);
         },
@@ -95,7 +97,8 @@ Battle.prototype.create = function() {
     // SOUND
     this.addAllMusic();
 
-    //spawnUnit(this.game, 2000, 400, "m105", ENEMY);
+    //spawnUnit(this.game, 1100, 400, "m105", ENEMY);
+
 
     //Enemy button for debugging
     // var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 700, 520);

@@ -106,6 +106,12 @@ AM.queueDownload("./img/unit/m003/jump.png");
 AM.queueDownload("./img/unit/m003/skill.png");
 AM.queueDownload("./img/unit/m003/die.png");
 
+AM.queueDownload("./img/unit/m005/stand.png");
+AM.queueDownload("./img/unit/m005/walk.png");
+AM.queueDownload("./img/unit/m005/jump.png");
+AM.queueDownload("./img/unit/m005/attack.png");
+AM.queueDownload("./img/unit/m005/die.png");
+
 AM.queueDownload("./img/unit/m010/stand.png");
 AM.queueDownload("./img/unit/m010/walk.png");
 AM.queueDownload("./img/unit/m010/jump.png");

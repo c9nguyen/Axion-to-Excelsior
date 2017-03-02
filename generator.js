@@ -135,9 +135,9 @@ EnemyGenerator.prototype.addToBossQueue = function(unitCode) {
 /**
  * Boost spawn rate of all unit
  */
-EnemyGenerator.prototype.boostSpawnRate = function() {
+EnemyGenerator.prototype.boostSpawnRate = function(rate = 1) {
     this.list.map(function(unit) {
-        unit.ticket++;
+        unit.ticket += rate;
     });
 }
 
@@ -184,18 +184,20 @@ EnemyGenerator.prototype.draw = function() {
 
 
 EnemyGenerator.prototype.update = function() {
-    if (this.active) {
+
         if (this.currentBoss.health <= 0) {
             if (this.bossQueue.length > 0) {
                 var newBoss = spawnUnit(this.game, 2400, 500, this.bossQueue[0], ENEMY);
                 this.assignCurrentBoss(newBoss);
                 this.bossQueue.splice(0, 1);
                 this.boostSpawnRate();
+                if (this.bossQueue.length === 0) this.active = false;
             } else {
                 this.allBossDied(true);
                 this.removeFromWorld = true;
             }
-        } else {
+        }
+    if (this.active) {
             for (var i = 0; i < this.conditionAndAction.length; i++) {
                 var pair = this.conditionAndAction[i];
                 if (pair.condition()) {
@@ -203,8 +205,6 @@ EnemyGenerator.prototype.update = function() {
                     if (!pair.repeat) this.conditionAndAction.splice(i, 1);
                 } 
             }
-
-
             if (this.frequency > 1){
                 if(this.frequency > 3){
                     this.frequency -= 0.02 * this.game.clockTick;
@@ -214,6 +214,7 @@ EnemyGenerator.prototype.update = function() {
                     this.frequency -= 0.005 * this.game.clockTick;
                 }
             }
+
             if (this.impCounter >= this.impFrequency) {
                 this.impCounter = 0;
                 this.boostSpawnRate();
@@ -222,7 +223,6 @@ EnemyGenerator.prototype.update = function() {
                 this.impCounter += this.game.clockTick;
             }
             Generator.prototype.update.call(this);
-        }
     }
 }
 
