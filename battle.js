@@ -33,7 +33,7 @@ Battle.prototype.create = function() {
                 ];
 
     var gen = new EnemyGenerator(this.game, 2400, 500, list);
-    gen.setFrequency(400);
+    gen.setFrequency(4);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
     gen.addToBossQueue("m105");

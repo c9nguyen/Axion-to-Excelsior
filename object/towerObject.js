@@ -208,7 +208,7 @@ function MainTower(game) {
         }
         castSkill(that.game, that.getClosestEnemy() - 100, 50, that, 10001, 0.2);
     });
-    this.skill2.setCooldown(1);
+    this.skill2.setCooldown(30);
     this.skill2.addSheet(AM.getAsset("./img/unit/tower0/skill2_icon_disable.png"), "disable");
     this.skill2.timeLastClick = this.game.timer.gameTime;
 
