@@ -244,6 +244,7 @@ SoundPlayer.prototype.privateRemoveSoundFromList = function(list){
         var tempSound = list.pop();
         tempSound.loop = false;
         tempSound.muted = true;
+        tempSound.currentTime = tempSound.duration;
     }
 }
 //-- end Remove all sounds
