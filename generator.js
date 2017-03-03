@@ -191,6 +191,11 @@ EnemyGenerator.prototype.update = function() {
                 this.assignCurrentBoss(newBoss);
                 this.bossQueue.splice(0, 1);
                 this.boostSpawnRate();
+                if(this.bossQueue.length === 0){
+                    this.game.soundPlayer.removeAllSound();
+                    this.game.soundPlayer.randomTrackInQueue = true;
+                    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-squirming-evil.mp3");
+                }
             } else {
                 this.allBossDied(true);
                 this.removeFromWorld = true;

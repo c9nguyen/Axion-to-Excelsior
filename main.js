@@ -230,15 +230,66 @@ AM.queueDownload("./sound/effects/smw_thud.wav", true);
 AM.queueDownload("./sound/effects/smw_yoshi_runs_away.wav", true);
 AM.queueDownload("./sound/effects/swords/quicksworddraw.wav", true);
 AM.queueDownload("./sound/effects/swords/slowsworddraw.wav", true);
+AM.queueDownload("./sound/effects/swords/stickswing1.wav", true);
+AM.queueDownload("./sound/effects/swords/stab.wav", true);
+AM.queueDownload("./sound/effects/swords/sweeps.wav", true);
 AM.queueDownload("./sound/effects/swords/fastwind.wav", true);
+AM.queueDownload("./sound/effects/swords/whoosh.wav", true);
+AM.queueDownload("./sound/effects/swords/whoosh1.wav", true);
+AM.queueDownload("./sound/effects/swords/whoosh2.wav", true);
+AM.queueDownload("./sound/effects/swords/whoosh3.wav", true);
+AM.queueDownload("./sound/effects/swords/woodhit.wav", true);
+AM.queueDownload("./sound/effects/swords/woodhit1.wav", true);
+AM.queueDownload("./sound/effects/swords/woodhit2.wav", true);
+
+AM.queueDownload("./sound/effects/effects/footstep1.wav", true);
+AM.queueDownload("./sound/effects/effects/footstep2.wav", true);
+
+AM.queueDownload("./sound/effects/swords/swordhitwood.wav", true);
 AM.queueDownload("./sound/effects/swords/epicswordclash.wav", true);
 AM.queueDownload("./sound/effects/swords/swordclash00.wav", true);
 AM.queueDownload("./sound/effects/swords/swordclash01.wav", true);
 AM.queueDownload("./sound/effects/swords/swordclash03.wav", true);
+AM.queueDownload("./sound/effects/swords/swordclash03-1.wav", true);
+AM.queueDownload("./sound/effects/swords/swordclash03-2.wav", true);
 AM.queueDownload("./sound/effects/swords/swordclash25.wav", true);
 AM.queueDownload("./sound/effects/swords/swordslice.wav", true);
 AM.queueDownload("./sound/effects/swords/swordslice14.wav", true);
+AM.queueDownload("./sound/effects/swords/shuriken3.wav", true);
+AM.queueDownload("./sound/effects/swords/shuriken1.wav", true);
+
+// Charge
+AM.queueDownload("./sound/effects/charge/chargelasersmall.wav", true);
+AM.queueDownload("./sound/effects/charge/energyshortsword5.wav", true);
+AM.queueDownload("./sound/effects/charge/energywhip2.wav", true);
+AM.queueDownload("./sound/effects/charge/lightsaberwave.wav", true);
+AM.queueDownload("./sound/effects/charge/lightsaberwave-1.wav", true);
+
+// Magic
+AM.queueDownload("./sound/effects/magic/magicsfxshort.wav", true);
+
+// Rock
+AM.queueDownload("./sound/effects/rock/thud5.wav", true);
 AM.queueDownload("./sound/effects/rock/thud6.wav", true);
+AM.queueDownload("./sound/effects/rock/rockfall.wav", true);
+AM.queueDownload("./sound/effects/tower/earthshake.wav", true);
+AM.queueDownload("./sound/effects/tower/thunder1.wav", true);
+
+//monster
+AM.queueDownload("./sound/effects/monster/axeimpact.wav", true);
+AM.queueDownload("./sound/effects/monster/axeconcretehit.wav", true);
+AM.queueDownload("./sound/effects/monster/axestab1.wav", true);
+AM.queueDownload("./sound/effects/monster/crackandstress1.wav", true);
+AM.queueDownload("./sound/effects/monster/ice1.wav", true);
+
+AM.queueDownload("./sound/effects/monster/boneneck.wav", true);
+AM.queueDownload("./sound/effects/monster/boneneck-1.wav", true);
+AM.queueDownload("./sound/effects/monster/monster.wav", true);
+AM.queueDownload("./sound/effects/monster/monster2.wav", true);
+AM.queueDownload("./sound/effects/monster/monsterbird.wav", true);
+AM.queueDownload("./sound/effects/monster/monsterbird-1.wav", true);
+AM.queueDownload("./sound/effects/monster/monstercat.wav", true);
+AM.queueDownload("./sound/effects/monster/monsterroar.wav", true);
 
 AM.queueDownload("./sound/music/battle/KH-squirming-evil.mp3", true);
 AM.queueDownload("./sound/music/battle/YGO-vs-darknite.mp3", true);
