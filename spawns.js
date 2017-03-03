@@ -904,7 +904,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 280, y: 330}];
             collisionBox = [{x: 280, y: 120, width: 295, height: 220}];
             var attack2 = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack2.png"),
-                                    5, 0.1, 10, groundPoints, collisionBox, false, 10);
+                                    5, 0.1, 10, groundPoints, collisionBox, false, 8);
             attack2.effects[5] = function(that) {
                 castSkill(that.game, that.x, that.y, that.unit, 00000, 3,
                             undefined,
@@ -913,7 +913,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{x: 463, y: 218}];
             collisionBox = [{x: 460, y: 0, width: 295, height: 220}];
             var attack3 = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack3.png"),
-                                    5, 0.1, 10, groundPoints, collisionBox, false, 5);
+                                    5, 0.1, 10, groundPoints, collisionBox, false, 3);
             attack3.effects[6] = function(that) {
                 castSkill(that.game, that.x + 80, that.y + 40, that.unit, 00000, 0.5,
                             function(enemyUnit) { enemyUnit.takePassiveEffect("poison", 40);

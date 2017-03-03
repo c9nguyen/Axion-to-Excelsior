@@ -79,6 +79,8 @@ EnemyGenerator = function(game, x, y, list = []) {
     this.frequency = 1;
     this.impFrequency = 20;
     this.counter = 0;
+    this.extra = this.game.clockTick;
+    this.extraCounter = 0
     this.impCounter = 0;
     this.action = function(that) {
         var ran = Math.floor(Math.random() * this.bucket.length);
@@ -92,11 +94,20 @@ EnemyGenerator = function(game, x, y, list = []) {
     });
 
     this.condition = function(that) {
+        
         if (that.counter >= that.frequency) {
             that.counter = 0;
+            if (that.extraCounter === 20) { 
+                that.extra = that.game.clockTick;
+                that.extraCounter = 0;
+            }
+            else {
+                that.extra += that.game.clockTick * that.game.clockTick;
+                that.extraCounter++;
+            } 
             return true;
         } else {
-            that.counter += that.game.clockTick;
+            that.counter += that.game.clockTick + that.extra;
             return false;
         }
     }

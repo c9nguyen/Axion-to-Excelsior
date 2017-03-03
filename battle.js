@@ -54,10 +54,11 @@ Battle.prototype.create = function() {
 
     //Initializing cards on hand
     var cards = [
-                 {code: "h000", ticket: 3},
-                 {code: "h001", ticket: 2},
+                 {code: "h000", ticket: 4},
+                 {code: "h001", ticket: 3},
                  {code: "h002", ticket: 5},
                  {code: "h003", ticket: 5},
+                 {code: "h004", ticket: 3},
                  {code: "h100", ticket: 1}
                  ];
     var cardGen = new CardGenerator(this.game, -50, 500, cards, 6);
@@ -97,7 +98,7 @@ Battle.prototype.create = function() {
     // SOUND
     this.addAllMusic();
 
-    spawnUnit(this.game, 100, 400, "h004", PLAYER);
+    //spawnUnit(this.game, 100, 400, "h004", PLAYER);
     //spawnUnit(this.game, 1100, 400, "m105", ENEMY);
 
 
