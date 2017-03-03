@@ -34,7 +34,7 @@ Battle.prototype.create = function() {
                 ];
 
     var gen = new EnemyGenerator(this.game, 2400, 500, list);
-    gen.setFrequency(4);
+    gen.setFrequency(5);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
     gen.addToBossQueue("m105");
@@ -46,6 +46,7 @@ Battle.prototype.create = function() {
             enemyBoss.leftG.changeAction("attack3");
             enemyBoss.rightG.changeAction("attack3");
             gen.boostSpawnRate(2);
+            gen.generateDeck();
             spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
         },
         false

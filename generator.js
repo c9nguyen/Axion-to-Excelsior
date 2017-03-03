@@ -102,7 +102,7 @@ EnemyGenerator = function(game, x, y, list = []) {
                 that.extraCounter = 0;
             }
             else {
-                that.extra += that.game.clockTick * that.game.clockTick;
+                that.extra += 0.01 * that.game.clockTick;
                 that.extraCounter++;
             } 
             return true;
@@ -233,7 +233,7 @@ EnemyGenerator.prototype.update = function() {
 
             if (this.impCounter >= this.impFrequency) {
                 this.impCounter = 0;
-                this.boostSpawnRate();
+               // this.boostSpawnRate();
                 this.generateDeck();
             } else {
                 this.impCounter += this.game.clockTick;

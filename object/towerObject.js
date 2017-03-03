@@ -195,7 +195,7 @@ function MainTower(game) {
         if (that.currentAction.interruptible || that.currentAction.isDone()) {
             that.changeAction("attack");
         }
-        castSkill(that.game, that.getClosestEnemy() - 50, -140 , that, 10000, 1);
+        castSkill(that.game, that.getClosestEnemy() - 50, -140 , that, 10000, 1.5);
 
     });
     this.skill.setCooldown(10);

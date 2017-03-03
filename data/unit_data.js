@@ -148,7 +148,7 @@ var unitData = {
     m010: { //turtle
         groundWidth: 120,
         groundHeight: 10,
-        health: 300,
+        health: 250,
         movementspeed: -80,
         att: 40,
         def: 0,
@@ -160,9 +160,9 @@ var unitData = {
     m100: { //ice boss
         groundWidth: 70,
         groundHeight: 10,
-        health: 1000,
+        health: 800,
         movementspeed: -70,
-        att: 100,
+        att: 90,
         def: 0.8,
         flying: false,
         knockable: false,
