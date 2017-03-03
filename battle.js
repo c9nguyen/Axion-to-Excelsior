@@ -25,15 +25,16 @@ Battle.prototype.create = function() {
     
     //Initializing enemy generator
     var list = [
-                {code: "m000", ticket: 4},
-                {code: "m001", ticket: 8},
-                {code: "m002", ticket: 6},
-                {code: "m003", ticket: 2},
-                {code: "m010", ticket: 1}
+                {code: "m000", ticket: 2},
+                {code: "m001", ticket: 6},
+                {code: "m002", ticket: 4},
+                {code: "m003", ticket: 1},
+                {code: "m005", ticket: 1},
+                {code: "m010", ticket: -1}
                 ];
 
     var gen = new EnemyGenerator(this.game, 2400, 500, list);
-    gen.setFrequency(4);
+    gen.setFrequency(5);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
     gen.addToBossQueue("m105");
@@ -44,21 +45,29 @@ Battle.prototype.create = function() {
         function() {
             enemyBoss.leftG.changeAction("attack3");
             enemyBoss.rightG.changeAction("attack3");
+            gen.boostSpawnRate(2);
+            gen.generateDeck();
             spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
         },
         false
     );
     this.game.addEntity(gen);
 
+    // spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
+
     //Initializing cards on hand
-    var cards = [
-                 {code: "h000", ticket: 3},
-                 {code: "h001", ticket: 2},
+    var unitCards = [
+                 {code: "h000", ticket: 4},
+                 {code: "h001", ticket: 3},
                  {code: "h002", ticket: 5},
                  {code: "h003", ticket: 5},
+                 {code: "h004", ticket: 3},
                  {code: "h100", ticket: 1}
                  ];
-    var cardGen = new CardGenerator(this.game, -50, 500, cards, 6);
+    var spellCards = [
+                 {code: "e1001", ticket: 2},
+                 ];   
+    var cardGen = new CardGenerator(this.game, -50, 500, 6, unitCards, spellCards);
     cardGen.assignCurrentBoss(playerBoss);
     cardGen.setBossesDiedAction(this.endGame);
     var enemyTowerHealthMark = 0.75;
@@ -69,7 +78,7 @@ Battle.prototype.create = function() {
             return enemyBoss.health / enemyBoss.data.health < enemyTowerHealthMark;
         },
         function() {
-            energyRate += 0.1;
+            energyRate += 0.075;
             enemyTowerHealthMark -= 0.25;
             cardGen.setEnergyRate(energyRate);
         },
@@ -95,7 +104,9 @@ Battle.prototype.create = function() {
     // SOUND
     this.addAllMusic();
 
-    //spawnUnit(this.game, 2000, 400, "m105", ENEMY);
+    //spawnUnit(this.game, 100, 400, "h004", PLAYER);
+    //spawnUnit(this.game, 1100, 400, "m105", ENEMY);
+
 
     //Enemy button for debugging
     // var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 700, 520);
@@ -167,7 +178,7 @@ Battle.prototype.buildTiles = function() {
 Battle.prototype.addAllMusic = function(){
     // Sound
 
-    var musicVolume = 0.25;
+    var musicVolume = 0.2;
     this.game.soundPlayer.randomTrackInQueue = true;
     this.game.soundPlayer.addToQueue("./sound/music/battle/KH-monstrous-monstro.mp3", undefined, undefined, musicVolume);
     this.game.soundPlayer.addToQueue("./sound/music/battle/KH-scherzo-di-notte.mp3", undefined, undefined, musicVolume);
@@ -175,6 +186,7 @@ Battle.prototype.addAllMusic = function(){
     this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-lancastrians.mp3", undefined, undefined, musicVolume);
     this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-seto.mp3", undefined, undefined, musicVolume);
     this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-yugi.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-darknite.mp3", undefined, undefined, musicVolume);
 
 
     // FOR BOSS

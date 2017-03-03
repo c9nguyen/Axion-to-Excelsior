@@ -119,6 +119,7 @@ Tower.prototype.update = function() {
     if (this.y > canvasHeight * 2) this.health = -1;
     if (this.health <= 0) {
          this.changeAction("die");
+         this.health = 0;
          this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
     } else {
         if (this.takingDamage > 0) {
@@ -194,7 +195,7 @@ function MainTower(game) {
         if (that.currentAction.interruptible || that.currentAction.isDone()) {
             that.changeAction("attack");
         }
-        castSkill(that.game, that.getClosestEnemy() - 50, -140 , that, 10000, 1);
+        castSkill(that.game, that.getClosestEnemy() - 50, -140 , that, "t0000", 1.5);
 
     });
     this.skill.setCooldown(10);
@@ -206,7 +207,7 @@ function MainTower(game) {
         if (that.currentAction.interruptible || that.currentAction.isDone()) {
             that.changeAction("attack2");
         }
-        castSkill(that.game, that.getClosestEnemy() - 100, 50, that, 10001, 0.2);
+        castSkill(that.game, that.getClosestEnemy() - 100, 50, that, "t0001", 0.2);
     });
     this.skill2.setCooldown(30);
     this.skill2.addSheet(AM.getAsset("./img/unit/tower0/skill2_icon_disable.png"), "disable");
@@ -228,7 +229,7 @@ MainTower.prototype.constructor = Unit;
  */
 MainTower.prototype.getClosestEnemy = function() {
     var enemy = this.game.enemyList ;
-    var x = 1400;
+    var x = 1800;
     for (var i in enemy) {
         if (enemy[i].removeFromWorld){
             enemy.splice(i, 1);
@@ -347,7 +348,8 @@ EnemyTower.prototype.leftGuardian = function() {
                             5, 0.1, 20, groundPoints, collisionBox, false, 2);
     attack.effects[9] = function(that) {
         if (that.unit.lockedTarget) {
-            castSkill(that.game, that.unit.lockedTarget.x - 50, -272, that.unit, 10002, 1);
+            castSkill(that.game, that.unit.lockedTarget.x - 50, -272, that.unit, "t0002", 1);
+            that.game.soundPlayer.addToEffect("./sound/effects/tower/thunder1.wav", undefined, undefined, 0.45);
         }
     };
  
@@ -355,7 +357,7 @@ EnemyTower.prototype.leftGuardian = function() {
     var attack3 = new Action(this.game, this.leftG, AM.getAsset("./img/unit/tower2/attack3.png"),
                             6, 0.1, 18, groundPoints, collisionBox, false);
     var pushEffect = function(that) {
-            castSkill(that.game, that.x - 1000, 0, that.unit, 00000, 0,
+            castSkill(that.game, that.x - 1000, 0, that.unit, "e0000", 0,
                     function(enemyUnit) { enemyUnit.push -= 200;},
                     1500, 600, 0.1, true);
     };  
@@ -406,7 +408,8 @@ EnemyTower.prototype.rightGuardian = function() {
                             6, 0.1, 18, groundPoints, collisionBox, false);
     attack.effects[11] = function(that) {
         if (that.unit.lockedTarget) {
-            castSkill(that.game, that.unit.lockedTarget.x - 50, 385, that.unit, 10003, 1);
+            castSkill(that.game, that.unit.lockedTarget.x - 50, 385, that.unit, "t0003", 1);
+            that.game.soundPlayer.addToEffect("./sound/effects/tower/earthshake.wav", undefined, undefined, 0.35);
         }
     };                
 
@@ -414,7 +417,7 @@ EnemyTower.prototype.rightGuardian = function() {
     var attack3 = new Action(this.game, this.rightG, AM.getAsset("./img/unit/tower3/attack3.png"),
                             6, 0.1, 18, groundPoints, collisionBox, false);
     var pushEffect = function(that) {
-            castSkill(that.game, that.x - 1000, 0, that.unit, 00000, 0,
+            castSkill(that.game, that.x - 1000, 0, that.unit, "e0000", 0,
                     function(enemyUnit) { enemyUnit.push -= 200;},
                     1500, 600, 0.1, true);
     };  
@@ -470,10 +473,16 @@ EnemyTower.prototype.initActions = function() {
     var die = new Action(this.game, this, AM.getAsset("./img/unit/tower1/die.png"),
                         6, 0.1, 18, groundPoints, collisionBox, false, -1);
     die.addEffect(0, function(that) {
-        that.unit.leftG.health = -1;
-        that.unit.rightG.health = -1;
+        //Push one last time before die
+        that.unit.leftG.actions["attack3"].endEffect = function() {that.unit.leftG.health = -1;};
+        that.unit.rightG.actions["attack3"].endEffect = function() {that.unit.rightG.health = -1;};
+        that.unit.leftG.changeAction("attack3");
+        that.unit.rightG.changeAction("attack3");
     });   
-    die.endEffect = function(that) {that.unit.update = function() {};
+    die.endEffect = function(that) {that.unit.update = function() {    
+                                                            that.unit.rightG.update();
+                                                            that.unit.leftG.update();
+                                                        };
                                     that.unit.defaultAction = dieafter;
     };
 
@@ -552,7 +561,7 @@ function spawnTower(game, x, y, towerCode, side = NEUTRAL) {
         //     var attack = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/stab_right.png"),
         //                             3, 0.2, 3, groundPoints, collisionBox, false);
         //     attack.effects[2] = function(that) {
-        //         castSkill(that.game, that.x + 50, that.y + 47, that.unit, 00000, 1,
+        //         castSkill(that.game, that.x + 50, that.y + 47, that.unit, "e0000", 1,
         //                 undefined, 93, 45, 0.1, false);};
 
         //     groundPoints = [{x: 55, y: 120}];
