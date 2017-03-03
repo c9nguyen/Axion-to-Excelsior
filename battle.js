@@ -52,6 +52,8 @@ Battle.prototype.create = function() {
     );
     this.game.addEntity(gen);
 
+    // spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
+
     //Initializing cards on hand
     var cards = [
                  {code: "h000", ticket: 4},
@@ -172,7 +174,7 @@ Battle.prototype.buildTiles = function() {
 Battle.prototype.addAllMusic = function(){
     // Sound
 
-    var musicVolume = 0.25;
+    var musicVolume = 0.2;
     this.game.soundPlayer.randomTrackInQueue = true;
     this.game.soundPlayer.addToQueue("./sound/music/battle/KH-monstrous-monstro.mp3", undefined, undefined, musicVolume);
     this.game.soundPlayer.addToQueue("./sound/music/battle/KH-scherzo-di-notte.mp3", undefined, undefined, musicVolume);
@@ -180,6 +182,7 @@ Battle.prototype.addAllMusic = function(){
     this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-lancastrians.mp3", undefined, undefined, musicVolume);
     this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-seto.mp3", undefined, undefined, musicVolume);
     this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-yugi.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-darknite.mp3", undefined, undefined, musicVolume);
 
 
     // FOR BOSS

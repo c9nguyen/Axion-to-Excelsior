@@ -189,7 +189,7 @@ SoundPlayer.prototype.addToEffect = function(location, loop = false, rate = 1.0,
     audio.volume = volume;
     this.toPlayEffect.push(audio);
 }
-SoundPlayer.prototype.addToQueue = function(location, loop = false, rate = 1.0, volume = 1){
+SoundPlayer.prototype.addToQueue = function(location, loop = false, rate = 1.0, volume = 0.3){
     var audio = AM.getAssetMusic(location);
     audio.loop = loop;
     audio.playbackRate = rate;
