@@ -223,13 +223,18 @@ AM.queueDownload("./img/ui/select_white_uncheck.png");
 AM.queueDownload("./img/ui/musicAni.png");
 AM.queueDownload("./img/ui/effectAni.png");
 
-AM.queueDownload("./img/effect/00000/stab.png");
-AM.queueDownload("./img/effect/00000/9.swingP1.2_0.png");
-AM.queueDownload("./img/effect/00000/shuriken_hit.png");
-AM.queueDownload("./img/effect/00001/shuriken.png");
-AM.queueDownload("./img/effect/00002/dummy.png");
+AM.queueDownload("./img/effect/e0000/stab.png");
+AM.queueDownload("./img/effect/e0000/9.swingP1.2_0.png");
+AM.queueDownload("./img/effect/e0000/shuriken_hit.png");
+AM.queueDownload("./img/effect/e0001/shuriken.png");
+AM.queueDownload("./img/effect/e0002/dummy.png");
 
-
+AM.queueDownload("./img/effect/e1001/effect.png");
+AM.queueDownload("./img/effect/e1001/mouse.png");
+AM.queueDownload("./img/effect/e1001/card.png");
+AM.queueDownload("./img/effect/e1001/card_disable.png");
+AM.queueDownload("./img/effect/e1001/card_mouseover.png");
+AM.queueDownload("./img/effect/e1001/card_click.png");
 
 AM.queueDownload("./img/effect/passive/att.png");
 AM.queueDownload("./img/effect/passive/def.png");
@@ -306,6 +311,10 @@ AM.queueDownload("./sound/effects/monster/monsterbird.wav", true);
 AM.queueDownload("./sound/effects/monster/monsterbird-1.wav", true);
 AM.queueDownload("./sound/effects/monster/monstercat.wav", true);
 AM.queueDownload("./sound/effects/monster/monsterroar.wav", true);
+
+//spell
+AM.queueDownload("./sound/effects/spell/wind.mp3", true);
+AM.queueDownload("./sound/effects/spell/explosion.ogg", true);
 
 AM.queueDownload("./sound/music/battle/KH-squirming-evil.mp3", true);
 AM.queueDownload("./sound/music/battle/YGO-vs-darknite.mp3", true);

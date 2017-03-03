@@ -3,7 +3,7 @@
 var towerData = {
     tower0: {
         groundWidth: 300,
-        health: 1000,
+        health: 1500,
         att: 20,
         skillCD: 15,
         skill2CD: 30,

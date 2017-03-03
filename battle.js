@@ -56,7 +56,7 @@ Battle.prototype.create = function() {
     // spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
 
     //Initializing cards on hand
-    var cards = [
+    var unitCards = [
                  {code: "h000", ticket: 4},
                  {code: "h001", ticket: 3},
                  {code: "h002", ticket: 5},
@@ -64,7 +64,10 @@ Battle.prototype.create = function() {
                  {code: "h004", ticket: 3},
                  {code: "h100", ticket: 1}
                  ];
-    var cardGen = new CardGenerator(this.game, -50, 500, cards, 6);
+    var spellCards = [
+                 {code: "e1001", ticket: 2},
+                 ];   
+    var cardGen = new CardGenerator(this.game, -50, 500, 6, unitCards, spellCards);
     cardGen.assignCurrentBoss(playerBoss);
     cardGen.setBossesDiedAction(this.endGame);
     var enemyTowerHealthMark = 0.75;

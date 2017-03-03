@@ -113,7 +113,7 @@ Button.prototype.update = function() {
 
 /*=========================================================================*/
 
-function UnitCard(generator, unitcode, x, y, unitX, unitY) {
+function UnitCard(generator, unitcode, type, x, y, unitX, unitY) {
     this.NORMAL = 0;
     this.PRESS = 1;
     this.MOUSEOVER = 2;
@@ -121,33 +121,46 @@ function UnitCard(generator, unitcode, x, y, unitX, unitY) {
     this.generator = generator;
 
     Entity.call(this, this.generator.game, x, y, UI);
+    this.unitX = unitX;
+    this.unitY = unitY;
+    this.type = type;
     this.movable = false;
     this.unitcode = unitcode;
-    this.energy = unitData[this.unitcode].energy;
     this.active = this.generator.checkEnergy(this.energy);
-
+    if (this.type === "unit") this.energy = unitData[this.unitcode].energy;
+    else if (this.type === "effect") this.energy = spellCastData[this.unitcode].energy;
     this.status = this.NORMAL;
-    var animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/" + unitcode + "/card.png"), x, y);
+    var animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + this.type + "/" + unitcode + "/card.png"), x, y);
     animatedObject.movable = false;
     this.normal = animatedObject;
-    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/" + unitcode + "/card_click.png"), x, y);
+    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + this.type + "/" + unitcode + "/card_click.png"), x, y);
     animatedObject.movable = false;
     this.press = animatedObject;
-    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/" + unitcode + "/card_mouseover.png"), x, y);
+    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + this.type + "/" + unitcode + "/card_mouseover.png"), x, y);
     animatedObject.movable = false;
     this.mouseover = animatedObject;
-    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/" + unitcode + "/card_disable.png"), x, y);
+    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + this.type + "/" + unitcode + "/card_disable.png"), x, y);
     animatedObject.movable = false;
     this.disable = animatedObject;
 
     this.colliseBox = {x: x, y: y, width: this.normal.width, height: this.normal.height};
 
-    this.clickAction = function() {spawnUnit(this.game, unitX, unitY, unitcode, PLAYER);};
+    this.clickAction = function() {
+
+    };
 
 }
 
 UnitCard.prototype = Object.create (Entity.prototype);
 UnitCard.prototype.constructor = UnitCard;
+
+UnitCard.prototype.play = function() {
+                
+    // SOUND
+    this.game.soundPlayer.addToEffect("./sound/effects/smb_stomp.wav", false, 2.0);
+    this.generator.useEnergy(this.energy);
+    this.removeFromWorld = true;
+}
 
 UnitCard.prototype.draw = function() {
     var drawObj;
@@ -178,12 +191,20 @@ UnitCard.prototype.update = function() {
     if (this.active) {
         if (collise(this.colliseBox, this.game.mouse)) {
             if (this.game.mouse.click) {
-                if (this.generator.checkEnergy(this.energy)) {
-                    this.clickAction(this);
-                    this.generator.useEnergy(this.energy);
-                    // SOUND
-                    this.game.soundPlayer.addToEffect("./sound/effects/smb_stomp.wav", false, 2.0);
-                    this.removeFromWorld = true;
+                if (this.generator.checkEnergy(this.energy)) {               
+                    if (this.type === "unit") {
+                        spawnUnit(this.game, this.unitX, this.unitY, this.unitcode, PLAYER);
+                        this.play();
+                    }
+                    else if (this.type === "effect") {
+                        if (!this.mouseSpell || this.mouseSpell.removeFromWorld) {
+                            this.mouseSpell = new SpellCast(this.game, this.unitcode, this);
+                            this.game.addEntity(this.mouseSpell);
+                        } else {
+                            this.mouseSpell.removeFromWorld = true;
+                            this.mouseSpell = undefined;
+                        } 
+                    }
                 }   
 
                 this.game.mouse.click = false;
@@ -197,5 +218,48 @@ UnitCard.prototype.update = function() {
     } else {
         this.status = this.DISABLE;
     }
+        Entity.prototype.update.call(this);
+}
+
+/*=========================================================================*/
+
+var spellCastData = {
+    e1001: {
+        spritesheet: AM.getAsset("./img/effect/e1001/mouse.png"),
+        energy: 4,
+        sheetWidth: 6,
+        frames: 6,
+        xOffset: -329,
+        yOffset: -430    //from the ground
+    },
+}
+
+function SpellCast(game, spellCode, theCard) {
+    this.data = spellCastData[spellCode];
+    this.spellCode = spellCode;
+    this.card = theCard;
+    
+    AnimatedObject.call(this, game, this.data.spritesheet, game.mouse.x + this.data.spritesheet.width / 2, game.mouse.y + this.data.spritesheet.height / 2,
+                        this.data.sheetWidth, 0.1, this.data.frames, true);
+    this.movable = false;
+    this.side = UI;
+
+}
+
+
+SpellCast.prototype = Object.create(AnimatedObject.prototype);
+SpellCast.prototype.constructor = SpellCast;
+
+SpellCast.prototype.update = function() {
     Entity.prototype.update.call(this);
+    this.x = this.game.mouse.x - this.width / 2;
+    this.y = this.game.mouse.y - this.height / 2
+    if (this.game.mouse.click) {
+        if (this.card.generator.checkEnergy(this.data.energy)) {
+            castSkill(this.game, this.game.mouse.x + this.data.xOffset - this.game.mapX, canvasHeight - 100 +  this.data.yOffset,
+                    this.card.generator.currentBoss, this.spellCode);
+            this.card.play();
+        }
+        this.removeFromWorld = true;
+    }
 }
