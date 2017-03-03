@@ -102,7 +102,7 @@ EnemyGenerator = function(game, x, y, list = []) {
                 that.extraCounter = 0;
             }
             else {
-                that.extra += that.game.clockTick * that.game.clockTick;
+                that.extra += 0.01 * that.game.clockTick;
                 that.extraCounter++;
             } 
             return true;
@@ -233,7 +233,7 @@ EnemyGenerator.prototype.update = function() {
 
             if (this.impCounter >= this.impFrequency) {
                 this.impCounter = 0;
-                this.boostSpawnRate();
+               // this.boostSpawnRate();
                 this.generateDeck();
             } else {
                 this.impCounter += this.game.clockTick;
@@ -246,7 +246,7 @@ EnemyGenerator.prototype.update = function() {
 
 /* ================================================================================================= */
 
-CardGenerator = function(game, x, y, list = [], numOfCard) {
+CardGenerator = function(game, x, y, numOfCard, unitList = [], spellList = []) {
     this.onHand = [];
     this.onHandLocation = [];
     this.onHandCooldown = [];
@@ -259,8 +259,12 @@ CardGenerator = function(game, x, y, list = [], numOfCard) {
 
     Entity.call(this, game, x, y, UI);
     var that = this;
-    list.map(function(unit) {
-        for (var i = 0; i < unit.ticket; i++) that.onDeck.push(unit.code);
+    unitList.map(function(unit) {
+        for (var i = 0; i < unit.ticket; i++) that.onDeck.push({code: unit.code, type: "unit"});
+    });
+
+    spellList.map(function(unit) {
+        for (var i = 0; i < unit.ticket; i++) that.onDeck.push({code: unit.code, type: "effect"});
     });
 
     for (var i = 0; i < numOfCard; i++) {
@@ -336,7 +340,7 @@ CardGenerator.prototype.drawCard = function(index) {
     var card = this.onDeck[ran];
     this.onDeck.splice(ran, 1);
     var location = this.onHandLocation[index];
-    var newCard = new UnitCard(this, card, location.x, location.y, this.x, this.y);
+    var newCard = new UnitCard(this, card.code, card.type,  location.x, location.y, this.x, this.y);
     this.onHand[index] = newCard;
     this.game.addEntity(newCard);
 }
@@ -382,7 +386,7 @@ CardGenerator.prototype.update = function() {
             var card = this.onHand[i];
             if (card.removeFromWorld) {
                 if (this.onHandCooldown[i] >= this.cooldown) {
-                    var oldCardCode = card.unitcode;
+                    var oldCardCode = {code:card.unitcode, type: card.type};
                     this.drawCard(i);
                     this.onDeck.push(oldCardCode);
                     this.onHandCooldown[i] = 0;

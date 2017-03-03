@@ -3,9 +3,9 @@
 var towerData = {
     tower0: {
         groundWidth: 300,
-        health: 1000,
+        health: 1500,
         att: 20,
-        skillCD: 20,
+        skillCD: 15,
         skill2CD: 30,
     },
     tower1: {
@@ -23,7 +23,7 @@ var towerData = {
         groundWidth: 110,
         groundHeight: 0,
         health: 1,
-        att: 20,
+        att: 30,
         range: [{x: -700, y: -150, width: 900, height: 200}],
     }
 }
