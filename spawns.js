@@ -739,7 +739,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             //Making knock back effect
             attack.effects[4] = function(that) {
                 castSkill(that.game, that.x, that.y + 30, that.unit, 00000, 1,
-                            function(unit) { unit.getKnockback(300);},
+                            function(unit) { unit.getKnockback(-300);},
                             160, 100, 0.4, true);
                 that.game.soundPlayer.addToEffect("./sound/effects/rock/thud6.wav")};
 
@@ -917,7 +917,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             attack3.effects[6] = function(that) {
                 castSkill(that.game, that.x + 80, that.y + 40, that.unit, 00000, 0.5,
                             function(enemyUnit) { enemyUnit.takePassiveEffect("poison", 40);
-                                                  enemyUnit.getKnockback(400); },
+                                                  enemyUnit.getKnockback(-400); },
                             130, 210, 0.3, true)}; 
 
             groundPoints = [{x: 93, y: 237}];

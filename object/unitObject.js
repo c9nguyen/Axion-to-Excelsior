@@ -292,9 +292,9 @@ Unit.prototype.applyPassiveEffect = function() {
 Unit.prototype.getKnockback = function(power) {
     if (this.knockable) {
        // this.velocity.x = this.movementspeed / (-this.movementspeed) * power * 2;
-        this.velocity.y = -400;
+        this.velocity.y = -power * 1.5;
         this.changeAction("jump");
-      this.push = -power;
+        this.push = power;
     }
 }
 
@@ -386,9 +386,13 @@ Unit.prototype.update = function() {
         this.removeFromWorld = true;
         return;
     } 
+
+    //Handling pushing 
     this.velocity.x = this.push;
     this.push = this.push - this.push * this.game.clockTick;
     this.push = this.push >= 0 ? this.push < 10 ? 0 : Math.floor(this.push) : this.push > -10 ? 0 : Math.ceil(this.push);
+
+
         if (!this.flying) {
             this.gravity = true;
             //Only check for ground collision when the unit falling down or standing    
