@@ -52,7 +52,7 @@ Battle.prototype.create = function() {
     );
     this.game.addEntity(gen);
 
-    // spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
+    spawnUnit(gen.game, 2400, 500, "m105", ENEMY);
 
     //Initializing cards on hand
     var cards = [
