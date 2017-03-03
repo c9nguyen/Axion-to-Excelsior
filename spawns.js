@@ -119,7 +119,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                     that.game.soundPlayer.addToEffect("./sound/effects/swords/whoosh1.wav", undefined, undefined, 0.25);
                 else
                     that.game.soundPlayer.addToEffect("./sound/effects/swords/whoosh3.wav", undefined, undefined, 0.25);
-                that.game.soundPlayer.addToEffect("./sound/effects/swords/shuriken1.wav", undefined, undefined, 0.12);
+                that.game.soundPlayer.addToEffect("./sound/effects/swords/shuriken1.wav", undefined, undefined, 0.1);
             };
             attack.effects[2] = effect;
             attack.effects[3] = effect;
@@ -479,12 +479,12 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var attack = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack_left.png"),
                                     8, 0.15, 8, groundPoints, collisionBox, false);
             attack.effects[1] = function(that){
-                that.game.soundPlayer.addToEffect("./sound/effects/charge/chargelasersmall.wav", undefined, undefined, 0.33);
+                that.game.soundPlayer.addToEffect("./sound/effects/charge/chargelasersmall.wav", undefined, undefined, 0.35);
             };
             attack.effects[4] = function(that) {
                                     castSkill(that.game, that.x + 0, that.y + 50, that.unit, 00000, 1,
                                     undefined,350, 60, 0.3, true);
-                that.game.soundPlayer.addToEffect("./sound/effects/charge/energyshortsword5.wav", undefined, undefined, 0.13);
+                that.game.soundPlayer.addToEffect("./sound/effects/charge/energyshortsword5.wav", undefined, undefined, 0.15);
             };
 
             groundPoints = [];
@@ -641,7 +641,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             
             var effect = function(that) {castSkill(that.game, that.x - 148, that.y - 20, that.unit, 00000, 1,
                                     undefined, 270, 140, 0.6, true, true, function(that, otherUnit) {otherUnit.takePassiveEffect("speed", 0.3)});
-                                that.game.soundPlayer.addToEffect("./sound/effects/magic/magicsfxshort.wav", undefined, undefined, 0.17);
+                                that.game.soundPlayer.addToEffect("./sound/effects/magic/magicsfxshort.wav", undefined, undefined, 0.2);
                         };
             skill.effects[4] = effect;
 
@@ -763,7 +763,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                             function(unit) { unit.getKnockback(-300);},
                             160, 100, 0.4, true);
                 that.game.soundPlayer.addToEffect("./sound/effects/rock/rockfall.wav", undefined, undefined, 0.7);
-                that.game.soundPlayer.addToEffect("./sound/effects/rock/thud5.wav", undefined, undefined, 0.45);};
+                that.game.soundPlayer.addToEffect("./sound/effects/rock/thud5.wav", undefined, undefined, 0.48);};
 
             groundPoints = [{x: 0, y: 130}];
             var die = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/die.png"),
@@ -820,7 +820,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x, that.y + 35, that.unit, 00000, 1,
                             undefined,
                             150, 150, 0.3, true);
-                        that.game.soundPlayer.addToEffect("./sound/effects/monster/ice1.wav", undefined, 0.8, 0.5);
+                        that.game.soundPlayer.addToEffect("./sound/effects/monster/ice1.wav", undefined, 0.8, 0.55);
             }; 
 
             groundPoints = [{x: 130, y: 175}];
@@ -831,7 +831,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x, that.y + 100, that.unit, 00000, 1,
                             undefined,
                             150, 75, 0.3, true);
-                that.game.soundPlayer.addToEffect("./sound/effects/monster/ice1.wav", undefined, 0.8, 0.5);
+                that.game.soundPlayer.addToEffect("./sound/effects/monster/ice1.wav", undefined, 0.8, 0.55);
             }; 
 
             groundPoints = [{x: 222, y: 235}];
@@ -842,8 +842,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x + 40, that.y + 100, that.unit, 00000, 1.5,
                             undefined,
                             215, 418, 0.45, true);
-                that.game.soundPlayer.addToEffect("./sound/effects/monster/crackandstress1.wav", undefined, undefined, 0.5);
-                that.game.soundPlayer.addToEffect("./sound/effects/monster/ice1.wav", undefined, undefined, 0.5);
+                that.game.soundPlayer.addToEffect("./sound/effects/monster/crackandstress1.wav", undefined, undefined, 0.55);
+                that.game.soundPlayer.addToEffect("./sound/effects/monster/ice1.wav", undefined, undefined, 0.55);
             }; 
 
             groundPoints = [{x: 348, y: 247}];
@@ -854,10 +854,10 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x + 61, that.y + 31, that.unit, 00000, 1.5,
                             undefined,
                             363, 218, 0.75, true);
-                that.game.soundPlayer.addToEffect("./sound/effects/monster/axestab1.wav", undefined, undefined, 0.6);
-                that.game.soundPlayer.addToEffect("./sound/effects/monster/axeimpact.wav", undefined, undefined, 0.7);
-                that.game.soundPlayer.addToEffect("./sound/effects/monster/axeconcretehit.wav", undefined, undefined, 0.6);
-                that.game.soundPlayer.addToEffect("./sound/effects/monster/crackandstress1.wav", undefined, undefined, 0.5);
+                that.game.soundPlayer.addToEffect("./sound/effects/monster/axestab1.wav", undefined, undefined, 0.65);
+                that.game.soundPlayer.addToEffect("./sound/effects/monster/axeimpact.wav", undefined, undefined, 0.75);
+                that.game.soundPlayer.addToEffect("./sound/effects/monster/axeconcretehit.wav", undefined, undefined, 0.65);
+                that.game.soundPlayer.addToEffect("./sound/effects/monster/crackandstress1.wav", undefined, undefined, 0.55);
             }; 
 
             groundPoints = [{x: 77, y: 164}];
@@ -933,13 +933,13 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x + 49, that.y, that.unit, 00000, 0.5,
                             undefined,
                             392, 292, 0.2, true);
-                that.game.soundPlayer.addToEffect("./sound/effects/charge/lightsaberwave.wav", undefined, undefined, 0.15);
+                that.game.soundPlayer.addToEffect("./sound/effects/charge/lightsaberwave.wav", undefined, undefined, 0.2);
             }; 
             attack.effects[4] = function(that) {
                 castSkill(that.game, that.x, that.y + 48, that.unit, 00000, 0.5,
                             undefined,
                             440, 220, 0.2, true);
-                that.game.soundPlayer.addToEffect("./sound/effects/charge/lightsaberwave-1.wav", undefined, undefined, 0.15);
+                that.game.soundPlayer.addToEffect("./sound/effects/charge/lightsaberwave-1.wav", undefined, undefined, 0.2);
             }; 
 
             groundPoints = [{x: 280, y: 330}];
@@ -961,8 +961,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var attack3 = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack3.png"),
                                     5, 0.1, 10, groundPoints, collisionBox, false, 3);
             attack3.effects[1] = function(that){
-                that.game.soundPlayer.addToEffect("./sound/effects/monster/monster.wav", undefined, undefined, 0.5);
-                that.game.soundPlayer.addToEffect("./sound/effects/monster/monster2.wav", undefined, undefined, 0.7);
+                that.game.soundPlayer.addToEffect("./sound/effects/monster/monster.wav", undefined, undefined, 0.55);
+                that.game.soundPlayer.addToEffect("./sound/effects/monster/monster2.wav", undefined, undefined, 0.75);
             };
             attack3.effects[6] = function(that) {
                 castSkill(that.game, that.x + 80, that.y + 40, that.unit, 00000, 0.5,

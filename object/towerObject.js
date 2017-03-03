@@ -349,7 +349,7 @@ EnemyTower.prototype.leftGuardian = function() {
     attack.effects[9] = function(that) {
         if (that.unit.lockedTarget) {
             castSkill(that.game, that.unit.lockedTarget.x - 50, -272, that.unit, 10002, 1);
-            that.game.soundPlayer.addToEffect("./sound/effects/tower/thunder1.wav", undefined, undefined, 0.5);
+            that.game.soundPlayer.addToEffect("./sound/effects/tower/thunder1.wav", undefined, undefined, 0.45);
         }
     };
  
@@ -409,7 +409,7 @@ EnemyTower.prototype.rightGuardian = function() {
     attack.effects[11] = function(that) {
         if (that.unit.lockedTarget) {
             castSkill(that.game, that.unit.lockedTarget.x - 50, 385, that.unit, 10003, 1);
-            that.game.soundPlayer.addToEffect("./sound/effects/tower/earthshake.wav", undefined, undefined, 0.4);
+            that.game.soundPlayer.addToEffect("./sound/effects/tower/earthshake.wav", undefined, undefined, 0.35);
         }
     };                
 
