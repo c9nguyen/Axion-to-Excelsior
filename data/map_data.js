@@ -1,4 +1,6 @@
 var mapType = {
+  curr:"map1",
+  
   map1: {
     background: "./img/map/01/back.png",
     tileType: 'snowrock',

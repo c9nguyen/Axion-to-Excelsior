@@ -2,7 +2,7 @@ function Battle(game)
 {
 	// this.game = game;
     Scene.call(this, game);
-    this.background = mapType['map1'].background;// "./img/map/01/back.png";
+    this.background = mapType[mapType['curr']].background;// "./img/map/01/back.png";
 }
 
 Battle.prototype = Object.create(Scene.prototype);
@@ -25,7 +25,7 @@ Battle.prototype.create = function() {
 
     //Initializing enemy generator
 
-    var list = mapType['map1'].enemyList;
+    var list = mapType[mapType['curr']].enemyList;
     // [{code: "m000", ticket: 4},
     //             {code: "m001", ticket: 8},
     //             {code: "m002", ticket: 6},
@@ -33,7 +33,7 @@ Battle.prototype.create = function() {
     //             {code: "m010", ticket: 1}];
 
     var gen = new EnemyGenerator(this.game, 2400, 500, list);
-    gen.setFrequency(mapType['map1'].enemyGenFrequency);
+    gen.setFrequency(mapType[mapType['curr']].enemyGenFrequency);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
     gen.addToBossQueue("m105");
@@ -69,13 +69,13 @@ Battle.prototype.create = function() {
 
     //Initializing cards on hand
 
-    var unitCards = mapType['map1'].unitCards;
-    var spellCards = mapType['map1'].spellCards;
-    var cardGen = new CardGenerator(this.game, -50, 500, mapType['map1'].numOfCard, unitCards, spellCards);
+    var unitCards = mapType[mapType['curr']].unitCards;
+    var spellCards = mapType[mapType['curr']].spellCards;
+    var cardGen = new CardGenerator(this.game, -50, 500, mapType[mapType['curr']].numOfCard, unitCards, spellCards);
     cardGen.assignCurrentBoss(playerBoss);
     cardGen.setBossesDiedAction(this.endGame);
     var enemyTowerHealthMark = 0.75;
-    var energyRate = mapType['map1'].energyRate;
+    var energyRate = mapType[mapType['curr']].energyRate;
     //Setting a condition that lower the enemy tower health, higher energy rate
     cardGen.addConditionAndAction(
         function() {
@@ -177,7 +177,7 @@ Battle.prototype.buildTiles = function() {
     var numOfTile = Math.ceil(canvasWidth / 90) + extraTile;
     var groundX = -90 * extraTile / 2;
 
-    var tile = new Tile(this.game, groundX, canvasHeight - 100, numOfTile, mapType['map1'].tileType);
+    var tile = new Tile(this.game, groundX, canvasHeight - 100, numOfTile, mapType[mapType['curr']].tileType);
     this.game.addEntity(tile);
 };
 

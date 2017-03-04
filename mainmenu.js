@@ -28,9 +28,12 @@ MainMenu.prototype.create = function () {
   // settingbutton.addSheet( AM.getAsset("./img/ui/settings_hoverbutton.png"),'mouseover');
   // settingbutton.addSheet( AM.getAsset("./img/ui/settings_pressbutton.png"),'press');
 
-  // var mapbutton =  new Button(this.game, AM.getAsset("./img/ui/maps_button.png"), 1200-250-238, 50+131+50);
-  // mapbutton.addSheet( AM.getAsset("./img/ui/maps_hoverbutton.png"),'mouseover');
-  // mapbutton.addSheet( AM.getAsset("./img/ui/maps_pressbutton.png"),'press');
+  var mapbutton =  new Button(this.game, AM.getAsset("./img/ui/maps_button.png"), 500, 200);
+  mapbutton.addSheet( AM.getAsset("./img/ui/maps_hoverbutton.png"),'mouseover');
+  mapbutton.addSheet( AM.getAsset("./img/ui/maps_pressbutton.png"),'press');
+  mapbutton.addEventListener('click', function() {
+    this.game.sceneManager.startScene('mapmenu');
+  });
 
   // var shopbutton =  new Button(this.game, AM.getAsset("./img/ui/shop_button.png"), 250, 50+131+50);
   // shopbutton.addSheet( AM.getAsset("./img/ui/shop_hoverbutton.png"),'mouseover');
@@ -40,7 +43,7 @@ MainMenu.prototype.create = function () {
 
   this.game.addEntity(back);
   // this.game.addEntity(shopbutton);
-  // this.game.addEntity(mapbutton);
+  this.game.addEntity(mapbutton);
   // this.game.addEntity(settingbutton);
   this.game.addEntity(startbutton);
   // this.game.addEntity(cardbutton);
