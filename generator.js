@@ -195,7 +195,6 @@ EnemyGenerator.prototype.draw = function() {
 
 
 EnemyGenerator.prototype.update = function() {
-    console.log(this.frequency);
         if (this.currentBoss.health <= 0) {
             if (this.bossQueue.length > 0) {
                 var newBoss = spawnUnit(this.game, 2400, 500, this.bossQueue[0], ENEMY);

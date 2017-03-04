@@ -26,15 +26,16 @@ Battle.prototype.create = function() {
     //Initializing enemy generator
     var list = [
                 {code: "m000", ticket: 2},
-                {code: "m001", ticket: 6},
-                {code: "m002", ticket: 4},
+                {code: "m001", ticket: 4},
+                {code: "m002", ticket: 3},
                 {code: "m003", ticket: 1},
                 {code: "m005", ticket: 1},
+                {code: "m006", ticket: 0},
                 {code: "m013", ticket: -1}
                 ];
 
     var gen = new EnemyGenerator(this.game, 2400, 500, list);
-    gen.setFrequency(4);
+    gen.setFrequency(5);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
     gen.addToBossQueue("m105");
@@ -75,6 +76,7 @@ Battle.prototype.create = function() {
                  {code: "h002", ticket: 5},
                  {code: "h003", ticket: 5},
                  {code: "h004", ticket: 3},
+                 {code: "h005", ticket: 4},
                  {code: "h100", ticket: 1}
                  ];
     var spellCards = [
@@ -117,9 +119,9 @@ Battle.prototype.create = function() {
     // SOUND
     this.addAllMusic();
 
-    //spawnUnit(this.game, 100, 400, "h004", PLAYER);
+    //spawnUnit(this.game, 100, 400, "h005", PLAYER);
 //     spawnUnit(this.game, 1100, 400, "m105", ENEMY);
- //spawnUnit(this.game, 1100, 400, "m013", ENEMY);
+ //spawnUnit(this.game, 1100, 400, "m006", ENEMY);
 
     //Enemy button for debugging
     // var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 700, 520);

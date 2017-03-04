@@ -25,8 +25,8 @@ function Action(game, unit, spritesheet,
                 width = frameWidth, height = frameHeight) { //default orignal size
 
     this.unit = unit;
-    this.effects = [];
-    this.effectCasted = new Set(); //Keep track what effect already at a frame so wont recast
+    this.subAction = [];
+    this.takenActions = new Set(); //Keep track what effect already at a frame so wont recast
     this.cooldown = cooldown;
     this.interruptible = interruptible;
     this.cooldownClock = 0;
@@ -37,16 +37,16 @@ function Action(game, unit, spritesheet,
     var y = this.unit.y - this.groundPoints[0].y;
 
     //What you want to happen at:
-    this.startEffect = function() {}; //Beginning of the action
+    this.startAction = function() {}; //Beginning of the action
  //   this.duringEffect = function() {};    //During the action, between each frame           //Need to work on
-    this.endEffect = function() {};   //The end of the action
+    this.endAction = function() {};   //The end of the action
 
     AnimatedObject.call(this, game, spritesheet, x, y,
                         sheetWidth, frameDuration, frames, cooldown === 0, 
                         frameWidth, frameHeight);
 }
 
-Action.prototype = Object.create(AnimatedObject);
+Action.prototype = Object.create(AnimatedObject.prototype);
 Action.prototype.constructor = Action;
 
 /**
@@ -61,18 +61,20 @@ Action.prototype.checkCooldown = function() {
 /**
  * Add the effect that will hapen at index of the frame
  */
-Action.prototype.addEffect = function(index, callback) {
-    this.effects[index] = callback;
+Action.prototype.addSubAction = function(index, callback) {
+    this.subAction[index] = callback;
 }
+
 
 /**
  * What to do at the start of action. Called by unit when start the action
  * Overwrite it if you want to use. (Overwrite the instance of Action not the prototype)
  */
 Action.prototype.start = function() {
+    this.startAction(this);
     this.elapsedTime = 0;
     this.timeLastStart = this.game.timer.gameTime;
-    this.effectCasted = new Set();
+    this.takenActions = new Set();
 }
 
 /**
@@ -86,16 +88,16 @@ Action.prototype.during = function() {
  * Overwrite it if you want to use. (Overwrite the instance of Action not the prototype)
  */
 Action.prototype.end = function() {
-    this.endEffect(this);
+    this.endAction(this);
 }
 
 
 Action.prototype.update = function() {//Updating the coordinate for the unit in the frame
     //If this action is still on cooldown, call default 
     if (this.isDone()) {
-        this.effectCasted = new Set();
+        this.takenActions = new Set();
         if (!this.checkCooldown() || !this.loop) {
-            this.endEffect(this);
+            this.endAction(this);
             this.unit.currentAction = this.unit.defaultAction;
             if(this.unit.currentAction !== undefined){
                 this.unit.currentAction.start();
@@ -122,10 +124,10 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
     }
 
 
-    var effect = this.effects[frame]; //Callback the effect
-    if (effect !== undefined && typeof effect === "function" && !this.effectCasted.has(frame)) {
-        effect(this);
-        this.effectCasted.add(frame);
+    var subaction = this.subAction[frame]; //Callback the effect
+    if (subaction !== undefined && typeof subaction === "function" && !this.takenActions.has(frame)) {
+        subaction(this);
+        this.takenActions.add(frame);
     }
     AnimatedObject.prototype.update.call(this);
 
@@ -308,7 +310,7 @@ Unit.prototype.getKnockback = function(thePower, air = false) {
  */
 Unit.prototype.changeAction = function(actionName) {
     var action = this.actions[actionName];
-    if (action !== undefined && this.currentAction !== action && action.checkCooldown()) {    //If action is defined and not performing
+    if (action !== undefined && (this.currentAction !== action || this.currentAction.isDone()) && action.checkCooldown()) {    //If action is defined and not performing
         if (this.currentAction !== undefined) this.currentAction.end();
         this.currentAction = action;
  //       this.currentAction.update();

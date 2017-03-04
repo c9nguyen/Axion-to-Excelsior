@@ -77,6 +77,17 @@ AM.queueDownload("./img/unit/h004/jump.png");
 AM.queueDownload("./img/unit/h004/attack.png");
 AM.queueDownload("./img/unit/h004/die.png");
 
+AM.queueDownload("./img/unit/h005/card.png");
+AM.queueDownload("./img/unit/h005/card_click.png");
+AM.queueDownload("./img/unit/h005/card_mouseover.png");
+AM.queueDownload("./img/unit/h005/card_disable.png");
+AM.queueDownload("./img/unit/h005/stand.png");
+AM.queueDownload("./img/unit/h005/walk.png");
+AM.queueDownload("./img/unit/h005/jump.png");
+AM.queueDownload("./img/unit/h005/attack.png");
+AM.queueDownload("./img/unit/h005/attack2.png");
+AM.queueDownload("./img/unit/h005/die.png");
+
 AM.queueDownload("./img/unit/h100/card.png");
 AM.queueDownload("./img/unit/h100/card_click.png");
 AM.queueDownload("./img/unit/h100/card_mouseover.png");
@@ -121,6 +132,13 @@ AM.queueDownload("./img/unit/m005/walk.png");
 AM.queueDownload("./img/unit/m005/jump.png");
 AM.queueDownload("./img/unit/m005/attack.png");
 AM.queueDownload("./img/unit/m005/die.png");
+
+AM.queueDownload("./img/unit/m006/stand.png");
+AM.queueDownload("./img/unit/m006/walk.png");
+AM.queueDownload("./img/unit/m006/jump.png");
+AM.queueDownload("./img/unit/m006/attack.png");
+AM.queueDownload("./img/unit/m006/attack_effect.png");
+AM.queueDownload("./img/unit/m006/die.png");
 
 AM.queueDownload("./img/unit/m010/stand.png");
 AM.queueDownload("./img/unit/m010/walk.png");
@@ -235,6 +253,10 @@ AM.queueDownload("./img/effect/e0000/9.swingP1.2_0.png");
 AM.queueDownload("./img/effect/e0000/shuriken_hit.png");
 AM.queueDownload("./img/effect/e0001/shuriken.png");
 AM.queueDownload("./img/effect/e0002/dummy.png");
+
+AM.queueDownload("./img/effect/e0003/effect.png");
+AM.queueDownload("./img/effect/e0003/ball.png");
+AM.queueDownload("./img/effect/e0003/hit.png");
 
 AM.queueDownload("./img/effect/e1001/effect.png");
 AM.queueDownload("./img/effect/e1001/mouse.png");

@@ -37,12 +37,13 @@ NonAnimatedObject.prototype.setSize = function(width, height) {
     this.height = height;
 }
 
-/**
- * Set up an entity that this entity will stick to it
- */
-NonAnimatedObject.prototype.setStickTo = function(entity, offsetX, offsetY) {
-    this.stickTo = {entity: entity, offsetX: offsetX, offsetY: offsetY};
-}
+// /**
+//  * Set up an entity that this entity will stick to it
+//  */
+// NonAnimatedObject.prototype.setStickTo = function(entity, offsetX, offsetY) {
+//     this.stickTo = {entity: entity, offsetX: offsetX, offsetY: offsetY};
+// }
+
 
 NonAnimatedObject.prototype.draw = function() {
     var drawX = this.x;
@@ -58,16 +59,18 @@ NonAnimatedObject.prototype.draw = function() {
     } catch (e) {
 
     }
+
+    Entity.prototype.draw.call(this);
 }
 
 NonAnimatedObject.prototype.update = function () {
-    if (this.stickTo) {
-        var host = this.stickTo;
-        this.x = host.entity.x + host.offsetX;
-        this.y = host.entity.y + host.offsetY;
-        this.removeFromWorld = host.entity.removeFromWorld;
-        if (host.health) this.removeFromWorld = host.health <= 0;
-    }
+    // if (this.stickTo) {
+    //     var host = this.stickTo;
+    //     this.x = host.entity.x + host.offsetX;
+    //     this.y = host.entity.y + host.offsetY;
+    //     this.removeFromWorld = host.entity.removeFromWorld;
+    //     if (host.health) this.removeFromWorld = host.health <= 0;
+    // }
     Entity.prototype.update.call(this);
 };
 
