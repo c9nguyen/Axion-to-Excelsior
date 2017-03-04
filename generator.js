@@ -5,7 +5,7 @@ Generator = function(game, x, y, active = true) {
     this.active = active;
     this.action = function() {};    //the action that will be generated
     this.condition = function() {return true};  //the condition for the action to generate
-    this.conditionPair = []
+    this.conditionAndAction = [];
 }
 
 Generator.prototype = Object.create(Entity.prototype);
@@ -54,6 +54,13 @@ Generator.prototype.setBossesDiedAction = function(callback) {
     this.allBossDied = callback;
 }
 
+/**
+ * Add a condition and action pair
+ */
+Generator.prototype.addConditionAndAction = function(theCondition, theAction, theRepeat = false) {
+    this.conditionAndAction.push({condition: theCondition, action: theAction, repeat: theRepeat});
+}
+
 Generator.prototype.update = function() {
     if (this.active && this.condition(this)) this.action(this);
 }
@@ -72,6 +79,8 @@ EnemyGenerator = function(game, x, y, list = []) {
     this.frequency = 1;
     this.impFrequency = 20;
     this.counter = 0;
+    this.extra = this.game.clockTick;
+    this.extraCounter = 0
     this.impCounter = 0;
     this.action = function(that) {
         var ran = Math.floor(Math.random() * this.bucket.length);
@@ -85,11 +94,20 @@ EnemyGenerator = function(game, x, y, list = []) {
     });
 
     this.condition = function(that) {
+        
         if (that.counter >= that.frequency) {
             that.counter = 0;
+            if (that.extraCounter === 20) { 
+                that.extra = that.game.clockTick;
+                that.extraCounter = 0;
+            }
+            else {
+                that.extra += 0.1 * that.game.clockTick;
+                that.extraCounter++;
+            } 
             return true;
         } else {
-            that.counter += that.game.clockTick;
+            that.counter += that.game.clockTick + that.extra;
             return false;
         }
     }
@@ -97,6 +115,17 @@ EnemyGenerator = function(game, x, y, list = []) {
 
 EnemyGenerator.prototype = Object.create(Generator.prototype);
 EnemyGenerator.prototype.constructor = EnemyGenerator;
+
+
+/**
+ * Generate the deck base on the ticket list
+ */
+EnemyGenerator.prototype.generateDeck = function() {
+    var that = this;
+    this.list.map(function(unit) {
+        for (var i = 0; i < unit.ticket; i++) that.bucket.push(unit.code);
+    });
+}
 
 EnemyGenerator.prototype.setFrequency = function (frequency) {
     this.frequency = frequency;
@@ -112,6 +141,15 @@ EnemyGenerator.prototype.setEndgame = function (endgame) {
 
 EnemyGenerator.prototype.addToBossQueue = function(unitCode) {
     this.bossQueue.push(unitCode);
+}
+
+/**
+ * Boost spawn rate of all unit
+ */
+EnemyGenerator.prototype.boostSpawnRate = function(rate = 1) {
+    this.list.map(function(unit) {
+        unit.ticket += rate;
+    });
 }
 
 
@@ -157,28 +195,49 @@ EnemyGenerator.prototype.draw = function() {
 
 
 EnemyGenerator.prototype.update = function() {
-    if (this.active) {
         if (this.currentBoss.health <= 0) {
             if (this.bossQueue.length > 0) {
-                spawnUnit(this.game, 2400, 500, this.bossQueue[0], ENEMY);
+                var newBoss = spawnUnit(this.game, 2400, 500, this.bossQueue[0], ENEMY);
+                this.assignCurrentBoss(newBoss);
+                this.bossQueue.splice(0, 1);
+                this.boostSpawnRate();
+                if(this.bossQueue.length === 0){
+                    this.active = false;
+                    this.game.soundPlayer.removeAllSound();
+                    this.game.soundPlayer.randomTrackInQueue = true;
+                    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-squirming-evil.mp3");
+                }
             } else {
                 this.allBossDied(true);
                 this.removeFromWorld = true;
             }
-        } else {
-            if (this.frequency > 1)
-                this.frequency -= 0.01 * this.game.clockTick;
+        }
+    if (this.active) {
+            for (var i = 0; i < this.conditionAndAction.length; i++) {
+                var pair = this.conditionAndAction[i];
+                if (pair.condition()) {
+                    pair.action();
+                    if (!pair.repeat) this.conditionAndAction.splice(i, 1);
+                } 
+            }
+            if (this.frequency > 2){
+                if(this.frequency > 4){
+                    this.frequency -= 0.02 * this.game.clockTick;
+                } else if (this.frequency > 3){
+                    this.frequency -= 0.01 * this.game.clockTick;
+                } else {
+                    this.frequency -= 0.005 * this.game.clockTick;
+                }
+            }
+
             if (this.impCounter >= this.impFrequency) {
                 this.impCounter = 0;
-                var that = this;
-                this.list.map(function(unit) {
-                    that.bucket.push(unit.code);
-                });
+               // this.boostSpawnRate();
+                this.generateDeck();
             } else {
                 this.impCounter += this.game.clockTick;
             }
             Generator.prototype.update.call(this);
-        }
     }
 }
 
@@ -186,20 +245,27 @@ EnemyGenerator.prototype.update = function() {
 
 /* ================================================================================================= */
 
-CardGenerator = function(game, x, y, list = [], numOfCard) {
+CardGenerator = function(game, x, y, numOfCard, unitList = [], spellList = []) {
     this.onHand = [];
     this.onHandLocation = [];
     this.onHandCooldown = [];
+    this.waitList = [];
+    this.waitListCooldown = 0;
     this.onDeck = [];
     this.cooldown = 2;
     this.numOfCard = numOfCard;
     this.energy = 3;
     this.energyRate = 0.5;
+    this.conditionAndAction = [];
 
     Entity.call(this, game, x, y, UI);
     var that = this;
-    list.map(function(unit) {
-        for (var i = 0; i < unit.ticket; i++) that.onDeck.push(unit.code);
+    unitList.map(function(unit) {
+        for (var i = 0; i < unit.ticket; i++) that.onDeck.push({code: unit.code, type: "unit"});
+    });
+
+    spellList.map(function(unit) {
+        for (var i = 0; i < unit.ticket; i++) that.onDeck.push({code: unit.code, type: "effect"});
     });
 
     for (var i = 0; i < numOfCard; i++) {
@@ -212,16 +278,36 @@ CardGenerator = function(game, x, y, list = [], numOfCard) {
 CardGenerator.prototype = Object.create(Entity.prototype);
 CardGenerator.prototype.constructor = CardGenerator;
 
+/**
+ * Start drawing cards
+ */
 CardGenerator.prototype.start = function() {
      for (var i = 0; i < this.onHandLocation.length; i++) {
         this.drawCard(i);
     }
 }
 
+/**
+ * Set location of spawning unit
+ */
 CardGenerator.prototype.setLocation = function(index, location = {x :0, y: 0}) {
     this.onHandLocation[index] = location;
 }
 
+CardGenerator.prototype.setCooldown = function(cooldown) {
+    this.cooldown = cooldown;
+}
+
+// /**
+//  * Generate the deck base on the ticket list
+//  */
+// CardGenerator.prototype.generateDeck = function(cooldown) {
+//     this.cooldown = cooldown;
+// }
+
+/**
+ * Set cooldown of drawing card
+ */
 CardGenerator.prototype.setCooldown = function(cooldown) {
     this.cooldown = cooldown;
 }
@@ -251,13 +337,16 @@ CardGenerator.prototype.removeAll = function() {
 }
 
 CardGenerator.prototype.drawCard = function(index) {
-    var ran = Math.floor(Math.random() * this.onDeck.length);
-    var card = this.onDeck[ran];
-    this.onDeck.splice(ran, 1);
-    var location = this.onHandLocation[index];
-    var newCard = new UnitCard(this, card, location.x, location.y, this.x, this.y);
-    this.onHand[index] = newCard;
-    this.game.addEntity(newCard);
+
+    if (this.onDeck.length > 0) {
+        var ran = Math.floor(Math.random() * this.onDeck.length);
+        var card = this.onDeck[ran];
+        this.onDeck.splice(ran, 1);
+        var location = this.onHandLocation[index];
+        var newCard = new UnitCard(this, card.code, card.type,  location.x, location.y, this.x, this.y, index);
+        this.onHand[index] = newCard;
+        this.game.addEntity(newCard);
+    }
 }
 
 /**
@@ -274,6 +363,33 @@ CardGenerator.prototype.setBossesDiedAction = function(callback) {
     this.allBossDied = callback;
 }
 
+/**
+ * Add a condition and action pair
+ */
+CardGenerator.prototype.addConditionAndAction = function(theCondition, theAction, theRepeat = false) {
+    this.conditionAndAction.push({condition: theCondition, action: theAction, repeat: theRepeat});
+}
+
+CardGenerator.prototype.pushToWaitList = function(card) {
+    var arrivalTime = Math.floor(this.waitListCooldown) - 1;
+    if (arrivalTime <= 0) arrivalTime = 10;
+    this.waitList.push({card: card, arrivalTime: arrivalTime});
+}
+
+CardGenerator.prototype.waitListToDeck = function() {
+    if (this.waitList.length > 0) {
+        this.waitListCooldown += this.game.clockTick;
+        //reset the clock
+        if (this.waitListCooldown >= 11) {
+            this.waitListCooldown = 0;
+        }
+        //tak card back to deck
+        while (this.waitList.length > 0 && Math.floor(this.waitListCooldown) === this.waitList[0].arrivalTime) {
+            this.onDeck.push(this.waitList[0].card);
+            this.waitList.splice(0, 1);
+        }
+    }
+}
 
 CardGenerator.prototype.update = function() {
     if (this.currentBoss.health <= 0) {
@@ -281,16 +397,28 @@ CardGenerator.prototype.update = function() {
         this.allBossDied(false);
         this.removeFromWorld = true;
     } else {
+        for (var i = 0; i < this.conditionAndAction.length; i++) {
+            var pair = this.conditionAndAction[i];
+            if (pair.condition()) {
+                pair.action();
+                if (!pair.repeat) this.conditionAndAction.splice(i, 1);
+            } 
+        }
+
+        //Handling cards on hand and deck
+        this.waitListToDeck();
         var that = this;
         this.energy = Math.min(this.energy + this.game.clockTick * this.energyRate, 10);
         for (var i = 0; i < this.numOfCard; i++) {
             var card = this.onHand[i];
             if (card.removeFromWorld) {
                 if (this.onHandCooldown[i] >= this.cooldown) {
-                    var oldCardCode = card.unitcode;
-                    this.drawCard(i);
-                    this.onDeck.push(oldCardCode);
-                    this.onHandCooldown[i] = 0;
+                    var oldCardCode = {code:card.unitcode, type: card.type};
+                    if (this.onDeck.length > 0) {
+                        this.drawCard(i);
+                        this.pushToWaitList(oldCardCode);
+                        this.onHandCooldown[i] = 0;
+                    }
                 } else {
                     this.onHandCooldown[i] += this.game.clockTick;
                 }

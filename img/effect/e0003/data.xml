@@ -1,0 +1,23 @@
+<i>
+  <i image="3001004_0.png" delay="100" x="-32" y="-32"/>
+  <i image="3001004_1.png" delay="100" x="-32" y="-32"/>
+  <i image="3001004_2.png" delay="100" x="-32" y="-32"/>
+  <i image="hit.0_0.png" delay="90" x="-74" y="-67"/>
+  <i image="hit.0_1.png" delay="90" x="-74" y="-67"/>
+  <i image="hit.0_2.png" delay="90" x="-74" y="-67"/>
+  <i image="hit.0_3.png" delay="90" x="-74" y="-67"/>
+  <i image="ball_0.png" delay="90" x="-71" y="-27"/>
+  <i image="ball_1.png" delay="90" x="-71" y="-27"/>
+  <i image="ball_2.png" delay="90" x="-71" y="-27"/>
+  <i image="afterimage.bow.shoot1.2_0.png" delay="60" x="-1" y="0"/>
+  <i image="afterimage.crossBow.shoot2.2_0.png" delay="60" x="-1" y="0"/>
+  <i image="effect_0.png" delay="90" x="-40" y="-70"/>
+  <i image="effect_1.png" delay="90" x="-40" y="-70"/>
+  <i image="effect_2.png" delay="90" x="-40" y="-70"/>
+  <i image="effect_3.png" delay="90" x="-40" y="-70"/>
+  <i image="effect_4.png" delay="90" x="-40" y="-70"/>
+  <i image="effect_5.png" delay="90" x="-40" y="-70"/>
+  <i image="effect_6.png" delay="90" x="-40" y="-70"/>
+  <i image="effect_7.png" delay="90" x="-40" y="-70"/>
+  <i image="effect_8.png" delay="90" x="-40" y="-70"/>
+</i>

@@ -38,6 +38,20 @@ function GameEngine() {
 
     this.right = null;
     this.left = null;
+
+    this.numberKeys = [];
+    this.resetKeys = function(){
+        this.right.stopIm = false;
+        this.left.stopIm = false;
+        this.keyW.stopIm = false;
+        this.keyA.stopIm = false;
+        this.keyS.stopIm = false;
+        this.keyD.stopIm = false;
+        for(var i = 0; i < this.numberKeys.length; i++){
+            this.numberKeys[i].stopIm = false;
+        }
+    };
+
     //events
     this.mouse = {click: false,
                     x: undefined,
@@ -140,6 +154,13 @@ GameEngine.prototype.startInput = function () {
     this.keyA = new KeyBoard(this.ctx, "KeyA");
     this.keyS = new KeyBoard(this.ctx, "KeyS");
     this.keyD = new KeyBoard(this.ctx, "KeyD");
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit0"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit1"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit2"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit3"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit4"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit5"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit6"));
     //end vinh
 
     // this.ctx.canvas.addEventListener("keyup", function (e) {
@@ -212,7 +233,7 @@ GameEngine.prototype.update = function () {
                 i--;
             }
     }
-
+    this.resetKeys();
     this.mouse.reset();
 }
 
@@ -260,6 +281,7 @@ function Entity(game, x, y, side = NEUTRAL) {
     this.removeFromWorld = false;
     this.forceX = 0;
     this.forceY = 0;
+    this.subEntities = [];
 }
 
 //Push the entity in a direction
@@ -267,6 +289,21 @@ Entity.prototype.force = function(forceX, forceY) {
     this.forceX += forceX;
     this.forceY += forceY;
 }
+
+/**
+ * Set up an entity that this entity will stick to it
+ */
+Entity.prototype.setStickTo = function(otherEntity, offsetX, offsetY) {
+    this.stickTo = {entity: otherEntity, offsetX: offsetX, offsetY: offsetY};
+}
+
+/**
+ * Set up an entity that will depend on this entity
+ */
+Entity.prototype.setHost = function(otherEntity) {
+    this.subEntities.push(otherEntity);
+}
+
 
 Entity.prototype.update = function () {
     // adding screen scroll
@@ -277,6 +314,16 @@ Entity.prototype.update = function () {
     // if(this.movable){
     //     this.x += this.game.movedAmount;
     // }
+    this.subEntities.map(function(subEntity) {
+        subEntity.update();
+    });
+
+    if (this.stickTo) {
+        var host = this.stickTo;
+        this.x = host.entity.x + host.offsetX;
+        this.y = host.entity.y + host.offsetY;
+        this.removeFromWorld = host.entity.removeFromWorld;
+    }
 
     if (this.gravity) this.velocity.y += this.game.clockTick * GRAVITY;      //Applying grativy
     this.y += this.game.clockTick * this.velocity.y;
@@ -294,13 +341,17 @@ Entity.prototype.update = function () {
 
 Entity.prototype.draw = function (ctx) {
 
-    if (this.game.showOutlines && this.radius) {
-        this.game.ctx.beginPath();
-        this.game.ctx.strokeStyle = "green";
-        this.game.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        this.game.ctx.stroke();
-        this.game.ctx.closePath();
-    }
+    this.subEntities.map(function(subEntity) {
+        subEntity.draw();
+    });
+
+    // if (this.game.showOutlines && this.radius) {
+    //     this.game.ctx.beginPath();
+    //     this.game.ctx.strokeStyle = "green";
+    //     this.game.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    //     this.game.ctx.stroke();
+    //     this.game.ctx.closePath();
+    // }
 }
 
 Entity.prototype.rotateAndCache = function (image, angle) {

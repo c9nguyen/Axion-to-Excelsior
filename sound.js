@@ -4,8 +4,8 @@ function SoundPlayer(game){
 
     this.playMusic = true;
     this.playEffect = true;
-    this.toggleMusic = false;
-    this.toggleEffect = false;
+    this.toggleMusic = true;
+    this.toggleEffect = true;
 
     this.toPlayMusic = [];
     this.toPlayEffect = [];
@@ -124,9 +124,7 @@ SoundPlayer.prototype.privatePlay = function(list, toAdd, checkSound){
 
     while(list.length > 0){
         var tempAudio = list.pop();
-        if(!checkSound){
-            tempAudio.muted = true;
-        }
+        this.privateCheckToPlay(tempAudio, checkSound);
         tempAudio.play();
         toAdd.push(tempAudio);
     }
@@ -136,6 +134,7 @@ SoundPlayer.prototype.privatePlayNextInQueue = function(){
     if(this.currentMusic < 0 && this.playQueue.length > 0){
         this.currentMusic = 0;
         if(this.randomTrackInQueue) this.currentMusic = Math.floor(Math.random() * this.playQueue.length);
+        this.privateCheckToPlay(this.playQueue[this.currentMusic], this.playMusic);
         this.playQueue[this.currentMusic].play();
     }
     if(this.playQueue.length > 0 && this.playQueue[this.currentMusic].ended){
@@ -145,14 +144,20 @@ SoundPlayer.prototype.privatePlayNextInQueue = function(){
             while(this.playQueue.length > 1 && this.currentMusic === lastPlay){
                 this.currentMusic = Math.floor(Math.random() * this.playQueue.length);
             }
-            console.log("changing music: " + this.currentMusic);
-            this.playQueue[this.currentMusic].play();
         // Play next in queue
         } else {
             this.currentMusic++;
             this.currentMusic = this.currentMusic % this.playQueue.length;
-            this.playQueue[this.currentMusic].play();
         }
+        this.privateCheckToPlay(this.playQueue[this.currentMusic], this.playMusic);
+        this.playQueue[this.currentMusic].play();
+    }
+}
+SoundPlayer.prototype.privateCheckToPlay = function(audio, checkSound){
+    if(!checkSound){
+        audio.muted = true;
+    } else {
+        audio.muted = false;
     }
 }
 SoundPlayer.prototype.privateToggleSound = function(list, checkSound){
@@ -171,21 +176,21 @@ SoundPlayer.prototype.cleanSound = function(list){
 //--- End hellper method for update
 
 SoundPlayer.prototype.addToMusic = function(location, loop = true, rate = 1.0, volume = 1){
-    var audio = new Audio(location);
+    var audio = AM.getAssetMusic(location);
     audio.loop = loop;
     audio.playbackRate = rate;
     audio.volume = volume;
     this.toPlayMusic.push(audio);
 }
 SoundPlayer.prototype.addToEffect = function(location, loop = false, rate = 1.0, volume = 1){
-    var audio = new Audio(location);
+    var audio = AM.getAssetMusic(location);
     audio.loop = loop;
     audio.playbackRate = rate;
     audio.volume = volume;
     this.toPlayEffect.push(audio);
 }
-SoundPlayer.prototype.addToQueue = function(location, loop = false, rate = 1.0, volume = 1){
-    var audio = new Audio(location);
+SoundPlayer.prototype.addToQueue = function(location, loop = false, rate = 1.0, volume = 0.3){
+    var audio = AM.getAssetMusic(location);
     audio.loop = loop;
     audio.playbackRate = rate;
     audio.volume = volume;
@@ -239,6 +244,7 @@ SoundPlayer.prototype.privateRemoveSoundFromList = function(list){
         var tempSound = list.pop();
         tempSound.loop = false;
         tempSound.muted = true;
+        tempSound.currentTime = tempSound.duration;
     }
 }
 //-- end Remove all sounds

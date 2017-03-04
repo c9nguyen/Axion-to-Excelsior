@@ -24,6 +24,7 @@ Battle.prototype.create = function() {
     this.buildTiles();
 
     //Initializing enemy generator
+
     var list = mapType['map1'].enemyList;
     // [{code: "m000", ticket: 4},
     //             {code: "m001", ticket: 8},
@@ -31,23 +32,64 @@ Battle.prototype.create = function() {
     //             {code: "m003", ticket: 2},
     //             {code: "m010", ticket: 1}];
 
-    var gen = new EnemyGenerator(this.game, 2300, 400, list);
+    var gen = new EnemyGenerator(this.game, 2400, 500, list);
     gen.setFrequency(mapType['map1'].enemyGenFrequency);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
+    gen.addToBossQueue("m105");
+    gen.addConditionAndAction(
+        function() {
+            return enemyBoss.health / enemyBoss.data.health < 0.5;
+        },
+        function() {
+            enemyBoss.leftG.changeAction("attack3");
+            enemyBoss.rightG.changeAction("attack3");
+            gen.boostSpawnRate(2);
+            gen.generateDeck();
+            spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
+        },
+        false
+    );
+    gen.addConditionAndAction(
+        function() {
+            return enemyBoss.health / enemyBoss.data.health < 0.75;
+        },
+        function() {
+            enemyBoss.leftG.changeAction("attack3");
+            enemyBoss.rightG.changeAction("attack3");
+            gen.boostSpawnRate(2);
+            gen.generateDeck();
+        },
+        false
+    );
+
     this.game.addEntity(gen);
 
+    // spawnUnit(gen.game, 2400, 500, "m105", ENEMY);
+
     //Initializing cards on hand
-    var cards = mapType['map1'].cards;
-    // [{code: "h000", ticket: 3},
-    //              {code: "h001", ticket: 2},
-    //              {code: "h002", ticket: 5},
-    //              {code: "h003", ticket: 5},
-    //              {code: "h100", ticket: 1}];
-    var cardGen = new CardGenerator(this.game, 100, 400, cards, mapType['map1'].numOfCard);
+
+    var unitCards = mapType['map1'].unitCards;
+    var spellCards = mapType['map1'].spellCards;
+    var cardGen = new CardGenerator(this.game, -50, 500, mapType['map1'].numOfCard, unitCards, spellCards);
     cardGen.assignCurrentBoss(playerBoss);
     cardGen.setBossesDiedAction(this.endGame);
-    cardGen.setEnergyRate(mapType['map1'].energyRate);
+    var enemyTowerHealthMark = 0.75;
+    var energyRate = mapType['map1'].energyRate;
+    //Setting a condition that lower the enemy tower health, higher energy rate
+    cardGen.addConditionAndAction(
+        function() {
+            return enemyBoss.health / enemyBoss.data.health < enemyTowerHealthMark;
+        },
+        function() {
+            energyRate += 0.025;
+            enemyTowerHealthMark -= 0.25;
+            cardGen.setEnergyRate(energyRate);
+        },
+        true
+    );
+    cardGen.setEnergyRate(energyRate);
+
     cardGen.start();
     this.game.addEntity(cardGen);
 
@@ -67,7 +109,10 @@ Battle.prototype.create = function() {
     // SOUND
     this.addAllMusic();
 
-    var that = this;
+    //spawnUnit(this.game, 100, 400, "h004", PLAYER);
+    // spawnUnit(this.game, 1100, 400, "m105", ENEMY);
+    // spawnUnit(this.game, 1100, 400, "m100", ENEMY);
+
 
     //Enemy button for debugging
     // var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 700, 520);
@@ -81,11 +126,9 @@ Battle.prototype.create = function() {
     // });
     // this.game.addEntity(button2);
 
-//    spawnUnit(this.game, 100, 400, "h003", PLAYER);
+
 
 	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
-	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
-	// exit_button.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
 	exit_button.addEventListener('click', function() {
         this.game.soundPlayer.removeAllSound();
 		this.game.sceneManager.startScene('mainmenu');
@@ -130,9 +173,9 @@ Battle.prototype.buildTiles = function() {
 	var canvasHeight = this.game.ctx.canvas.clientHeight;
 	var canvasWidth = this.game.screenMover.mapSize;
     var groundCollisionBox = this.game.collisionBox.ground;
-
-    var numOfTile = Math.ceil(canvasWidth / 90) + 2;
-    var groundX = -97;
+    var extraTile = 19;
+    var numOfTile = Math.ceil(canvasWidth / 90) + extraTile;
+    var groundX = -90 * extraTile / 2;
 
     var tile = new Tile(this.game, groundX, canvasHeight - 100, numOfTile, mapType['map1'].tileType);
     this.game.addEntity(tile);
@@ -140,15 +183,21 @@ Battle.prototype.buildTiles = function() {
 
 Battle.prototype.addAllMusic = function(){
     // Sound
+
+    var musicVolume = 0.2;
     this.game.soundPlayer.randomTrackInQueue = true;
-    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-monstrous-monstro.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-squirming-evil.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-scherzo-di-notte.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-go-for-it.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-darknite.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-lancastrians.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-seto.mp3", undefined, undefined, 0.4);
-    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-yugi.mp3", undefined, undefined, 0.4);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-monstrous-monstro.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-scherzo-di-notte.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/KH-go-for-it.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-lancastrians.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-seto.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-yugi.mp3", undefined, undefined, musicVolume);
+    this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-darknite.mp3", undefined, undefined, musicVolume);
+
+
+    // FOR BOSS
+    // this.game.soundPlayer.addToQueue("./sound/music/battle/KH-squirming-evil.mp3", undefined, undefined, 0.4);
+    // this.game.soundPlayer.addToQueue("./sound/music/battle/YGO-vs-darknite.mp3", undefined, undefined, 0.4);
 
 }
 
@@ -162,14 +211,14 @@ Battle.prototype.endGame = function(playerWon, extraAction = undefined){
     if(playerWon){
         this.game.soundPlayer.removeAllSound();
         this.game.soundPlayer.randomTrackInQueue = false;
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-won.mp3", undefined, undefined, 0.5);
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/mappedstoryUpbeat.mp3", true, undefined, 0.4);
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-won.mp3", undefined, undefined, 0.4);
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/mappedstoryUpbeat.mp3", true, undefined, 0.3);
         this.enableSound = false;
     } else {
         this.game.soundPlayer.removeAllSound();
         this.game.soundPlayer.randomTrackInQueue = false;
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-lost.mp3", undefined, undefined, 0.5);
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-end-of-the-world.mp3", true, undefined, 0.4);
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-lost.mp3", undefined, undefined, 0.4);
+        this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-end-of-the-world.mp3", true, undefined, 0.3);
         this.enableSound = false;
     }
     if(extraAction !== undefined){

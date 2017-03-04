@@ -25,8 +25,8 @@ function Action(game, unit, spritesheet,
                 width = frameWidth, height = frameHeight) { //default orignal size
 
     this.unit = unit;
-    this.effects = [];
-    this.effectCasted = new Set(); //Keep track what effect already at a frame so wont recast
+    this.subAction = [];
+    this.takenActions = new Set(); //Keep track what effect already at a frame so wont recast
     this.cooldown = cooldown;
     this.interruptible = interruptible;
     this.cooldownClock = 0;
@@ -37,16 +37,16 @@ function Action(game, unit, spritesheet,
     var y = this.unit.y - this.groundPoints[0].y;
 
     //What you want to happen at:
-    this.startEffect = function() {}; //Beginning of the action
+    this.startAction = function() {}; //Beginning of the action
  //   this.duringEffect = function() {};    //During the action, between each frame           //Need to work on
-    this.endEffect = function() {};   //The end of the action
+    this.endAction = function() {};   //The end of the action
 
     AnimatedObject.call(this, game, spritesheet, x, y,
                         sheetWidth, frameDuration, frames, cooldown === 0, 
                         frameWidth, frameHeight);
 }
 
-Action.prototype = Object.create(AnimatedObject);
+Action.prototype = Object.create(AnimatedObject.prototype);
 Action.prototype.constructor = Action;
 
 /**
@@ -61,18 +61,20 @@ Action.prototype.checkCooldown = function() {
 /**
  * Add the effect that will hapen at index of the frame
  */
-Action.prototype.addEffect = function(index, callback) {
-    this.effects[index] = callback;
+Action.prototype.addSubAction = function(index, callback) {
+    this.subAction[index] = callback;
 }
+
 
 /**
  * What to do at the start of action. Called by unit when start the action
  * Overwrite it if you want to use. (Overwrite the instance of Action not the prototype)
  */
 Action.prototype.start = function() {
+    this.startAction(this);
     this.elapsedTime = 0;
     this.timeLastStart = this.game.timer.gameTime;
-    this.effectCasted = new Set();
+    this.takenActions = new Set();
 }
 
 /**
@@ -86,22 +88,21 @@ Action.prototype.during = function() {
  * Overwrite it if you want to use. (Overwrite the instance of Action not the prototype)
  */
 Action.prototype.end = function() {
-    this.endEffect(this);
+    this.endAction(this);
 }
 
 
 Action.prototype.update = function() {//Updating the coordinate for the unit in the frame
     //If this action is still on cooldown, call default 
     if (this.isDone()) {
-        this.effectCasted = new Set();
+        this.takenActions = new Set();
         if (!this.checkCooldown() || !this.loop) {
-            this.endEffect(this);
+            this.endAction(this);
             this.unit.currentAction = this.unit.defaultAction;
             if(this.unit.currentAction !== undefined){
                 this.unit.currentAction.start();
                 this.unit.currentAction.update();
             }
-            
             return;
          }
     }
@@ -123,10 +124,10 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
     }
 
 
-    var effect = this.effects[frame]; //Callback the effect
-    if (effect !== undefined && typeof effect === "function" && !this.effectCasted.has(frame)) {
-        effect(this);
-        this.effectCasted.add(frame);
+    var subaction = this.subAction[frame]; //Callback the effect
+    if (subaction !== undefined && typeof subaction === "function" && !this.takenActions.has(frame)) {
+        subaction(this);
+        this.takenActions.add(frame);
     }
     AnimatedObject.prototype.update.call(this);
 
@@ -195,7 +196,8 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
 
     //var range = this.data.range;
     this.rangeBox = this.data.range; 
-    this.speedPercent = 1;
+    this.baseSpeedPercent = 1;
+    this.speedPercent = this.baseSpeedPercent;
     this.flying = this.data.flying;
     
     //Stats
@@ -203,7 +205,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.movementspeed = this.data.movementspeed;
     this.att = this.data.att;
     this.def = this.data.def;
-    this.knockable = this.data.knockable
+    this.pushResist = Math.min(this.data.pushResist, 1);
 
     this.actions = {}; //contains all actions this unit can perform (walk, stand, attack)
     this.defaultAction;
@@ -219,7 +221,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
         that.health -= Math.max(damage - (that.def * damage), 1);
         that.takingEffect.map(function(effect) {
             effect(that);
-        })
+        });
        // if (this.takingEffect) this.takingEffect(this);
     };
     this.actionHandler = function() {};
@@ -246,14 +248,14 @@ Unit.prototype.passiveEffectInit = function() {
     this.passiveEffectImage["poison"].setSize(20, 20); 
     this.passiveEffect["speed"] = {amount: 0, duration: 0};  
     this.passiveEffectImage["speed"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/speed.png"));
-    this.passiveEffectImage["poison"].setSize(20, 20);
+    this.passiveEffectImage["speed"].setSize(20, 20);
     // this.passiveEffect["stun"] = {amount: 0, duration: 0};
     // this.passiveEffectImage["stun"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/stun.png"));
     // this.passiveEffectImage["stun"].setSize(20, 20);
 }
 
-Unit.prototype.takePassiveEffect = function(effectType, amount, duration = 5) {
-    this.passiveEffect[effectType] = {amount: amount, duration: duration}; 
+Unit.prototype.takePassiveEffect = function(effectType, amount) {
+    this.passiveEffect[effectType] = {amount: amount, duration: 5}; 
 }
 
 Unit.prototype.getCollisionBox = function() {
@@ -279,7 +281,7 @@ Unit.prototype.applyPassiveEffect = function() {
     this.def = this.data.def + this.passiveEffect.def.amount;
     this.health = Math.max(this.health - this.passiveEffect.poison.amount * this.game.clockTick, 1);
     this.health = Math.min(this.health + this.passiveEffect.heal.amount * this.game.clockTick, this.data.health);
-    this.speedPercent = 1 + this.passiveEffect.speed.amount;
+    this.speedPercent = this.baseSpeedPercent + this.passiveEffect.speed.amount;
     for (var i in this.passiveEffect) {
         var effect = this.passiveEffect[i];
         effect.duration -= this.game.clockTick;
@@ -290,13 +292,15 @@ Unit.prototype.applyPassiveEffect = function() {
     }
 }
 
-Unit.prototype.getKnockback = function(power) {
-    if (this.knockable) {
+Unit.prototype.getKnockback = function(thePower, air = false) {
+    var power = thePower * (1 - this.pushResist);
        // this.velocity.x = this.movementspeed / (-this.movementspeed) * power * 2;
-        this.velocity.y = -400;
+    if (air) {
+        this.y -= 20;
+        this.velocity.y = -Math.abs(power)  * (1 - this.pushResist);
         this.changeAction("jump");
-      this.push = -power;
     }
+    this.push = power;
 }
 
 
@@ -306,7 +310,7 @@ Unit.prototype.getKnockback = function(power) {
  */
 Unit.prototype.changeAction = function(actionName) {
     var action = this.actions[actionName];
-    if (action !== undefined && this.currentAction !== action && action.checkCooldown()) {    //If action is defined and not performing
+    if (action !== undefined && (this.currentAction !== action || this.currentAction.isDone()) && action.checkCooldown()) {    //If action is defined and not performing
         if (this.currentAction !== undefined) this.currentAction.end();
         this.currentAction = action;
  //       this.currentAction.update();
@@ -384,48 +388,54 @@ Unit.prototype.checkAllyInRange = function(condition = function() {return true;}
 Unit.prototype.update = function() {
     Entity.prototype.update.call(this);
     if (this.y > canvasHeight * 2){
-        this.removeFromWorld = true;
+        this.health = 0;
         return;
     } 
+
+    //Handling pushing 
     this.velocity.x = this.push;
     this.push = this.push - this.push * this.game.clockTick;
     this.push = this.push >= 0 ? this.push < 10 ? 0 : Math.floor(this.push) : this.push > -10 ? 0 : Math.ceil(this.push);
-        if (!this.flying) {
-            this.gravity = true;
-            //Only check for ground collision when the unit falling down or standing    
-            if (this.velocity.y >= 0) {
-                //Improving performace by checking if still standing on the previous platform                    
-                if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
-                    this.y = this.previousPlatform.y + this.data.groundHeight;
-                    this.velocity.y = 0;
-                    this.gravity = false;
-                } else {
-                    var groundCollisionBox = this.game.collisionBox.ground;
-                    for (var box in groundCollisionBox) {
-                        if (collise(this, groundCollisionBox[box])) {
-                            this.y = groundCollisionBox[box].y + 10;
-                            this.velocity.y = 0;
-                            this.gravity = false;
-                            this.previousPlatform = groundCollisionBox[box];    //Save this to check again
-                            break;
-                        }
+
+
+    if (!this.flying) {
+        this.gravity = true;
+        //Only check for ground collision when the unit falling down or standing    
+        if (this.velocity.y >= 0) {
+            //Improving performace by checking if still standing on the previous platform                    
+            if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
+                this.y = this.previousPlatform.y + this.data.groundHeight;
+                this.velocity.y = 0;
+                this.gravity = false;
+            } else {
+                var groundCollisionBox = this.game.collisionBox.ground;
+                for (var box in groundCollisionBox) {
+                    if (collise(this, groundCollisionBox[box])) {
+                        this.y = groundCollisionBox[box].y + 10;
+                        this.velocity.y = 0;
+                        this.gravity = false;
+                        this.previousPlatform = groundCollisionBox[box];    //Save this to check again
+                        break;
                     }
                 }
             }
         }
+    }
 
 
     if (this.health <= 0) {
          this.changeAction("die");
+         this.health = 0;
     //     this.velocity.x = 0;
          this.currentAction.collisionBox = {x: 0, y: 0, width: 0, height: 0};
     } else {
         this.applyPassiveEffect();
-        if (this.takingDamage > 0 || this.healing > 0) {
+        if (this.takingDamage > 0 || this.healing > 0 || this.takingEffect.length > 0) {
             this.getHit(this, this.takingDamage);
             this.health = Math.min(this.health + this.healing, this.data.health);
             this.healing = 0;
             this.takingDamage = 0;
+            this.takingEffect = [];
         }
 
        
