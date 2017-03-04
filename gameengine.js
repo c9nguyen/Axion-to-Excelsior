@@ -38,6 +38,20 @@ function GameEngine() {
 
     this.right = null;
     this.left = null;
+
+    this.numberKeys = [];
+    this.resetKeys = function(){
+        this.right.stopIm = false;
+        this.left.stopIm = false;
+        this.keyW.stopIm = false;
+        this.keyA.stopIm = false;
+        this.keyS.stopIm = false;
+        this.keyD.stopIm = false;
+        for(var i = 0; i < this.numberKeys.length; i++){
+            this.numberKeys[i].stopIm = false;
+        }
+    };
+
     //events
     this.mouse = {click: false,
                     x: undefined,
@@ -140,6 +154,13 @@ GameEngine.prototype.startInput = function () {
     this.keyA = new KeyBoard(this.ctx, "KeyA");
     this.keyS = new KeyBoard(this.ctx, "KeyS");
     this.keyD = new KeyBoard(this.ctx, "KeyD");
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit0"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit1"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit2"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit3"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit4"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit5"));
+    this.numberKeys.push(new KeyBoard(this.ctx, "Digit6"));
     //end vinh
 
     // this.ctx.canvas.addEventListener("keyup", function (e) {
@@ -212,7 +233,7 @@ GameEngine.prototype.update = function () {
                 i--;
             }
     }
-
+    this.resetKeys();
     this.mouse.reset();
 }
 

@@ -337,16 +337,16 @@ CardGenerator.prototype.removeAll = function() {
 }
 
 CardGenerator.prototype.drawCard = function(index) {
+
     if (this.onDeck.length > 0) {
         var ran = Math.floor(Math.random() * this.onDeck.length);
         var card = this.onDeck[ran];
         this.onDeck.splice(ran, 1);
         var location = this.onHandLocation[index];
-        var newCard = new UnitCard(this, card.code, card.type,  location.x, location.y, this.x, this.y);
+        var newCard = new UnitCard(this, card.code, card.type,  location.x, location.y, this.x, this.y, index);
         this.onHand[index] = newCard;
         this.game.addEntity(newCard);
     }
-
 }
 
 /**
