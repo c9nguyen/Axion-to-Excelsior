@@ -2,7 +2,7 @@ function Battle(game)
 {
 	// this.game = game;
     Scene.call(this, game);
-    this.background = "./img/map/01/back.png";
+    this.background = mapType['map1'].background;// "./img/map/01/back.png";
 }
 
 Battle.prototype = Object.create(Scene.prototype);
@@ -22,30 +22,32 @@ Battle.prototype.create = function() {
     this.game.addEntity(enemyBoss);
 
     this.buildTiles();
-    
+
     //Initializing enemy generator
-    var list = [{code: "m000", ticket: 4},
-                {code: "m001", ticket: 8},
-                {code: "m002", ticket: 6},
-                {code: "m003", ticket: 2},
-                {code: "m010", ticket: 1}];
+    var list = mapType['map1'].enemyList;
+    // [{code: "m000", ticket: 4},
+    //             {code: "m001", ticket: 8},
+    //             {code: "m002", ticket: 6},
+    //             {code: "m003", ticket: 2},
+    //             {code: "m010", ticket: 1}];
 
     var gen = new EnemyGenerator(this.game, 2300, 400, list);
-    gen.setFrequency(4);
+    gen.setFrequency(mapType['map1'].enemyGenFrequency);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
     this.game.addEntity(gen);
 
     //Initializing cards on hand
-    var cards = [{code: "h000", ticket: 3},
-                 {code: "h001", ticket: 2},
-                 {code: "h002", ticket: 5},
-                 {code: "h003", ticket: 5},
-                 {code: "h100", ticket: 1}];
-    var cardGen = new CardGenerator(this.game, 100, 400, cards, 6);
+    var cards = mapType['map1'].cards;
+    // [{code: "h000", ticket: 3},
+    //              {code: "h001", ticket: 2},
+    //              {code: "h002", ticket: 5},
+    //              {code: "h003", ticket: 5},
+    //              {code: "h100", ticket: 1}];
+    var cardGen = new CardGenerator(this.game, 100, 400, cards, mapType['map1'].numOfCard);
     cardGen.assignCurrentBoss(playerBoss);
     cardGen.setBossesDiedAction(this.endGame);
-    cardGen.setEnergyRate(0.4);
+    cardGen.setEnergyRate(mapType['map1'].energyRate);
     cardGen.start();
     this.game.addEntity(cardGen);
 
@@ -71,11 +73,11 @@ Battle.prototype.create = function() {
     // var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 700, 520);
     // button2.addSheet(AM.getAsset("./img/unit/m000/card_click.png"), "click");
     // button2.addSheet(AM.getAsset("./img/unit/m000/card_mouseover.png"), "mouseover");
-    // button2.addEventListener("click", function() { 
-    //     gen.switch(); 
+    // button2.addEventListener("click", function() {
+    //     gen.switch();
     //     // SAMPLE
-    //     // endGame.gameOver(true); 
-    //     //endGame.gameOver(false); 
+    //     // endGame.gameOver(true);
+    //     //endGame.gameOver(false);
     // });
     // this.game.addEntity(button2);
 
@@ -132,7 +134,7 @@ Battle.prototype.buildTiles = function() {
     var numOfTile = Math.ceil(canvasWidth / 90) + 2;
     var groundX = -97;
 
-    var tile = new Tile(this.game, groundX, canvasHeight - 100, numOfTile, "snowrock");
+    var tile = new Tile(this.game, groundX, canvasHeight - 100, numOfTile, mapType['map1'].tileType);
     this.game.addEntity(tile);
 };
 
@@ -154,7 +156,7 @@ Battle.prototype.addAllMusic = function(){
 // ONLY CALL WHEN GAME END CONDITION IS APPLIED
 // Add EXTRA ACTION when end game is called if you want
 Battle.prototype.endGame = function(playerWon, extraAction = undefined){
-    
+
     //-ADJUST: put more things here if you want extra end game stuff...
     //- or use the extraAction function
     if(playerWon){
