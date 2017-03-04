@@ -83,13 +83,13 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[14] = [{x: 0, y: 0, width: 0, height: 0}];
             var pullAction = function(that, otherUnit) {
                 that.hitList = new Set();
-                var dist = otherUnit.x + (otherUnit.width / 2) - x - (collisionBox[0].width / 2)
-                otherUnit.push = dist * -2;
+                var dist = otherUnit.x + (otherUnit.width / 2) - x - (collisionBox[0].width / 2);
+                otherUnit.getKnockback(dist * -2);
             };
 
             var pushAction = function(that, otherUnit) {
                 var dist = otherUnit.x + (otherUnit.width / 2) - x - (collisionBox[0].width / 2);
-                otherUnit.push = 1000 - Math.abs(dist);
+                otherUnit.getKnockback(1000 - Math.abs(dist));
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
             };
@@ -165,6 +165,6 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
         if (positive) skill.setPositive();
     } 
 
-    else console.log("Wrong skillcode");
+    else console.log("Wrong skillcode" + skillCode);
     return skill;
 }
