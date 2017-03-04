@@ -273,8 +273,10 @@ AM.queueDownload("./img/effect/passive/ice.png");
 AM.queueDownload("./img/effect/passive/heal.png");
 AM.queueDownload("./img/effect/passive/poison.png");
 AM.queueDownload("./img/effect/passive/push.png");
-
-//SOUND 
+AM.queueDownload("./img/map/01/map.png");
+AM.queueDownload("./img/effect/e1001/mob_1.png");
+AM.queueDownload("./img/effect/e1001/mob_6.png");
+//SOUND
 AM.queueDownload("./sound/effects/smb_stomp.wav", true);
 AM.queueDownload("./sound/effects/smw_thud.wav", true);
 AM.queueDownload("./sound/effects/smw_yoshi_runs_away.wav", true);
@@ -361,6 +363,8 @@ AM.queueDownload("./sound/music/gameover/mappedstoryUpbeat.mp3", true);
 AM.queueDownload("./sound/music/gameover/KH-end-of-the-world.mp3", true);
 
 
+
+
 AM.downloadAll(function () {
     var canvas = document.getElementById("gameWorld");
     var ctx = canvas.getContext("2d");
@@ -368,6 +372,7 @@ AM.downloadAll(function () {
     gameEngine.init(ctx);
     gameEngine.sceneManager.addScene('mainmenu',MainMenu);
     gameEngine.sceneManager.addScene('battle',Battle);
+    gameEngine.sceneManager.addScene('mapmenu',MapMenu);
     gameEngine.start();
 
     gameEngine.sceneManager.startScene('mainmenu');
