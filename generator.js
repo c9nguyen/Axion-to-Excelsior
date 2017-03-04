@@ -220,10 +220,10 @@ EnemyGenerator.prototype.update = function() {
                     if (!pair.repeat) this.conditionAndAction.splice(i, 1);
                 } 
             }
-            if (this.frequency > 1){
-                if(this.frequency > 3){
+            if (this.frequency > 2){
+                if(this.frequency > 4){
                     this.frequency -= 0.02 * this.game.clockTick;
-                } else if (this.frequency > 2){
+                } else if (this.frequency > 3){
                     this.frequency -= 0.01 * this.game.clockTick;
                 } else {
                     this.frequency -= 0.005 * this.game.clockTick;
