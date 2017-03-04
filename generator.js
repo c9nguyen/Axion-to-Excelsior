@@ -250,6 +250,8 @@ CardGenerator = function(game, x, y, numOfCard, unitList = [], spellList = []) {
     this.onHand = [];
     this.onHandLocation = [];
     this.onHandCooldown = [];
+    this.waitList = [];
+    this.waitListCooldown = 0;
     this.onDeck = [];
     this.cooldown = 2;
     this.numOfCard = numOfCard;
@@ -336,13 +338,16 @@ CardGenerator.prototype.removeAll = function() {
 }
 
 CardGenerator.prototype.drawCard = function(index) {
-    var ran = Math.floor(Math.random() * this.onDeck.length);
-    var card = this.onDeck[ran];
-    this.onDeck.splice(ran, 1);
-    var location = this.onHandLocation[index];
-    var newCard = new UnitCard(this, card.code, card.type,  location.x, location.y, this.x, this.y);
-    this.onHand[index] = newCard;
-    this.game.addEntity(newCard);
+    if (this.onDeck.length > 0) {
+        var ran = Math.floor(Math.random() * this.onDeck.length);
+        var card = this.onDeck[ran];
+        this.onDeck.splice(ran, 1);
+        var location = this.onHandLocation[index];
+        var newCard = new UnitCard(this, card.code, card.type,  location.x, location.y, this.x, this.y);
+        this.onHand[index] = newCard;
+        this.game.addEntity(newCard);
+    }
+
 }
 
 /**
@@ -366,6 +371,26 @@ CardGenerator.prototype.addConditionAndAction = function(theCondition, theAction
     this.conditionAndAction.push({condition: theCondition, action: theAction, repeat: theRepeat});
 }
 
+CardGenerator.prototype.pushToWaitList = function(card) {
+    var arrivalTime = Math.floor(this.waitListCooldown) - 1;
+    if (arrivalTime <= 0) arrivalTime = 10;
+    this.waitList.push({card: card, arrivalTime: arrivalTime});
+}
+
+CardGenerator.prototype.waitListToDeck = function() {
+    if (this.waitList.length > 0) {
+        this.waitListCooldown += this.game.clockTick;
+        //reset the clock
+        if (this.waitListCooldown >= 11) {
+            this.waitListCooldown = 0;
+        }
+        //tak card back to deck
+        while (this.waitList.length > 0 && Math.floor(this.waitListCooldown) === this.waitList[0].arrivalTime) {
+            this.onDeck.push(this.waitList[0].card);
+            this.waitList.splice(0, 1);
+        }
+    }
+}
 
 CardGenerator.prototype.update = function() {
     if (this.currentBoss.health <= 0) {
@@ -380,6 +405,9 @@ CardGenerator.prototype.update = function() {
                 if (!pair.repeat) this.conditionAndAction.splice(i, 1);
             } 
         }
+
+        //Handling cards on hand and deck
+        this.waitListToDeck();
         var that = this;
         this.energy = Math.min(this.energy + this.game.clockTick * this.energyRate, 10);
         for (var i = 0; i < this.numOfCard; i++) {
@@ -387,9 +415,11 @@ CardGenerator.prototype.update = function() {
             if (card.removeFromWorld) {
                 if (this.onHandCooldown[i] >= this.cooldown) {
                     var oldCardCode = {code:card.unitcode, type: card.type};
-                    this.drawCard(i);
-                    this.onDeck.push(oldCardCode);
-                    this.onHandCooldown[i] = 0;
+                    if (this.onDeck.length > 0) {
+                        this.drawCard(i);
+                        this.pushToWaitList(oldCardCode);
+                        this.onHandCooldown[i] = 0;
+                    }
                 } else {
                     this.onHandCooldown[i] += this.game.clockTick;
                 }

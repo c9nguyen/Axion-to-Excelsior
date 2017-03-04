@@ -202,7 +202,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.movementspeed = this.data.movementspeed;
     this.att = this.data.att;
     this.def = this.data.def;
-    this.knockable = this.data.knockable
+    this.pushResist = Math.min(this.data.pushResist, 1);
 
     this.actions = {}; //contains all actions this unit can perform (walk, stand, attack)
     this.defaultAction;
@@ -289,13 +289,14 @@ Unit.prototype.applyPassiveEffect = function() {
     }
 }
 
-Unit.prototype.getKnockback = function(power) {
-    if (this.knockable) {
+Unit.prototype.getKnockback = function(thePower, air = false) {
+    var power = thePower * (1 - this.pushResist);
        // this.velocity.x = this.movementspeed / (-this.movementspeed) * power * 2;
-        this.velocity.y = -power * 1.5;
+    if (air) {
+        this.velocity.y = -power * 1.5 * (1 - this.pushResist);
         this.changeAction("jump");
-        this.push = power;
     }
+    this.push = power;
 }
 
 
@@ -383,7 +384,7 @@ Unit.prototype.checkAllyInRange = function(condition = function() {return true;}
 Unit.prototype.update = function() {
     Entity.prototype.update.call(this);
     if (this.y > canvasHeight * 2){
-        this.removeFromWorld = true;
+        this.health = 0;
         return;
     } 
 

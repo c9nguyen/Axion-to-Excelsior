@@ -136,7 +136,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var skill = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/skill.png"),
                 1, 0.2, 1, groundPoints, collisionBox, false, 10);
             skill.effects[0] = function (that) {
-                castSkill(that.game, that.x, that.y, that.unit, 00010, 0);
+                castSkill(that.game, that.x, that.y, that.unit, "e0010", 0);
                 that.unit.x = that.unit.x - 100;
                 that.unit.velocity.x = -100;
             };
@@ -790,7 +790,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             //Making knock back effect
             attack.effects[4] = function (that) {
                 castSkill(that.game, that.x, that.y + 30, that.unit, "e0000", 1,
-                    function (unit) { unit.getKnockback(-300); },
+                    function (unit) { unit.getKnockback(-300, true); },
                     160, 100, 0.4, true);
                 that.game.soundPlayer.addToEffect("./sound/effects/rock/rockfall.wav", undefined, undefined, 0.7);
                 that.game.soundPlayer.addToEffect("./sound/effects/rock/thud5.wav", undefined, undefined, 0.48);
@@ -1003,7 +1003,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x + 80, that.y + 40, that.unit, "e0000", 0.5,
                     function (enemyUnit) {
                         enemyUnit.takePassiveEffect("poison", 40);
-                        enemyUnit.getKnockback(-400);
+                        enemyUnit.getKnockback(-400, true);
                     },
                     130, 210, 0.3, true)
             };
