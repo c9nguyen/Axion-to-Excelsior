@@ -102,7 +102,7 @@ EnemyGenerator = function(game, x, y, list = []) {
                 that.extraCounter = 0;
             }
             else {
-                that.extra += 0.01 * that.game.clockTick;
+                that.extra += 0.1 * that.game.clockTick;
                 that.extraCounter++;
             } 
             return true;
@@ -195,7 +195,7 @@ EnemyGenerator.prototype.draw = function() {
 
 
 EnemyGenerator.prototype.update = function() {
-
+    console.log(this.frequency);
         if (this.currentBoss.health <= 0) {
             if (this.bossQueue.length > 0) {
                 var newBoss = spawnUnit(this.game, 2400, 500, this.bossQueue[0], ENEMY);

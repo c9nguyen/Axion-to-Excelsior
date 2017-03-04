@@ -396,29 +396,29 @@ Unit.prototype.update = function() {
     this.push = this.push >= 0 ? this.push < 10 ? 0 : Math.floor(this.push) : this.push > -10 ? 0 : Math.ceil(this.push);
 
 
-        if (!this.flying) {
-            this.gravity = true;
-            //Only check for ground collision when the unit falling down or standing    
-            if (this.velocity.y >= 0) {
-                //Improving performace by checking if still standing on the previous platform                    
-                if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
-                    this.y = this.previousPlatform.y + this.data.groundHeight;
-                    this.velocity.y = 0;
-                    this.gravity = false;
-                } else {
-                    var groundCollisionBox = this.game.collisionBox.ground;
-                    for (var box in groundCollisionBox) {
-                        if (collise(this, groundCollisionBox[box])) {
-                            this.y = groundCollisionBox[box].y + 10;
-                            this.velocity.y = 0;
-                            this.gravity = false;
-                            this.previousPlatform = groundCollisionBox[box];    //Save this to check again
-                            break;
-                        }
+    if (!this.flying) {
+        this.gravity = true;
+        //Only check for ground collision when the unit falling down or standing    
+        if (this.velocity.y >= 0) {
+            //Improving performace by checking if still standing on the previous platform                    
+            if (this.previousPlatform !== undefined && collise(this, this.previousPlatform)) { 
+                this.y = this.previousPlatform.y + this.data.groundHeight;
+                this.velocity.y = 0;
+                this.gravity = false;
+            } else {
+                var groundCollisionBox = this.game.collisionBox.ground;
+                for (var box in groundCollisionBox) {
+                    if (collise(this, groundCollisionBox[box])) {
+                        this.y = groundCollisionBox[box].y + 10;
+                        this.velocity.y = 0;
+                        this.gravity = false;
+                        this.previousPlatform = groundCollisionBox[box];    //Save this to check again
+                        break;
                     }
                 }
             }
         }
+    }
 
 
     if (this.health <= 0) {

@@ -10,7 +10,7 @@ var towerData = {
     },
     tower1: {
         groundWidth: 180,
-        health: 2000,
+        health: 3000,
     },
     tower2: {
         groundWidth: 110,

@@ -89,7 +89,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
 
             var pushAction = function(that, otherUnit) {
                 var dist = otherUnit.x + (otherUnit.width / 2) - x - (collisionBox[0].width / 2);
-                otherUnit.getKnockback(1000 - Math.abs(dist));
+                otherUnit.getKnockback(800 - Math.abs(dist));
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
             };

@@ -34,7 +34,7 @@ Battle.prototype.create = function() {
                 ];
 
     var gen = new EnemyGenerator(this.game, 2400, 500, list);
-    gen.setFrequency(5);
+    gen.setFrequency(4);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
     gen.addToBossQueue("m105");
@@ -91,7 +91,7 @@ Battle.prototype.create = function() {
             return enemyBoss.health / enemyBoss.data.health < enemyTowerHealthMark;
         },
         function() {
-            energyRate += 0.075;
+            energyRate += 0.025;
             enemyTowerHealthMark -= 0.25;
             cardGen.setEnergyRate(energyRate);
         },

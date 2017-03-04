@@ -226,7 +226,7 @@ UnitCard.prototype.update = function() {
 var spellCastData = {
     e1001: {
         spritesheet: AM.getAsset("./img/effect/e1001/mouse.png"),
-        energy: 4,
+        energy: 5,
         sheetWidth: 6,
         frames: 6,
         xOffset: -329,
