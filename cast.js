@@ -116,7 +116,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             game.soundPlayer.addToEffect("./sound/effects/spell/wind.mp3", false, 0.5);
 
             var collisionBox = [{x: 0, y: 0, width: 659, height: 454}];
-            collisionBox[14] = [{x: 0, y: 0, width: 0, height: 0}];
+            collisionBox[14] = {x: 0, y: 0, width: 0, height: 0};
             var pullAction = function(that, otherUnit) {
                 that.hitList = new Set();
                 var dist = otherUnit.x + (otherUnit.width / 2) - x - (collisionBox[0].width / 2);
@@ -125,7 +125,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
 
             var pushAction = function(that, otherUnit) {
                 var dist = otherUnit.x + (otherUnit.width / 2) - x - (collisionBox[0].width / 2);
-                otherUnit.getKnockback(800 - Math.abs(dist));
+                otherUnit.getKnockback(1000 - Math.abs(dist));
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
             };
@@ -142,6 +142,36 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 
                 skill.collisingAction = pushAction;
             };
+            break;
+
+
+        case "e1002": //meteor shower (player)
+            //Play sound
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            action = function(that, otherUnit) {};
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/effect.png"),
+                                5, 0.1, 20, collisionBox, action, percentAtt, true);
+            skill.subEffects[4] = function(that) {
+
+                castSkill(that.game, x - 347 + 115, groundLevel - 405, unit, "e1002_5", 1);
+            };
+
+            break;
+
+        case "e1002_5": //meteor shower tile 5 (player)
+            //Play sound
+
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            collisionBox[15] = {x: 284, y: 250, width: 126, height: 170};
+            collisionBox[16] = {x: 250, y: 240, width: 198, height: 180};
+            collisionBox[20] = {x: 0, y: 0, width: 0, height: 0};
+            action = function(that, otherUnit) {
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile5.png"),
+                                11, 0.1, 22, collisionBox, action, percentAtt, true);
             break;
 
         case "t0000": //main tower first skill

@@ -212,7 +212,7 @@ var unitData = {
         att: 30,
         def: 0.4,
         flying: false,
-        pushResist: 0.6,
+        pushResist: 0.3,
         range: [{x: -230, y: -250, width: 365, height: 266}, {x: -375, y: -171, width: 60, height: 200}],
     }
 }

@@ -238,6 +238,14 @@ var spellCastData = {
         xOffset: -329,
         yOffset: -430    //from the ground
     },
+    e1002: {
+        spritesheet: AM.getAsset("./img/effect/e1002/mouse.png"),
+        energy: 5,
+        sheetWidth: 6,
+        frames: 6,
+        xOffset: -112,
+        yOffset: -237    //from the ground
+    },
 }
 
 function SpellCast(game, spellCode, theCard) {
@@ -262,7 +270,7 @@ SpellCast.prototype.update = function() {
     this.y = this.game.mouse.y - this.height / 2
     if (this.game.mouse.click) {
         if (this.card.generator.checkEnergy(this.data.energy)) {
-            castSkill(this.game, this.game.mouse.x + this.data.xOffset - this.game.mapX, canvasHeight - 100 +  this.data.yOffset,
+            castSkill(this.game, this.game.mouse.x + this.data.xOffset - this.game.mapX, groundLevel +  this.data.yOffset,
                     this.card.generator.currentBoss, this.spellCode);
             this.card.play();
         }

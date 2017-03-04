@@ -265,6 +265,15 @@ AM.queueDownload("./img/effect/e1001/card_disable.png");
 AM.queueDownload("./img/effect/e1001/card_mouseover.png");
 AM.queueDownload("./img/effect/e1001/card_click.png");
 
+AM.queueDownload("./img/effect/e1002/effect.png");
+AM.queueDownload("./img/effect/e1002/mouse.png");
+AM.queueDownload("./img/effect/e1002/card.png");
+AM.queueDownload("./img/effect/e1002/card_disable.png");
+AM.queueDownload("./img/effect/e1002/card_mouseover.png");
+AM.queueDownload("./img/effect/e1002/card_click.png");
+AM.queueDownload("./img/effect/e1002/tile5.png");
+
+
 AM.queueDownload("./img/effect/passive/att.png");
 AM.queueDownload("./img/effect/passive/def.png");
 AM.queueDownload("./img/effect/passive/speed.png");

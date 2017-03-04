@@ -1,5 +1,6 @@
 var canvasWidth = 0;
 var canvasHeight = 0;
+var groundLevel = 0;
 
 
 /*===============================================================*/
@@ -179,6 +180,7 @@ function Effect(game, x, y, unit, spritesheet,
 
     this.unit = unit;
     this.subEffects = [];   //What happen at certain frame
+    this.doneEffect = new Set();
     this.collisionBoxes = collisionBoxes; //List of collision boxes
     this.collisionBox = {};  //The current collisionBox
     this.loopCounter = 0;
@@ -223,9 +225,9 @@ Effect.prototype.update = function() {//Updating the coordinate for the unit in 
         if (this.numOfLoop <= 0) {
             this.removeFromWorld = true;
         } else {
-
             this.elapsedTime = 0;
             this.hitList = new Set();
+            this.doneEffect = new Set();
         }
   
     } 
@@ -260,7 +262,10 @@ Effect.prototype.update = function() {//Updating the coordinate for the unit in 
         }
     }
     var effect = this.subEffects[frame]; //Callback the effect
-    if (effect !== undefined && typeof effect === "function") effect(this);
+    if (effect !== undefined && typeof effect === "function" && !this.doneEffect.has(frame)) {
+        effect(this);
+        this.doneEffect.add(frame);
+    } 
     
 
 }

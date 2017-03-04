@@ -176,8 +176,9 @@ Battle.prototype.buildTiles = function() {
     var extraTile = 19;
     var numOfTile = Math.ceil(canvasWidth / 90) + extraTile;
     var groundX = -90 * extraTile / 2;
+    groundLevel = canvasHeight - 100;
 
-    var tile = new Tile(this.game, groundX, canvasHeight - 100, numOfTile, mapType[mapType['curr']].tileType);
+    var tile = new Tile(this.game, groundX, groundLevel, numOfTile, mapType[mapType['curr']].tileType);
     this.game.addEntity(tile);
 };
 

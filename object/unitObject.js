@@ -26,7 +26,7 @@ function Action(game, unit, spritesheet,
 
     this.unit = unit;
     this.subAction = [];
-    this.takenActions = new Set(); //Keep track what effect already at a frame so wont recast
+    this.doneActions = new Set(); //Keep track what effect already at a frame so wont recast
     this.cooldown = cooldown;
     this.interruptible = interruptible;
     this.cooldownClock = 0;
@@ -74,7 +74,7 @@ Action.prototype.start = function() {
     this.startAction(this);
     this.elapsedTime = 0;
     this.timeLastStart = this.game.timer.gameTime;
-    this.takenActions = new Set();
+    this.doneActions = new Set();
 }
 
 /**
@@ -95,7 +95,7 @@ Action.prototype.end = function() {
 Action.prototype.update = function() {//Updating the coordinate for the unit in the frame
     //If this action is still on cooldown, call default 
     if (this.isDone()) {
-        this.takenActions = new Set();
+        this.doneActions = new Set();
         if (!this.checkCooldown() || !this.loop) {
             this.endAction(this);
             this.unit.currentAction = this.unit.defaultAction;
@@ -125,9 +125,9 @@ Action.prototype.update = function() {//Updating the coordinate for the unit in 
 
 
     var subaction = this.subAction[frame]; //Callback the effect
-    if (subaction !== undefined && typeof subaction === "function" && !this.takenActions.has(frame)) {
+    if (subaction !== undefined && typeof subaction === "function" && !this.doneActions.has(frame)) {
         subaction(this);
-        this.takenActions.add(frame);
+        this.doneActions.add(frame);
     }
     AnimatedObject.prototype.update.call(this);
 
