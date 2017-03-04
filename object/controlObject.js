@@ -113,7 +113,7 @@ Button.prototype.update = function() {
 
 /*=========================================================================*/
 
-function UnitCard(generator, unitcode, type, x, y, unitX, unitY) {
+function UnitCard(generator, unitcode, type, x, y, unitX, unitY, index) {
     this.NORMAL = 0;
     this.PRESS = 1;
     this.MOUSEOVER = 2;
@@ -121,6 +121,11 @@ function UnitCard(generator, unitcode, type, x, y, unitX, unitY) {
     this.generator = generator;
 
     Entity.call(this, this.generator.game, x, y, UI);
+
+    // Number listener
+    if(index + 1 < this.game.numberKeys.length)
+        this.numberListener = this.game.numberKeys[index + 1];
+
     this.unitX = unitX;
     this.unitY = unitY;
     this.type = type;
@@ -189,8 +194,8 @@ UnitCard.prototype.draw = function() {
 UnitCard.prototype.update = function() {
     this.active = this.generator.checkEnergy(this.energy);
     if (this.active) {
-        if (collise(this.colliseBox, this.game.mouse)) {
-            if (this.game.mouse.click) {
+        if (collise(this.colliseBox, this.game.mouse) || (this.numberListener && this.numberListener.stopIm)) {
+            if (this.game.mouse.click || this.numberListener.stopIm) {
                 if (this.generator.checkEnergy(this.energy)) {               
                     if (this.type === "unit") {
                         spawnUnit(this.game, this.unitX, this.unitY, this.unitcode, PLAYER);
@@ -206,7 +211,6 @@ UnitCard.prototype.update = function() {
                         } 
                     }
                 }   
-
                 this.game.mouse.click = false;
             } else if (this.game.mouse.pressed) {
                 this.status = this.PRESS;
@@ -214,6 +218,8 @@ UnitCard.prototype.update = function() {
             } else {
                 this.status = this.MOUSEOVER;
             }
+            // unpress
+            this.numberListener.stopIm = false;
         } else this.status = this.NORMAL;
     } else {
         this.status = this.DISABLE;
