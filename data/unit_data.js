@@ -17,7 +17,7 @@ var unitData = {
         flying: false,
         pushResist: 0,
         //Attacking with x and y are offset from unit's ground hit box
-        range: [{x: 0, y: -50, width: 130, height: 60}, {x: 250, y: -90, width: 50, height: 100}],
+        range: [{x: 0, y: -50, width: 120, height: 60}, {x: 250, y: -90, width: 50, height: 100}],
     },
     h001: { //ninja
         groundWidth: 35,
@@ -71,7 +71,19 @@ var unitData = {
         //Attacking with x and y are offset from unit's ground hit box
         range: [{x: 0, y: -156, width: 121, height: 170}],
     },
-
+    h005: { //long range slow archer
+        groundWidth: 50,
+        groundHeight: 10,
+        energy: 1,
+        health: 200,
+        movementspeed: 120,
+        att: 20,
+        def: 0.5,
+        flying: false,
+        pushResist: 0,
+        //Attacking with x and y are offset from unit's ground hit box
+        range: [{x: 0, y: -156, width: 121, height: 170}],
+    },
     h100: {
         groundWidth: 50,
         groundHeight: 10,
@@ -148,14 +160,26 @@ var unitData = {
     m010: {
         groundWidth: 120,
         groundHeight: 10,
-        health: 300,
+        health: 200,
         movementspeed: -80,
         att: 40,
-        def: 0,
+        def: 0.2,
         flying: false,
         pushResist: 0.25,
         //Attacking with x and y are offset from unit's ground hit box
         range: [{x: -40, y: -120, width: 150, height: 120}],
+    },
+    m013: {
+        groundWidth: 85,
+        groundHeight: 10,
+        health: 400,
+        movementspeed: -90,
+        att: 30,
+        def: 0,
+        flying: false,
+        pushResist: 0.25,
+        //Attacking with x and y are offset from unit's ground hit box
+        range: [{x: -90, y: -120, width: 110, height: 120}],
     },
     m100: {
         groundWidth: 70,

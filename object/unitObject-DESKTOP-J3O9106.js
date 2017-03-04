@@ -194,8 +194,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
 
     //var range = this.data.range;
     this.rangeBox = this.data.range; 
-    this.baseSpeedPercent = 1;
-    this.speedPercent = this.baseSpeedPercent;
+    this.speedPercent = 1;
     this.flying = this.data.flying;
     
     //Stats
@@ -279,7 +278,7 @@ Unit.prototype.applyPassiveEffect = function() {
     this.def = this.data.def + this.passiveEffect.def.amount;
     this.health = Math.max(this.health - this.passiveEffect.poison.amount * this.game.clockTick, 1);
     this.health = Math.min(this.health + this.passiveEffect.heal.amount * this.game.clockTick, this.data.health);
-    this.speedPercent = this.baseSpeedPercent + this.passiveEffect.speed.amount;
+    this.speedPercent = 1 + this.passiveEffect.speed.amount;
     for (var i in this.passiveEffect) {
         var effect = this.passiveEffect[i];
         effect.duration -= this.game.clockTick;
@@ -294,8 +293,7 @@ Unit.prototype.getKnockback = function(thePower, air = false) {
     var power = thePower * (1 - this.pushResist);
        // this.velocity.x = this.movementspeed / (-this.movementspeed) * power * 2;
     if (air) {
-        this.y -= 20;
-        this.velocity.y = -Math.abs(power)  * (1 - this.pushResist);
+        this.velocity.y = -power * 1.5 * (1 - this.pushResist);
         this.changeAction("jump");
     }
     this.push = power;

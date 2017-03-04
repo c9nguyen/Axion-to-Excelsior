@@ -30,7 +30,7 @@ Battle.prototype.create = function() {
                 {code: "m002", ticket: 4},
                 {code: "m003", ticket: 1},
                 {code: "m005", ticket: 1},
-                {code: "m010", ticket: -1}
+                {code: "m013", ticket: -1}
                 ];
 
     var gen = new EnemyGenerator(this.game, 2400, 500, list);
@@ -51,6 +51,19 @@ Battle.prototype.create = function() {
         },
         false
     );
+    gen.addConditionAndAction(
+        function() {
+            return enemyBoss.health / enemyBoss.data.health < 0.75;
+        },
+        function() {
+            enemyBoss.leftG.changeAction("attack3");
+            enemyBoss.rightG.changeAction("attack3");
+            gen.boostSpawnRate(2);
+            gen.generateDeck();
+        },
+        false
+    );
+
     this.game.addEntity(gen);
 
     // spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
@@ -106,7 +119,7 @@ Battle.prototype.create = function() {
 
     //spawnUnit(this.game, 100, 400, "h004", PLAYER);
 //     spawnUnit(this.game, 1100, 400, "m105", ENEMY);
-// spawnUnit(this.game, 1100, 400, "m100", ENEMY);
+ //spawnUnit(this.game, 1100, 400, "m013", ENEMY);
 
     //Enemy button for debugging
     // var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 700, 520);
