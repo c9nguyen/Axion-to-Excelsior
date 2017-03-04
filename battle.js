@@ -53,7 +53,7 @@ Battle.prototype.create = function() {
     );
     this.game.addEntity(gen);
 
-    spawnUnit(gen.game, 2400, 500, "m105", ENEMY);
+    // spawnUnit(gen.game, 2400, 500, "m105", ENEMY);
 
     //Initializing cards on hand
     var unitCards = [
@@ -65,7 +65,7 @@ Battle.prototype.create = function() {
                  {code: "h100", ticket: 1}
                  ];
     var spellCards = [
-                 {code: "e1001", ticket: 222},
+                 {code: "e1001", ticket: 1},
                  ];   
     var cardGen = new CardGenerator(this.game, -50, 500, 6, unitCards, spellCards);
     cardGen.assignCurrentBoss(playerBoss);
@@ -105,8 +105,8 @@ Battle.prototype.create = function() {
     this.addAllMusic();
 
     //spawnUnit(this.game, 100, 400, "h004", PLAYER);
-    spawnUnit(this.game, 1100, 400, "m105", ENEMY);
-spawnUnit(this.game, 1100, 400, "m100", ENEMY);
+    // spawnUnit(this.game, 1100, 400, "m105", ENEMY);
+    // spawnUnit(this.game, 1100, 400, "m100", ENEMY);
 
     //Enemy button for debugging
     // var button2 = new Button(this.game, AM.getAsset("./img/unit/m000/card.png"), 700, 520);
