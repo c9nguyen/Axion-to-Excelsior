@@ -148,12 +148,12 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
         case "e1002": //meteor shower (player)
             //Play sound
             var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            var center = x - 347;
             action = function(that, otherUnit) {};
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/effect.png"),
                                 5, 0.1, 20, collisionBox, action, percentAtt, true);
-            skill.subEffects[4] = function(that) {
-
-                castSkill(that.game, x - 347 + 115, groundLevel - 405, unit, "e1002_5", 1);
+            skill.subEffects[3] = function(that) {
+                castSkill(that.game, center + 115, groundLevel - 405, unit, "e1002_5", 1);
             };
 
             break;
