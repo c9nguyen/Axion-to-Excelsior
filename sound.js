@@ -72,31 +72,28 @@ SoundPlayer.prototype.draw = function(){
 }
 SoundPlayer.prototype.update = function(){
 
-    if(!this.removingSound){
+    // Check boxes
+    this.checkCollision();
 
-        // Check boxes
-        this.checkCollision();
+    // Play incoming sounds
+    this.privatePlay(this.toPlayMusic, this.whilePlayMusic, this.playMusic);
+    this.privatePlay(this.toPlayEffect, this.whilePlayEffect, this.playEffect);
+    this.privatePlayNextInQueue();
 
-        // Play incoming sounds
-        this.privatePlay(this.toPlayMusic, this.whilePlayMusic, this.playMusic);
-        this.privatePlay(this.toPlayEffect, this.whilePlayEffect, this.playEffect);
-        this.privatePlayNextInQueue();
-
-        // Check to mute sounds or unmute
-        if(this.toggleMusic){
-            this.privateToggleSound(this.whilePlayMusic, this.playMusic);
-            this.privateToggleSound(this.playQueue, this.playMusic);
-            this.toggleMusic = false;    
-        }
-        if(this.toggleEffect){
-            this.privateToggleSound(this.whilePlayEffect, this.playEffect);
-            this.toggleEffect = false;
-        }
-        
-        // Remove any finished sounds
-        this.cleanSound(this.whilePlayMusic);
-        this.cleanSound(this.whilePlayEffect);
+    // Check to mute sounds or unmute
+    if(this.toggleMusic){
+        this.privateToggleSound(this.whilePlayMusic, this.playMusic);
+        this.privateToggleSound(this.playQueue, this.playMusic);
+        this.toggleMusic = false;    
     }
+    if(this.toggleEffect){
+        this.privateToggleSound(this.whilePlayEffect, this.playEffect);
+        this.toggleEffect = false;
+    }
+    
+    // Remove any finished sounds
+    this.cleanSound(this.whilePlayMusic);
+    this.cleanSound(this.whilePlayEffect);
 }
 //--- End Draw and Update
 
@@ -253,7 +250,8 @@ SoundPlayer.prototype.privateRemoveSoundFromList = function(list){
         var tempSound = list.pop();
         tempSound.loop = false;
         tempSound.muted = true;
-        tempSound.currentTime = tempSound.duration;
+        tempSound.pause();
+        tempSound.currentTime = 0;
     }
 }
 //-- end Remove all sounds
