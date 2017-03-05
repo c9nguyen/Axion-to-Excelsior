@@ -69,8 +69,8 @@ Battle.prototype.create = function() {
 
     //Initializing cards on hand
 
-    var unitCards = mapType[mapType['curr']].unitCards;
-    var spellCards = mapType[mapType['curr']].spellCards;
+    var unitCards = PLAYERDECK["unitCards"];
+    var spellCards = PLAYERDECK["spellCards"];
     var cardGen = new CardGenerator(this.game, -50, 500, mapType[mapType['curr']].numOfCard, unitCards, spellCards);
     cardGen.assignCurrentBoss(playerBoss);
     cardGen.setBossesDiedAction(this.endGame);
