@@ -161,13 +161,15 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 {x: 486, y: 570, percent: 2, num: 7},   //7
                 {x: 632, y: 770, percent: 2, num: 8},   //8
             ];
-
+              var counter = 0;
             var castMeteor = function(index, offset) {
                 var meteor = meteors[index];
                 castSkill(game, center - meteor.x + offset, groundLevel - meteor.y, unit, "e1002_" + meteor.num, meteor.percent);
                 meteors.splice(index, 1);
+                                counter++;
+                console.log(counter);
             };
-
+          
             var castRandomMeteor = function() {
                 //first meteor
                 var ran = Math.floor(Math.random() * meteors.length);  //random meteor
@@ -178,14 +180,13 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
 
             action = function(that, otherUnit) {};
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/effect.png"),
-                                5, 0.1, 20, collisionBox, action, percentAtt, true);
+                                5, 0.1, 25, collisionBox, action, percentAtt, true);
             skill.subEffects[2] = function(that) {
                 castMeteor(5, 0);
-                castRandomMeteor();
-                castRandomMeteor();
             };
-            for (var i = 3; i < 20; i += 3) {
+            for (var i = 3; i < 26; i += 3) {
                 skill.subEffects[i] = function(that) { castRandomMeteor();};
+              //  console.log(i);
             }
 
             break;
