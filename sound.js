@@ -16,6 +16,7 @@ function SoundPlayer(game){
     this.playQueue = [];
     this.currentMusic = -1;
     this.randomTrackInQueue = false;
+    this.removingSound = false;
 
     // UI
     this.x = 1125;
@@ -71,29 +72,31 @@ SoundPlayer.prototype.draw = function(){
 }
 SoundPlayer.prototype.update = function(){
 
-    // Check boxes
-    this.checkCollision();
+    if(!this.removingSound){
 
-    // Play incoming sounds
-    this.privatePlay(this.toPlayMusic, this.whilePlayMusic, this.playMusic);
-    this.privatePlay(this.toPlayEffect, this.whilePlayEffect, this.playEffect);
-    this.privatePlayNextInQueue();
+        // Check boxes
+        this.checkCollision();
 
-    // Check to mute sounds or unmute
-    if(this.toggleMusic){
-        this.privateToggleSound(this.whilePlayMusic, this.playMusic);
-        this.privateToggleSound(this.playQueue, this.playMusic);
-        this.toggleMusic = false;    
+        // Play incoming sounds
+        this.privatePlay(this.toPlayMusic, this.whilePlayMusic, this.playMusic);
+        this.privatePlay(this.toPlayEffect, this.whilePlayEffect, this.playEffect);
+        this.privatePlayNextInQueue();
+
+        // Check to mute sounds or unmute
+        if(this.toggleMusic){
+            this.privateToggleSound(this.whilePlayMusic, this.playMusic);
+            this.privateToggleSound(this.playQueue, this.playMusic);
+            this.toggleMusic = false;    
+        }
+        if(this.toggleEffect){
+            this.privateToggleSound(this.whilePlayEffect, this.playEffect);
+            this.toggleEffect = false;
+        }
+        
+        // Remove any finished sounds
+        this.cleanSound(this.whilePlayMusic);
+        this.cleanSound(this.whilePlayEffect);
     }
-    if(this.toggleEffect){
-        this.privateToggleSound(this.whilePlayEffect, this.playEffect);
-        this.toggleEffect = false;
-    }
-    
-    // Remove any finished sounds
-    this.cleanSound(this.whilePlayMusic);
-    this.cleanSound(this.whilePlayEffect);
-    
 }
 //--- End Draw and Update
 
@@ -230,6 +233,12 @@ SoundPlayer.prototype.disableEffect = function(){
 //--- Remove all sounds
 SoundPlayer.prototype.removeAllSound = function(){
 
+    this.removingSound = true;
+    this.privateRemoveAllSound();
+    this.removingSound = false;
+    
+}
+SoundPlayer.prototype.privateRemoveAllSound = function(){
     this.privateRemoveSoundFromList(this.toPlayMusic);
     this.privateRemoveSoundFromList(this.toPlayEffect);
     this.privateRemoveSoundFromList(this.whilePlayMusic);
