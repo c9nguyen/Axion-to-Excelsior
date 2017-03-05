@@ -18,7 +18,7 @@ function SoundPlayer(game){
     this.randomTrackInQueue = false;
 
     // UI
-    this.x = 1100;
+    this.x = 1125;
     this.y = 0;
     var checkSheet = AM.getAsset("./img/ui/select_blue_check.png");
     var unCheckSheet = AM.getAsset("./img/ui/select_blue_uncheck.png");
@@ -32,18 +32,18 @@ function SoundPlayer(game){
     this.colliseBoxMusic = {x: this.x, y: this.y, 
                         width: checkSheet.width, height: checkSheet.height}
 
-    var separationValue = 50;
-    this.selectSound = new NonAnimatedObject(this.game, checkSheet, this.x + separationValue, this.y);
+    var separationValue = 20;
+    this.selectSound = new NonAnimatedObject(this.game, checkSheet, this.x, this.y + separationValue);
     this.selectSound.movable = false;
-    this.unSelectSound = new NonAnimatedObject(this.game, unCheckSheet, this.x + separationValue, this.y);
+    this.unSelectSound = new NonAnimatedObject(this.game, unCheckSheet, this.x, this.y + separationValue);
     this.unSelectSound.movable = false;
-    this.colliseBoxEffect = {x: this.x + separationValue, y: this.y, 
+    this.colliseBoxEffect = {x: this.x, y: this.y + separationValue, 
                         width: unCheckSheet.width, height: unCheckSheet.height}
 
     this.musicAni = new AnimatedObject(this.game, musicAniSheet, this.x + 10, this.y - 7,
                                         8, 0.2, 8, true);
     this.musicAni.movable = false;
-    this.effectAni = new AnimatedObject(this.game, effectAniSheet, this.x + 70, this.y - 7,
+    this.effectAni = new AnimatedObject(this.game, effectAniSheet, this.x + separationValue, this.y - 7 + separationValue,
                                         8, 0.2, 8, true);
     this.effectAni.movable = false;
 

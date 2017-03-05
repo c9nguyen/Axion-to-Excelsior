@@ -128,7 +128,7 @@ Battle.prototype.create = function() {
 
 
 
-	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
+	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 1175, 0, 0.3);
 	exit_button.addEventListener('click', function() {
         this.game.soundPlayer.removeAllSound();
 		this.game.sceneManager.startScene('mainmenu');
