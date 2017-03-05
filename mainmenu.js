@@ -28,13 +28,20 @@ MainMenu.prototype.create = function () {
   // settingbutton.addSheet( AM.getAsset("./img/ui/settings_hoverbutton.png"),'mouseover');
   // settingbutton.addSheet( AM.getAsset("./img/ui/settings_pressbutton.png"),'press');
 
-  var mapbutton =  new Button(this.game, AM.getAsset("./img/ui/maps_button.png"), 500, 200);
+  var buttonScale = 0.4;
+  var mapbutton =  new Button(this.game, AM.getAsset("./img/ui/maps_button.png"), 675, 425, buttonScale);
   mapbutton.addSheet( AM.getAsset("./img/ui/maps_hoverbutton.png"),'mouseover');
   mapbutton.addSheet( AM.getAsset("./img/ui/maps_pressbutton.png"),'press');
   mapbutton.addEventListener('click', function() {
     this.game.sceneManager.startScene('mapmenu');
   });
 
+  var cardbutton =  new Button(this.game, AM.getAsset("./img/ui/cards_button.png"), 675, 480, buttonScale);
+  cardbutton.addSheet( AM.getAsset("./img/ui/cards_hoverbutton.png"),'mouseover');
+  cardbutton.addSheet( AM.getAsset("./img/ui/cards_pressbutton.png"),'press');
+  cardbutton.addEventListener('click', function() {
+    this.game.sceneManager.startScene('deckbuilding');
+  });
   // var shopbutton =  new Button(this.game, AM.getAsset("./img/ui/shop_button.png"), 250, 50+131+50);
   // shopbutton.addSheet( AM.getAsset("./img/ui/shop_hoverbutton.png"),'mouseover');
   // shopbutton.addSheet( AM.getAsset("./img/ui/shop_pressbutton.png"),'press');
@@ -46,5 +53,5 @@ MainMenu.prototype.create = function () {
   this.game.addEntity(mapbutton);
   // this.game.addEntity(settingbutton);
   this.game.addEntity(startbutton);
-  // this.game.addEntity(cardbutton);
+  this.game.addEntity(cardbutton);
 };

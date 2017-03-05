@@ -258,6 +258,12 @@ AM.queueDownload("./img/ui/right_arrow_pressbutton.png");
 AM.queueDownload("./img/ui/left_arrow_button.png");
 AM.queueDownload("./img/ui/left_arrow_hoverbutton.png");
 AM.queueDownload("./img/ui/left_arrow_pressbutton.png");
+AM.queueDownload("./img/ui/up_arrow_button.png");
+AM.queueDownload("./img/ui/up_arrow_hoverbutton.png");
+AM.queueDownload("./img/ui/up_arrow_pressbutton.png");
+AM.queueDownload("./img/ui/down_arrow_button.png");
+AM.queueDownload("./img/ui/down_arrow_hoverbutton.png");
+AM.queueDownload("./img/ui/down_arrow_pressbutton.png");
 
 AM.queueDownload("./img/ui/select_blue_check.png");
 AM.queueDownload("./img/ui/select_blue_uncheck.png");
@@ -317,6 +323,17 @@ AM.queueDownload("./img/effect/passive/push.png");
 AM.queueDownload("./img/map/01/map.png");
 AM.queueDownload("./img/effect/e1001/mob_1.png");
 AM.queueDownload("./img/effect/e1001/mob_6.png");
+
+for(var i = 0; i < 10; i++){
+    AM.queueDownload("./img/ui/numbers/" + i +".png");
+}
+AM.queueDownload("./img/ui/numbers/minusnormal.png");
+AM.queueDownload("./img/ui/numbers/minushover.png");
+AM.queueDownload("./img/ui/numbers/minuspress.png");
+AM.queueDownload("./img/ui/numbers/plusnormal.png");
+AM.queueDownload("./img/ui/numbers/plushover.png");
+AM.queueDownload("./img/ui/numbers/pluspress.png");
+
 //SOUND
 AM.queueDownload("./sound/effects/smb_stomp.wav", true);
 AM.queueDownload("./sound/effects/smw_thud.wav", true);
@@ -388,6 +405,7 @@ AM.queueDownload("./sound/effects/monster/monsterroar.wav", true);
 AM.queueDownload("./sound/effects/spell/wind.mp3", true);
 AM.queueDownload("./sound/effects/spell/explosion.ogg", true);
 
+// MUSIC
 AM.queueDownload("./sound/music/battle/KH-squirming-evil.mp3", true);
 AM.queueDownload("./sound/music/battle/YGO-vs-darknite.mp3", true);
 AM.queueDownload("./sound/music/battle/KH-monstrous-monstro.mp3", true);
@@ -397,6 +415,9 @@ AM.queueDownload("./sound/music/battle/YGO-vs-lancastrians.mp3", true);
 AM.queueDownload("./sound/music/battle/YGO-vs-seto.mp3", true);
 AM.queueDownload("./sound/music/battle/YGO-vs-yugi.mp3", true);
 AM.queueDownload("./sound/music/KH-dearly-beloved.mp3", true);
+
+AM.queueDownload("./sound/music/mappedstoryMainTheme.mp3", true);
+AM.queueDownload("./sound/music/deckbuilding.mp3", true);
 
 AM.queueDownload("./sound/music/gameover/YGO-duel-won.mp3", true);
 AM.queueDownload("./sound/music/gameover/YGO-duel-lost.mp3", true);
@@ -414,6 +435,7 @@ AM.downloadAll(function () {
     gameEngine.sceneManager.addScene('mainmenu',MainMenu);
     gameEngine.sceneManager.addScene('battle',Battle);
     gameEngine.sceneManager.addScene('mapmenu',MapMenu);
+    gameEngine.sceneManager.addScene('deckbuilding',DeckBuilding);
     gameEngine.start();
 
     gameEngine.sceneManager.startScene('mainmenu');

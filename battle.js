@@ -82,8 +82,8 @@ Battle.prototype.create = function() {
 
     //Initializing cards on hand
 
-    var unitCards = mapType[mapType['curr']].unitCards;
-    var spellCards = mapType[mapType['curr']].spellCards;
+    var unitCards = PLAYERDECK["unitCards"];
+    var spellCards = PLAYERDECK["spellCards"];
     var cardGen = new CardGenerator(this.game, -50, 500, mapType[mapType['curr']].numOfCard, unitCards, spellCards);
     cardGen.assignCurrentBoss(playerBoss);
     cardGen.setBossesDiedAction(this.endGame);
@@ -141,7 +141,7 @@ Battle.prototype.create = function() {
 
 
 
-	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 10, 525);
+	var exit_button = new Button(this.game, AM.getAsset("./img/ui/exit_button.png"), 1175, 0, 0.3);
 	exit_button.addEventListener('click', function() {
         this.game.soundPlayer.removeAllSound();
 		this.game.sceneManager.startScene('mainmenu');

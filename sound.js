@@ -16,9 +16,10 @@ function SoundPlayer(game){
     this.playQueue = [];
     this.currentMusic = -1;
     this.randomTrackInQueue = false;
+    this.removingSound = false;
 
     // UI
-    this.x = 1100;
+    this.x = 1125;
     this.y = 0;
     var checkSheet = AM.getAsset("./img/ui/select_blue_check.png");
     var unCheckSheet = AM.getAsset("./img/ui/select_blue_uncheck.png");
@@ -29,21 +30,21 @@ function SoundPlayer(game){
     this.selectMusic.movable = false;
     this.unSelectMusic = new NonAnimatedObject(this.game, unCheckSheet, this.x, this.y);
     this.unSelectMusic.movable = false;
-    this.colliseBoxMusic = {x: this.x, y: this.y, 
+    this.colliseBoxMusic = {x: this.x, y: this.y,
                         width: checkSheet.width, height: checkSheet.height}
 
-    var separationValue = 50;
-    this.selectSound = new NonAnimatedObject(this.game, checkSheet, this.x + separationValue, this.y);
+    var separationValue = 20;
+    this.selectSound = new NonAnimatedObject(this.game, checkSheet, this.x, this.y + separationValue);
     this.selectSound.movable = false;
-    this.unSelectSound = new NonAnimatedObject(this.game, unCheckSheet, this.x + separationValue, this.y);
+    this.unSelectSound = new NonAnimatedObject(this.game, unCheckSheet, this.x, this.y + separationValue);
     this.unSelectSound.movable = false;
-    this.colliseBoxEffect = {x: this.x + separationValue, y: this.y, 
+    this.colliseBoxEffect = {x: this.x, y: this.y + separationValue,
                         width: unCheckSheet.width, height: unCheckSheet.height}
 
     this.musicAni = new AnimatedObject(this.game, musicAniSheet, this.x + 10, this.y - 7,
                                         8, 0.2, 8, true);
     this.musicAni.movable = false;
-    this.effectAni = new AnimatedObject(this.game, effectAniSheet, this.x + 70, this.y - 7,
+    this.effectAni = new AnimatedObject(this.game, effectAniSheet, this.x + separationValue, this.y - 7 + separationValue,
                                         8, 0.2, 8, true);
     this.effectAni.movable = false;
 
@@ -54,7 +55,7 @@ SoundPlayer.prototype.constructor = SoundPlayer;
 
 //--- Draw and Update
 SoundPlayer.prototype.draw = function(){
-    // EMPTY 
+    // EMPTY
     var drawBox = this.unSelectMusic;
     if(this.playMusic){
         drawBox = this.selectMusic;
@@ -93,7 +94,6 @@ SoundPlayer.prototype.update = function(){
     // Remove any finished sounds
     this.cleanSound(this.whilePlayMusic);
     this.cleanSound(this.whilePlayEffect);
-    
 }
 //--- End Draw and Update
 
@@ -161,7 +161,7 @@ SoundPlayer.prototype.privateCheckToPlay = function(audio, checkSound){
     }
 }
 SoundPlayer.prototype.privateToggleSound = function(list, checkSound){
-    
+
     for(var i = 0; i < list.length; i++){
         list[i].muted = !checkSound;
     }
@@ -208,21 +208,21 @@ SoundPlayer.prototype.addToQueueAudio = function(audio){
 }
 
 //--- Enable and disable Music or Sound
-SoundPlayer.prototype.enableMusic = function(){ 
-    this.playMusic = true; 
+SoundPlayer.prototype.enableMusic = function(){
+    this.playMusic = true;
     this.toggleMusic = true;
 }
-SoundPlayer.prototype.disableMusic = function(){ 
-    this.playMusic = false; 
+SoundPlayer.prototype.disableMusic = function(){
+    this.playMusic = false;
     this.toggleMusic = true;
 }
     // Effects //
-SoundPlayer.prototype.enableEffect = function(){ 
-    this.playEffect = true; 
+SoundPlayer.prototype.enableEffect = function(){
+    this.playEffect = true;
     this.toggleEffect = true;
 }
-SoundPlayer.prototype.disableEffect = function(){ 
-    this.playEffect = false; 
+SoundPlayer.prototype.disableEffect = function(){
+    this.playEffect = false;
     this.toggleEffect = true;
 }
 //--- End Enable and Disable
@@ -230,6 +230,12 @@ SoundPlayer.prototype.disableEffect = function(){
 //--- Remove all sounds
 SoundPlayer.prototype.removeAllSound = function(){
 
+    this.removingSound = true;
+    this.privateRemoveAllSound();
+    this.removingSound = false;
+
+}
+SoundPlayer.prototype.privateRemoveAllSound = function(){
     this.privateRemoveSoundFromList(this.toPlayMusic);
     this.privateRemoveSoundFromList(this.toPlayEffect);
     this.privateRemoveSoundFromList(this.whilePlayMusic);
@@ -244,7 +250,9 @@ SoundPlayer.prototype.privateRemoveSoundFromList = function(list){
         var tempSound = list.pop();
         tempSound.loop = false;
         tempSound.muted = true;
-        tempSound.currentTime = tempSound.duration;
+        // tempSound.currentTime = tempSound.duration;
+        tempSound.pause();
+        tempSound.currentTime = 0;
     }
 }
 //-- end Remove all sounds
