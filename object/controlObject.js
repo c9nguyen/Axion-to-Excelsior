@@ -63,6 +63,15 @@ Button.prototype.setCooldown = function(cooldown) {
     this.cooldown = cooldown;
 }
 
+Button.prototype.setX = function(x){
+    this.x = x;
+    this.colliseBox["x"] = x;
+}
+Button.prototype.setY = function(y){
+    this.y = y;
+    this.colliseBox["y"] = y;
+}
+
 Button.prototype.draw = function() {
     var drawObj;
     if (this.status === this.NORMAL) {

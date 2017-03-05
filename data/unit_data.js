@@ -61,7 +61,7 @@ var unitData = {
     h004: { //tanky samurai
         groundWidth: 50,
         groundHeight: 10,
-        energy: 1,
+        energy: 3,
         health: 200,
         movementspeed: 120,
         att: 15,
@@ -74,7 +74,7 @@ var unitData = {
     h005: { //long range slow archer
         groundWidth: 40,
         groundHeight: 10,
-        energy: 1,
+        energy: 2,
         health: 80,
         movementspeed: 120,
         att: 10,
