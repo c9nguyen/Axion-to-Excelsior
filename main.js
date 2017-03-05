@@ -271,8 +271,15 @@ AM.queueDownload("./img/effect/e1002/card.png");
 AM.queueDownload("./img/effect/e1002/card_disable.png");
 AM.queueDownload("./img/effect/e1002/card_mouseover.png");
 AM.queueDownload("./img/effect/e1002/card_click.png");
+AM.queueDownload("./img/effect/e1002/tile.png");
+AM.queueDownload("./img/effect/e1002/tile1.png");
+AM.queueDownload("./img/effect/e1002/tile2.png");
+AM.queueDownload("./img/effect/e1002/tile3.png");
+AM.queueDownload("./img/effect/e1002/tile4.png");
 AM.queueDownload("./img/effect/e1002/tile5.png");
-
+AM.queueDownload("./img/effect/e1002/tile6.png");
+AM.queueDownload("./img/effect/e1002/tile7.png");
+AM.queueDownload("./img/effect/e1002/tile8.png");
 
 AM.queueDownload("./img/effect/passive/att.png");
 AM.queueDownload("./img/effect/passive/def.png");

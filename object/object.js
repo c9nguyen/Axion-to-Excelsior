@@ -197,6 +197,8 @@ function Effect(game, x, y, unit, spritesheet,
     this.hit = false;
     this.hitList = new Set();   //A set of unit that already hit. So the effect won't hit again
     this.hitEffect = function(that) {};
+
+    this.endEffect = function() {};
 }
 
 Effect.prototype = Object.create(AnimatedObject.prototype);
@@ -221,6 +223,7 @@ Effect.prototype.addEffect = function(callback, index) {
 Effect.prototype.update = function() {//Updating the coordinate for the unit in the frame
     AnimatedObject.prototype.update.call(this);
     if (this.isDone()) {
+        this.endEffect();
         this.numOfLoop--;
         if (this.numOfLoop <= 0) {
             this.removeFromWorld = true;
