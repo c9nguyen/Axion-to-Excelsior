@@ -21,6 +21,7 @@ function NonAnimatedObject(game, spritesheet, x = 0, y = 0,
     this.width = width;
     this.height = height;
     this.scale = scale;
+    this.spritesheetOffset = {x: 0, y:0};
 
     var frame = frameIndex >= 0 ? frameIndex : Math.floor(Math.random() * (frames));
 
@@ -38,6 +39,13 @@ NonAnimatedObject.prototype.setSize = function(width, height) {
     this.height = height;
 }
 
+NonAnimatedObject.prototype.setFrameSize = function(width, height) {
+    this.frameWidth = width;
+    this.frameHeight = height;
+    this.width = width;
+    this.height = height;
+}
+
 // /**
 //  * Set up an entity that this entity will stick to it
 //  */
@@ -45,6 +53,9 @@ NonAnimatedObject.prototype.setSize = function(width, height) {
 //     this.stickTo = {entity: entity, offsetX: offsetX, offsetY: offsetY};
 // }
 
+NonAnimatedObject.prototype.setSpritesheetOffset = function(xOffset, yOffset) {
+    this.spritesheetOffset = {x: xOffset, y:yOffset};
+}
 
 NonAnimatedObject.prototype.draw = function() {
     var drawX = this.x;
@@ -53,7 +64,8 @@ NonAnimatedObject.prototype.draw = function() {
     }
     try {
         this.ctx.drawImage(this.spritesheet,
-                    this.xindex * this.frameWidth, this.yindex * this.frameHeight,  // source from sheet
+                    this.xindex * this.frameWidth + this.spritesheetOffset.x, 
+                    this.yindex * this.frameHeight + this.spritesheetOffset.y,  // source from sheet
                     this.frameWidth, this.frameHeight,
                     drawX, this.y,
                     this.width * this.scale, this.height * this.scale);

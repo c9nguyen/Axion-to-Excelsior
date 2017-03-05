@@ -184,7 +184,8 @@ GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
     this.ctx.save();
     var that = this;
-    var entities = this.sceneManager.getCurrentEntities();
+    //var entities = this.sceneManager.getCurrentEntities();
+    var entities = this.entitiesList;
     for (var i = 0; i < entities.length; i++) {
         entities[i].draw(this.ctx);
     }
