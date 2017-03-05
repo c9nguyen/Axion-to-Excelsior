@@ -80,33 +80,11 @@ SoundPlayer.prototype.update = function(){
     this.privatePlay(this.toPlayEffect, this.whilePlayEffect, this.playEffect);
     this.privatePlayNextInQueue();
 
-<<<<<<< HEAD
     // Check to mute sounds or unmute
     if(this.toggleMusic){
         this.privateToggleSound(this.whilePlayMusic, this.playMusic);
         this.privateToggleSound(this.playQueue, this.playMusic);
         this.toggleMusic = false;    
-=======
-        // Play incoming sounds
-        this.privatePlay(this.toPlayMusic, this.whilePlayMusic, this.playMusic);
-        this.privatePlay(this.toPlayEffect, this.whilePlayEffect, this.playEffect);
-        this.privatePlayNextInQueue();
-
-        // Check to mute sounds or unmute
-        if(this.toggleMusic){
-            this.privateToggleSound(this.whilePlayMusic, this.playMusic);
-            this.privateToggleSound(this.playQueue, this.playMusic);
-            this.toggleMusic = false;
-        }
-        if(this.toggleEffect){
-            this.privateToggleSound(this.whilePlayEffect, this.playEffect);
-            this.toggleEffect = false;
-        }
-
-        // Remove any finished sounds
-        this.cleanSound(this.whilePlayMusic);
-        this.cleanSound(this.whilePlayEffect);
->>>>>>> master
     }
     if(this.toggleEffect){
         this.privateToggleSound(this.whilePlayEffect, this.playEffect);
