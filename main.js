@@ -238,6 +238,12 @@ AM.queueDownload("./img/ui/right_arrow_pressbutton.png");
 AM.queueDownload("./img/ui/left_arrow_button.png");
 AM.queueDownload("./img/ui/left_arrow_hoverbutton.png");
 AM.queueDownload("./img/ui/left_arrow_pressbutton.png");
+AM.queueDownload("./img/ui/up_arrow_button.png");
+AM.queueDownload("./img/ui/up_arrow_hoverbutton.png");
+AM.queueDownload("./img/ui/up_arrow_pressbutton.png");
+AM.queueDownload("./img/ui/down_arrow_button.png");
+AM.queueDownload("./img/ui/down_arrow_hoverbutton.png");
+AM.queueDownload("./img/ui/down_arrow_pressbutton.png");
 
 AM.queueDownload("./img/ui/select_blue_check.png");
 AM.queueDownload("./img/ui/select_blue_uncheck.png");
