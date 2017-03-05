@@ -15,16 +15,18 @@ var mapType = {
                 ],
      enemyGenFrequency: 5,
      //enemyBoss: EnemyTower,
-     unitCards: [{code: "h000", ticket: 3},
-                  {code: "h001", ticket: 2},
+     unitCards: [{code: "h000", ticket: 4},
+                  {code: "h001", ticket: 3},
                   {code: "h002", ticket: 5},
                   {code: "h003", ticket: 5},
+                  {code: "h004", ticket: 3},
+                  {code: "h005", ticket: 3},
                   {code: "h100", ticket: 1}
                 ],
 
      spellCards:[
-                  {code: "e1001", ticket: 1},
-                  {code: "e1002", ticket: 1},
+                  {code: "e1001", ticket: 2},
+                  {code: "e1002", ticket: 2},
                 ],
   //  playerBoss: MainTower,
     energyRate: 0.4,
