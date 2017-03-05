@@ -240,7 +240,7 @@ var spellCastData = {
     },
     e1002: {
         spritesheet: AM.getAsset("./img/effect/e1002/mouse.png"),
-        energy: 1,
+        energy: 5,
         sheetWidth: 6,
         frames: 6,
         xOffset: -112,

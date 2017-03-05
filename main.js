@@ -146,6 +146,13 @@ AM.queueDownload("./img/unit/m010/jump.png");
 AM.queueDownload("./img/unit/m010/attack.png");
 AM.queueDownload("./img/unit/m010/die.png");
 
+AM.queueDownload("./img/unit/m012/stand.png");
+AM.queueDownload("./img/unit/m012/walk.png");
+AM.queueDownload("./img/unit/m012/jump.png");
+AM.queueDownload("./img/unit/m012/attack.png");
+AM.queueDownload("./img/unit/m012/regen.png");
+AM.queueDownload("./img/unit/m012/die.png");
+
 AM.queueDownload("./img/unit/m013/stand.png");
 AM.queueDownload("./img/unit/m013/walk.png");
 AM.queueDownload("./img/unit/m013/jump.png");
@@ -161,6 +168,19 @@ AM.queueDownload("./img/unit/m100/attack2.png");
 AM.queueDownload("./img/unit/m100/attack3.png");
 AM.queueDownload("./img/unit/m100/attack4.png");
 AM.queueDownload("./img/unit/m100/die.png");
+
+AM.queueDownload("./img/unit/m101/stand.png");
+AM.queueDownload("./img/unit/m101/walk.png");
+AM.queueDownload("./img/unit/m101/jump.png");
+AM.queueDownload("./img/unit/m101/attack.png");
+AM.queueDownload("./img/unit/m101/attack_effect1.png");
+AM.queueDownload("./img/unit/m101/attack_effect3.png");
+AM.queueDownload("./img/unit/m101/attack_effect2.png");
+AM.queueDownload("./img/unit/m101/attack_effect4.png");
+AM.queueDownload("./img/unit/m101/skill2.png");
+AM.queueDownload("./img/unit/m101/skill3.png");
+AM.queueDownload("./img/unit/m101/skill4.png");
+AM.queueDownload("./img/unit/m101/die.png");
 
 AM.queueDownload("./img/unit/m105/stand.png");
 AM.queueDownload("./img/unit/m105/walk.png");

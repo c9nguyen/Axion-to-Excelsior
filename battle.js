@@ -39,6 +39,19 @@ Battle.prototype.create = function() {
     gen.addToBossQueue("m105");
     gen.addConditionAndAction(
         function() {
+            return enemyBoss.health / enemyBoss.data.health < 0.25;
+        },
+        function() {
+            enemyBoss.leftG.changeAction("attack3");
+            enemyBoss.rightG.changeAction("attack3");
+            gen.boostSpawnRate(3);
+            gen.generateDeck();
+            spawnUnit(gen.game, 2400, 500, "m101", ENEMY);
+        },
+        false
+    );
+    gen.addConditionAndAction(
+        function() {
             return enemyBoss.health / enemyBoss.data.health < 0.5;
         },
         function() {
@@ -57,7 +70,7 @@ Battle.prototype.create = function() {
         function() {
             enemyBoss.leftG.changeAction("attack3");
             enemyBoss.rightG.changeAction("attack3");
-            gen.boostSpawnRate(2);
+            gen.boostSpawnRate(1);
             gen.generateDeck();
         },
         false
@@ -65,7 +78,7 @@ Battle.prototype.create = function() {
 
     this.game.addEntity(gen);
 
-    // spawnUnit(gen.game, 2400, 500, "m105", ENEMY);
+ //spawnUnit(gen.game, 1400, 500, "m101", ENEMY);
 
     //Initializing cards on hand
 

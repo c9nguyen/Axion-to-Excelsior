@@ -111,6 +111,24 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
 
             break;
 
+        case "e0013": //Lighting
+            var getSprite = function() {
+                var ran = Math.floor(Math.random() * 4 + 1);
+                return AM.getAsset("./img/unit/m101/attack_effect" + ran + ".png");
+            };
+
+            var collisionBox = [{x: 0, y: 0, width: 136, height: 76}];
+            action = function(that, otherUnit) {
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+
+            skill = new Effect(game, x, y, unit, getSprite(),
+                                7, 0.1, 7, collisionBox, action, percentAtt, true, 5);
+            skill.endEffect = function(that) {that.spritesheet = getSprite();}
+            break;
+
         case "e1001": //wind (player)
             //Play sound
             game.soundPlayer.addToEffect("./sound/effects/spell/wind.mp3", false, 0.5);
@@ -161,13 +179,10 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 {x: 486, y: 570, percent: 2, num: 7},   //7
                 {x: 632, y: 770, percent: 2, num: 8},   //8
             ];
-              var counter = 0;
             var castMeteor = function(index, offset) {
                 var meteor = meteors[index];
                 castSkill(game, center - meteor.x + offset, groundLevel - meteor.y, unit, "e1002_" + meteor.num, meteor.percent);
                 meteors.splice(index, 1);
-                                counter++;
-                console.log(counter);
             };
           
             var castRandomMeteor = function() {
@@ -180,13 +195,13 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
 
             action = function(that, otherUnit) {};
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/effect.png"),
-                                5, 0.1, 25, collisionBox, action, percentAtt, true);
+                                5, 0.15, 25, collisionBox, action, percentAtt, true);
             skill.subEffects[2] = function(that) {
                 castMeteor(5, 0);
             };
             for (var i = 3; i < 26; i += 3) {
                 skill.subEffects[i] = function(that) { castRandomMeteor();};
-              //  console.log(i);
+
             }
 
             break;
@@ -199,6 +214,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[19] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
                 var damage = that.percent * that.unit.att;
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
             };
@@ -213,6 +231,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[14] = {x: 146, y: 130, width: 106, height: 110};
             collisionBox[19] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
@@ -228,6 +249,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[14] = {x: 183, y: 127, width: 151, height: 177};
             collisionBox[20] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
@@ -243,6 +267,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[16] = {x: 228, y: 257, width: 97, height: 80};
             collisionBox[21] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
@@ -258,6 +285,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[16] = {x: 292, y: 315, width: 115, height: 112};
             collisionBox[21] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
@@ -274,6 +304,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[16] = {x: 250, y: 240, width: 198, height: 180};
             collisionBox[20] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
@@ -289,6 +322,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[17] = {x: 331, y: 388, width: 86, height: 82};
             collisionBox[22] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
@@ -304,6 +340,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[17] = {x: 409, y: 492, width: 142, height: 109};
             collisionBox[22] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
@@ -319,6 +358,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[17] = {x: 560, y: 632, width: 157, height: 161};
             collisionBox[22] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);

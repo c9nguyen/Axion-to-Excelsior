@@ -88,10 +88,10 @@ var unitData = {
         groundWidth: 50,
         groundHeight: 10,
         energy: 5,
-        health: 180,
+        health: 250,
         movementspeed: 130,
-        att: 10,
-        def: 0.2,
+        att: 20,
+        def: 0.3,
         flying: false,
         pushResist: 0.2,
         //Attacking with x and y are offset from unit's ground hit box
@@ -181,6 +181,18 @@ var unitData = {
         //Attacking with x and y are offset from unit's ground hit box
         range: [{x: -40, y: -120, width: 150, height: 120}],
     },
+    m012: {
+        groundWidth: 40,
+        groundHeight: 10,
+        health: 60,
+        movementspeed: -100,
+        att: 20,
+        def: 0,
+        flying: false,
+        pushResist: 0,
+        //Attacking with x and y are offset from unit's ground hit box
+        range: [{x: -54, y: -80, width: 70, height: 90}],
+    },
     m013: {
         groundWidth: 85,
         groundHeight: 10,
@@ -193,7 +205,7 @@ var unitData = {
         //Attacking with x and y are offset from unit's ground hit box
         range: [{x: -90, y: -120, width: 110, height: 120}],
     },
-    m100: {
+    m100: { //ice guy boss
         groundWidth: 70,
         groundHeight: 10,
         health: 700,
@@ -204,7 +216,18 @@ var unitData = {
         pushResist: 0.5, 
         range: [{x: -120, y: -160, width: 200, height: 180}, {x: -285, y: -200, width: 320, height: 220}],
     },
-    m105: {
+    m101: { //skeleton mage
+        groundWidth: 121,
+        groundHeight: 10,
+        health: 800,
+        movementspeed: -100,
+        att: 10,
+        def: 0.1,
+        flying: false,
+        pushResist: 0.3, 
+        range: [{x: -300, y: -200, width: 600, height: 200}, {x: -285, y: -200, width: 320, height: 220}],
+    },
+    m105: { //creepy one
         groundWidth: 300,
         groundHeight: 10,
         health: 1500,

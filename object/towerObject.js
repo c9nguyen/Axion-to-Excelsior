@@ -23,7 +23,7 @@ function Tower(game, x, y, towerCode, side) {
 }
 
 Tower.prototype = Object.create(Entity.prototype);
-Tower.prototype.constructor = Unit;
+Tower.prototype.constructor = Tower;
 
 
 Tower.prototype.takePassiveEffect = function() {
@@ -345,7 +345,7 @@ function EnemyTower(game) {
 }
 
 EnemyTower.prototype = Object.create(Tower.prototype);
-EnemyTower.prototype.constructor = Unit;
+EnemyTower.prototype.constructor = EnemyTower;
 
 EnemyTower.prototype.leftGuardian = function() {
 
