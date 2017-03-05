@@ -257,7 +257,6 @@ function SpellCast(game, spellCode, theCard) {
     this.data = spellCastData[spellCode];
     this.spellCode = spellCode;
     this.card = theCard;
-    
     AnimatedObject.call(this, game, this.data.spritesheet, game.mouse.x + this.data.spritesheet.width / 2, game.mouse.y + this.data.spritesheet.height / 2,
                         this.data.sheetWidth, 0.1, this.data.frames, true);
     this.movable = false;
@@ -274,11 +273,12 @@ SpellCast.prototype.update = function() {
     this.x = this.game.mouse.x - this.width / 2;
     this.y = this.game.mouse.y - this.height / 2
     if (this.game.mouse.click) {
-        if (this.card.generator.checkEnergy(this.data.energy)) {
+        if (this.card.generator.checkEnergy(this.data.energy)) { 
             castSkill(this.game, this.game.mouse.x + this.data.xOffset - this.game.mapX, groundLevel +  this.data.yOffset,
                     this.card.generator.currentBoss, this.spellCode);
             this.card.play();
         }
         this.removeFromWorld = true;
+        this.game.mouse.click = false;
     }
 }

@@ -23,7 +23,7 @@ function Tower(game, x, y, towerCode, side) {
 }
 
 Tower.prototype = Object.create(Entity.prototype);
-Tower.prototype.constructor = Unit;
+Tower.prototype.constructor = Tower;
 
 
 Tower.prototype.takePassiveEffect = function() {
@@ -195,7 +195,8 @@ function MainTower(game) {
         if (that.currentAction.interruptible || that.currentAction.isDone()) {
             that.changeAction("attack");
         }
-        castSkill(that.game, that.getClosestEnemy() - 50, -140 , that, "t0000", 1.5);
+        var target = that.getClosestEnemy();
+        castSkill(that.game, target.x + target.velocity.x - 50, -140 , that, "t0000", 1.5);
 
     });
     this.skill.setCooldown(10);
@@ -207,7 +208,8 @@ function MainTower(game) {
         if (that.currentAction.interruptible || that.currentAction.isDone()) {
             that.changeAction("attack2");
         }
-        castSkill(that.game, that.getClosestEnemy() - 100, 50, that, "t0001", 0.2);
+        var target = that.getClosestEnemy();
+        castSkill(that.game, target.x + target.velocity.x - 100, 50, that, "t0001", 1);
     });
     this.skill2.setCooldown(30);
     this.skill2.addSheet(AM.getAsset("./img/unit/tower0/skill2_icon_disable.png"), "disable");
@@ -219,6 +221,12 @@ function MainTower(game) {
         if (that.currentAction.interruptible || that.currentAction.isDone()) {
             that.changeAction("stand");
     }};
+
+    this.getHit = function(that, damage) {  //default get hit action: lose hp
+        that.health -= Math.max(damage, 1);
+        that.skill.timeLastClick -= 0.5;
+        that.skill2.timeLastClick -= 0.5;
+    };
 }
 
 MainTower.prototype = Object.create(Tower.prototype);
@@ -229,19 +237,18 @@ MainTower.prototype.constructor = Unit;
  */
 MainTower.prototype.getClosestEnemy = function() {
     var enemy = this.game.enemyList ;
-    var x = 1800;
+    var closest = {x: 1400, velocity: {x: 0}};
     for (var i in enemy) {
         if (enemy[i].removeFromWorld){
             enemy.splice(i, 1);
             i--;
         } else {
-            var otherCollisionBox = enemy[i].getCollisionBox();
-            if (x === 0 || x > otherCollisionBox.x)
-                x = otherCollisionBox.x;
+            if (closest.x > enemy[i].x)
+                closest = enemy[i];
         }
     }
 
-    return Math.min(x, 1400);
+    return closest;
 }
 
 MainTower.prototype.initActions = function() {
@@ -307,6 +314,7 @@ MainTower.prototype.draw = function() {
 }
 
 MainTower.prototype.drawBar = function(x, y, width, height, fill, color) {
+    Math.max(fill, 0);
     var ctx = this.game.ctx;
     ctx.beginPath();
     ctx.lineWidth = "1";
@@ -337,7 +345,7 @@ function EnemyTower(game) {
 }
 
 EnemyTower.prototype = Object.create(Tower.prototype);
-EnemyTower.prototype.constructor = Unit;
+EnemyTower.prototype.constructor = EnemyTower;
 
 EnemyTower.prototype.leftGuardian = function() {
 

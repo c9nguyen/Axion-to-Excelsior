@@ -146,6 +146,13 @@ AM.queueDownload("./img/unit/m010/jump.png");
 AM.queueDownload("./img/unit/m010/attack.png");
 AM.queueDownload("./img/unit/m010/die.png");
 
+AM.queueDownload("./img/unit/m012/stand.png");
+AM.queueDownload("./img/unit/m012/walk.png");
+AM.queueDownload("./img/unit/m012/jump.png");
+AM.queueDownload("./img/unit/m012/attack.png");
+AM.queueDownload("./img/unit/m012/regen.png");
+AM.queueDownload("./img/unit/m012/die.png");
+
 AM.queueDownload("./img/unit/m013/stand.png");
 AM.queueDownload("./img/unit/m013/walk.png");
 AM.queueDownload("./img/unit/m013/jump.png");
@@ -161,6 +168,19 @@ AM.queueDownload("./img/unit/m100/attack2.png");
 AM.queueDownload("./img/unit/m100/attack3.png");
 AM.queueDownload("./img/unit/m100/attack4.png");
 AM.queueDownload("./img/unit/m100/die.png");
+
+AM.queueDownload("./img/unit/m101/stand.png");
+AM.queueDownload("./img/unit/m101/walk.png");
+AM.queueDownload("./img/unit/m101/jump.png");
+AM.queueDownload("./img/unit/m101/attack.png");
+AM.queueDownload("./img/unit/m101/attack_effect1.png");
+AM.queueDownload("./img/unit/m101/attack_effect3.png");
+AM.queueDownload("./img/unit/m101/attack_effect2.png");
+AM.queueDownload("./img/unit/m101/attack_effect4.png");
+AM.queueDownload("./img/unit/m101/skill2.png");
+AM.queueDownload("./img/unit/m101/skill3.png");
+AM.queueDownload("./img/unit/m101/skill4.png");
+AM.queueDownload("./img/unit/m101/die.png");
 
 AM.queueDownload("./img/unit/m105/stand.png");
 AM.queueDownload("./img/unit/m105/walk.png");
@@ -271,8 +291,15 @@ AM.queueDownload("./img/effect/e1002/card.png");
 AM.queueDownload("./img/effect/e1002/card_disable.png");
 AM.queueDownload("./img/effect/e1002/card_mouseover.png");
 AM.queueDownload("./img/effect/e1002/card_click.png");
+AM.queueDownload("./img/effect/e1002/tile.png");
+AM.queueDownload("./img/effect/e1002/tile1.png");
+AM.queueDownload("./img/effect/e1002/tile2.png");
+AM.queueDownload("./img/effect/e1002/tile3.png");
+AM.queueDownload("./img/effect/e1002/tile4.png");
 AM.queueDownload("./img/effect/e1002/tile5.png");
-
+AM.queueDownload("./img/effect/e1002/tile6.png");
+AM.queueDownload("./img/effect/e1002/tile7.png");
+AM.queueDownload("./img/effect/e1002/tile8.png");
 
 AM.queueDownload("./img/effect/passive/att.png");
 AM.queueDownload("./img/effect/passive/def.png");

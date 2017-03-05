@@ -111,6 +111,24 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
 
             break;
 
+        case "e0013": //Lighting
+            var getSprite = function() {
+                var ran = Math.floor(Math.random() * 4 + 1);
+                return AM.getAsset("./img/unit/m101/attack_effect" + ran + ".png");
+            };
+
+            var collisionBox = [{x: 0, y: 0, width: 136, height: 76}];
+            action = function(that, otherUnit) {
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+
+            skill = new Effect(game, x, y, unit, getSprite(),
+                                7, 0.1, 7, collisionBox, action, percentAtt, true, 5);
+            skill.endEffect = function(that) {that.spritesheet = getSprite();}
+            break;
+
         case "e1001": //wind (player)
             //Play sound
             game.soundPlayer.addToEffect("./sound/effects/spell/wind.mp3", false, 0.5);
@@ -147,15 +165,135 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
 
         case "e1002": //meteor shower (player)
             //Play sound
+            
             var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            var center = x + 115;
+            var meteors = [
+                {x: 148, y: 163, percent: 2, num: 0},   //0
+                {x: 195, y: 220, percent: 2, num: 1},   //1
+                {x: 253, y: 290, percent: 2, num: 2},   //2
+                {x: 227, y: 330, percent: 2, num: 3},   //3
+                {x: 347, y: 410, percent: 2, num: 4},   //4
+                {x: 347, y: 405, percent: 2, num: 5},   //5
+                {x: 375, y: 460, percent: 2, num: 6},   //6
+                {x: 486, y: 570, percent: 2, num: 7},   //7
+                {x: 632, y: 770, percent: 2, num: 8},   //8
+            ];
+            var castMeteor = function(index, offset) {
+                var meteor = meteors[index];
+                castSkill(game, center - meteor.x + offset, groundLevel - meteor.y, unit, "e1002_" + meteor.num, meteor.percent);
+                meteors.splice(index, 1);
+            };
+          
+            var castRandomMeteor = function() {
+                //first meteor
+                var ran = Math.floor(Math.random() * meteors.length);  //random meteor
+                var ran2 = Math.floor(Math.random() * (800) - 400); //random distance
+                castMeteor(ran, ran2);
+
+            }
+
             action = function(that, otherUnit) {};
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/effect.png"),
-                                5, 0.1, 20, collisionBox, action, percentAtt, true);
-            skill.subEffects[4] = function(that) {
-
-                castSkill(that.game, x - 347 + 115, groundLevel - 405, unit, "e1002_5", 1);
+                                5, 0.15, 25, collisionBox, action, percentAtt, true);
+            skill.subEffects[2] = function(that) {
+                castMeteor(5, 0);
             };
+            for (var i = 3; i < 26; i += 3) {
+                skill.subEffects[i] = function(that) { castRandomMeteor();};
 
+            }
+
+            break;
+
+        case "e1002_0": //meteor shower tile 0til (player)
+            //Play sound
+
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            collisionBox[14] = {x: 100, y: 84, width: 100, height: 90};
+            collisionBox[19] = {x: 0, y: 0, width: 0, height: 0};
+            action = function(that, otherUnit) {
+                var damage = that.percent * that.unit.att;
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile.png"),
+                                11, 0.05, 22, collisionBox, action, percentAtt, true);
+            break;
+
+        case "e1002_1": //meteor shower tile 1 (player)
+            //Play sound
+
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            collisionBox[14] = {x: 146, y: 130, width: 106, height: 110};
+            collisionBox[19] = {x: 0, y: 0, width: 0, height: 0};
+            action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile1.png"),
+                                11, 0.05, 22, collisionBox, action, percentAtt, true);
+            break;
+
+        case "e1002_2": //meteor shower tile 2 (player)
+            //Play sound
+
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            collisionBox[14] = {x: 183, y: 127, width: 151, height: 177};
+            collisionBox[20] = {x: 0, y: 0, width: 0, height: 0};
+            action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile2.png"),
+                                11, 0.05, 22, collisionBox, action, percentAtt, true);
+            break;
+
+        case "e1002_3": //meteor shower tile 3 (player)
+            //Play sound
+
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            collisionBox[16] = {x: 228, y: 257, width: 97, height: 80};
+            collisionBox[21] = {x: 0, y: 0, width: 0, height: 0};
+            action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile3.png"),
+                                11, 0.05, 22, collisionBox, action, percentAtt, true);
+            break;
+
+        case "e1002_4": //meteor shower tile 4 (player)
+            //Play sound
+
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            collisionBox[16] = {x: 292, y: 315, width: 115, height: 112};
+            collisionBox[21] = {x: 0, y: 0, width: 0, height: 0};
+            action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile4.png"),
+                                11, 0.05, 22, collisionBox, action, percentAtt, true);
             break;
 
         case "e1002_5": //meteor shower tile 5 (player)
@@ -166,12 +304,69 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[16] = {x: 250, y: 240, width: 198, height: 180};
             collisionBox[20] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
             };
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile5.png"),
-                                11, 0.1, 22, collisionBox, action, percentAtt, true);
+                                11, 0.05, 22, collisionBox, action, percentAtt, true);
+            break;
+
+        case "e1002_6": //meteor shower tile 6 (player)
+            //Play sound
+
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            collisionBox[17] = {x: 331, y: 388, width: 86, height: 82};
+            collisionBox[22] = {x: 0, y: 0, width: 0, height: 0};
+            action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile6.png"),
+                                5, 0.05, 25, collisionBox, action, percentAtt, true);
+            break;
+
+        case "e1002_7": //meteor shower tile 7 (player)
+            //Play sound
+
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            collisionBox[17] = {x: 409, y: 492, width: 142, height: 109};
+            collisionBox[22] = {x: 0, y: 0, width: 0, height: 0};
+            action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile7.png"),
+                                5, 0.05, 25, collisionBox, action, percentAtt, true);
+            break;
+
+        case "e1002_8": //meteor shower tile 8 (player)
+            //Play sound
+
+            var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
+            collisionBox[17] = {x: 560, y: 632, width: 157, height: 161};
+            collisionBox[22] = {x: 0, y: 0, width: 0, height: 0};
+            action = function(that, otherUnit) {
+                if (otherUnit.constructor.name === "EnemyTower") {
+                    damage /= 2;
+                }
+                var damage = that.percent * that.unit.att;
+                otherUnit.takeDamage(damage);
+                otherUnit.takeEffect(additionalEffect);
+            };
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile8.png"),
+                                5, 0.05, 25, collisionBox, action, percentAtt, true);
             break;
 
         case "t0000": //main tower first skill
