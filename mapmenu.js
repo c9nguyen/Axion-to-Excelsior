@@ -30,9 +30,8 @@ MapMenu.prototype.create = function () {
     //back.setSize(canvasWidth, canvasHeight);
     this.game.addEntity(back);
 
-    var iceX = 330;
-    var iceY = 140
-    var ice = new Button(this.game, AM.getAsset("./img/effect/e1001/mob_1.png"), mapXLocation + iceX, mapYLocation + iceY);
+
+    var ice = new Button(this.game, AM.getAsset("./img/effect/e1001/mob_1.png"), mapXLocation + 330, mapYLocation + 140);
     ice.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'press');
     ice.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'mouseover');
     ice.addEventListener('click', function() {
@@ -40,6 +39,17 @@ MapMenu.prototype.create = function () {
       this.game.clearEntities();
       this.game.sceneManager.startScene('mainmenu');
     });
+    this.game.addEntity(ice);
+
+    var ice1 = new Button(this.game, AM.getAsset("./img/effect/e1001/mob_1.png"), mapXLocation + 240, mapYLocation + 150);
+    ice1.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'press');
+    ice1.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'mouseover');
+    ice1.addEventListener('click', function() {
+      mapType['curr'] = 'map1_1';
+      this.game.clearEntities();
+      this.game.sceneManager.startScene('mainmenu');
+    });
+    this.game.addEntity(ice1);
 
     var earthX = 500;
     var earthY = 280;
@@ -51,9 +61,11 @@ MapMenu.prototype.create = function () {
       this.game.clearEntities();
       this.game.sceneManager.startScene('mainmenu');
     });
-
-    this.game.addEntity(ice);
     this.game.addEntity(earth);
+    
+    
+
+
 
     this.addMusic();
 };

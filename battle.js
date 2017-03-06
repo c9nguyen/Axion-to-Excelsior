@@ -36,45 +36,59 @@ Battle.prototype.create = function() {
     gen.setFrequency(mapType[mapType['curr']].enemyGenFrequency);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
-    gen.addToBossQueue("m105");
-    gen.addConditionAndAction(
-        function(gen) {
-            return gen.currentBoss.health / gen.currentBoss.data.health < 0.25;
-        },
-        function(gen) {
-            gen.currentBoss.leftG.changeAction("attack3");
-            gen.currentBoss.rightG.changeAction("attack3");
-            gen.boostSpawnRate(3);
-            gen.generateDeck();
-            spawnUnit(gen.game, 2400, 500, "m101", ENEMY);
-        },
-        false
-    );
-    gen.addConditionAndAction(
-        function(gen) {
-            return gen.currentBoss.health / gen.currentBoss.data.health < 0.5;
-        },
-        function(gen) {
-            gen.currentBoss.leftG.changeAction("attack3");
-            gen.currentBoss.rightG.changeAction("attack3");
-            gen.boostSpawnRate(2);
-            gen.generateDeck();
-            spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
-        },
-        false
-    );
-    gen.addConditionAndAction(
-        function(gen) {
-            return gen.currentBoss.health / gen.currentBoss.data.health < 0.75;
-        },
-        function(gen) {
-            gen.currentBoss.leftG.changeAction("attack3");
-            gen.currentBoss.rightG.changeAction("attack3");
-            gen.boostSpawnRate(1);
-            gen.generateDeck();
-        },
-        false
-    );
+    for(var i = 0; i < mapType[mapType['curr']].bossQueue.length; i++){
+        gen.addToBossQueue(mapType[mapType['curr']].bossQueue[i]);
+    }
+    // gen.addToBossQueue("m105");
+    if(mapType[mapType['curr']].mapEffect1 !== undefined){
+        gen.addConditionAndAction(mapType[mapType['curr']].mapEffect1[0], mapType[mapType['curr']].mapEffect1[1], mapType[mapType['curr']].mapEffect1[2]);
+    }
+    if(mapType[mapType['curr']].mapEffect2 !== undefined){
+        gen.addConditionAndAction(mapType[mapType['curr']].mapEffect2[0], mapType[mapType['curr']].mapEffect2[1], mapType[mapType['curr']].mapEffect2[2]);
+    }
+    if(mapType[mapType['curr']].mapEffect3 !== undefined){
+        gen.addConditionAndAction(mapType[mapType['curr']].mapEffect3[0], mapType[mapType['curr']].mapEffect3[1], mapType[mapType['curr']].mapEffect3[2]);
+    }
+    
+    
+    // gen.addConditionAndAction(
+    //     function(gen) {
+    //         return gen.currentBoss.health / gen.currentBoss.data.health < 0.25;
+    //     },
+    //     function(gen) {
+    //         gen.currentBoss.leftG.changeAction("attack3");
+    //         gen.currentBoss.rightG.changeAction("attack3");
+    //         gen.boostSpawnRate(3);
+    //         gen.generateDeck();
+    //         spawnUnit(gen.game, 2400, 500, "m101", ENEMY);
+    //     },
+    //     false
+    // );
+    // gen.addConditionAndAction(
+    //     function(gen) {
+    //         return gen.currentBoss.health / gen.currentBoss.data.health < 0.5;
+    //     },
+    //     function(gen) {
+    //         gen.currentBoss.leftG.changeAction("attack3");
+    //         gen.currentBoss.rightG.changeAction("attack3");
+    //         gen.boostSpawnRate(2);
+    //         gen.generateDeck();
+    //         spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
+    //     },
+    //     false
+    // );
+    // gen.addConditionAndAction(
+    //     function(gen) {
+    //         return gen.currentBoss.health / gen.currentBoss.data.health < 0.75;
+    //     },
+    //     function(gen) {
+    //         gen.currentBoss.leftG.changeAction("attack3");
+    //         gen.currentBoss.rightG.changeAction("attack3");
+    //         gen.boostSpawnRate(1);
+    //         gen.generateDeck();
+    //     },
+    //     false
+    // );
 
     this.game.addEntity(gen);
 
