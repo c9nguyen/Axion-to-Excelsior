@@ -1175,7 +1175,6 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                     363, 218, 0.75, true);
                 that.game.soundPlayer.addToEffect("./sound/effects/monster/axestab1.wav", undefined, undefined, 0.65);
                 that.game.soundPlayer.addToEffect("./sound/effects/monster/axeimpact.wav", undefined, undefined, 0.75);
-                that.game.soundPlayer.addToEffect("./sound/effects/monster/axeconcretehit.wav", undefined, undefined, 0.65);
                 that.game.soundPlayer.addToEffect("./sound/effects/monster/crackandstress1.wav", undefined, undefined, 0.55);
             };
 
