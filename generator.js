@@ -213,10 +213,11 @@ EnemyGenerator.prototype.update = function() {
             }
         }
     if (this.active) {
+            var that = this;
             for (var i = 0; i < this.conditionAndAction.length; i++) {
                 var pair = this.conditionAndAction[i];
-                if (pair.condition()) {
-                    pair.action();
+                if (pair.condition(that)) {
+                    pair.action(that);
                     if (!pair.repeat) this.conditionAndAction.splice(i, 1);
                 } 
             }

@@ -38,12 +38,12 @@ Battle.prototype.create = function() {
     gen.setBossesDiedAction(this.endGame);
     gen.addToBossQueue("m105");
     gen.addConditionAndAction(
-        function() {
-            return enemyBoss.health / enemyBoss.data.health < 0.25;
+        function(gen) {
+            return gen.currentBoss.health / gen.currentBoss.data.health < 0.25;
         },
-        function() {
-            enemyBoss.leftG.changeAction("attack3");
-            enemyBoss.rightG.changeAction("attack3");
+        function(gen) {
+            gen.currentBoss.leftG.changeAction("attack3");
+            gen.currentBoss.rightG.changeAction("attack3");
             gen.boostSpawnRate(3);
             gen.generateDeck();
             spawnUnit(gen.game, 2400, 500, "m101", ENEMY);
@@ -51,12 +51,12 @@ Battle.prototype.create = function() {
         false
     );
     gen.addConditionAndAction(
-        function() {
-            return enemyBoss.health / enemyBoss.data.health < 0.5;
+        function(gen) {
+            return gen.currentBoss.health / gen.currentBoss.data.health < 0.5;
         },
-        function() {
-            enemyBoss.leftG.changeAction("attack3");
-            enemyBoss.rightG.changeAction("attack3");
+        function(gen) {
+            gen.currentBoss.leftG.changeAction("attack3");
+            gen.currentBoss.rightG.changeAction("attack3");
             gen.boostSpawnRate(2);
             gen.generateDeck();
             spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
@@ -64,12 +64,12 @@ Battle.prototype.create = function() {
         false
     );
     gen.addConditionAndAction(
-        function() {
-            return enemyBoss.health / enemyBoss.data.health < 0.75;
+        function(gen) {
+            return gen.currentBoss.health / gen.currentBoss.data.health < 0.75;
         },
-        function() {
-            enemyBoss.leftG.changeAction("attack3");
-            enemyBoss.rightG.changeAction("attack3");
+        function(gen) {
+            gen.currentBoss.leftG.changeAction("attack3");
+            gen.currentBoss.rightG.changeAction("attack3");
             gen.boostSpawnRate(1);
             gen.generateDeck();
         },
@@ -122,9 +122,42 @@ Battle.prototype.create = function() {
     // SOUND
     this.addAllMusic();
 
-    //spawnUnit(this.game, 100, 400, "h004", PLAYER);
-    // spawnUnit(this.game, 1100, 400, "m105", ENEMY);
-    // spawnUnit(this.game, 1100, 400, "m100", ENEMY);
+    // HARD CODE BATTLES
+    // gen.active = true;
+    // spawnUnit(this.game, 100, 400, "h000", PLAYER);
+    // spawnUnit(this.game, 250, 400, "h000", PLAYER);
+    // spawnUnit(this.game, 0, 400, "h001", PLAYER);
+    // spawnUnit(this.game, 150, 400, "h002", PLAYER);
+    // spawnUnit(this.game, 200, 400, "h003", PLAYER);
+    // spawnUnit(this.game, 600, 400, "h004", PLAYER);
+    // spawnUnit(this.game, 500, 400, "h004", PLAYER);
+    // for(var i = 0; i < 3; i++){
+    //     spawnUnit(this.game, i * 50, 400, "h005", PLAYER);
+    // }
+    // for(var i = 0; i < 5; i++){
+    //     spawnUnit(this.game, 300 + i * 50, 400, "h004", PLAYER);
+    // }
+    // spawnUnit(this.game, 100, 400, "h005", PLAYER);
+    // spawnUnit(this.game, 160, 400, "h100", PLAYER);
+    // spawnUnit(this.game, 210, 400, "h100", PLAYER);
+
+    // spawnUnit(this.game, 2200, 400, "m000", ENEMY);
+    // spawnUnit(this.game, 2300, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 2200, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 2100, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 2000, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 1900, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 1800, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 2220, 400, "m002", ENEMY);
+    // spawnUnit(this.game, 2230, 400, "m003", ENEMY);
+    // spawnUnit(this.game, 2240, 400, "m004", ENEMY);
+    // spawnUnit(this.game, 2250, 400, "m005", ENEMY);
+    // spawnUnit(this.game, 2260, 400, "m006", ENEMY);
+    // spawnUnit(this.game, 2270, 400, "m013", ENEMY);
+
+    // spawnUnit(this.game, 2270, 400, "m105", ENEMY);
+    // spawnUnit(this.game, 2270, 400, "m100", ENEMY);
+    // spawnUnit(this.game, 2270, 400, "m101", ENEMY);
 
 
     //Enemy button for debugging
