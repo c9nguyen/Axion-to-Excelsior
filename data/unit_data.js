@@ -269,6 +269,17 @@ var unitData = {
         pushResist: 0.2, 
         range: [{x: -300, y: -200, width: 600, height: 200}, {x: -285, y: -200, width: 320, height: 220}],
     },
+    m102: { //skeleton captain
+        groundWidth: 121,
+        groundHeight: 10,
+        health: 800,
+        movementspeed: -100,
+        att: 10,
+        def: 0.1,
+        flying: false,
+        pushResist: 0.2, 
+        range: [{x: -400, y: -45, width: 465, height: 213}, {x: -575, y: -23, width: 267, height: 575}],
+    },
     m105: { //creepy one
         groundWidth: 300,
         groundHeight: 10,

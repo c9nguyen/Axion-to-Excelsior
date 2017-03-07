@@ -1478,6 +1478,94 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             }
             break;
 
+     case "m102":   //skeleton captain
+            unit = new Unit(game, x, y, unitcode, side);
+            var groundPoints = [{ x: 34, y: 221 }];
+            var collisionBox = [{ x: 86, y: 36, width: 70, height: 186 }];
+            var walk = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/walk.png"),
+                6, 0.13, 6, groundPoints, collisionBox, true);
+            walk.velocity.x = walk.unit.movementspeed;
+
+            groundPoints = [{ x: 32, y: 222 }];
+            collisionBox = [{ x: 32, y: 37, width: 70, height: 186 }];
+            var stand = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/walk.png"),
+                6, 0.13, 6, groundPoints, collisionBox, true);
+            stand.subAction[0] = function (that) { that.unit.velocity.x = 0 };
+
+            groundPoints = [{ x: 32, y: 222 }];
+            collisionBox = [{ x: 32, y: 37, width: 70, height: 186 }];
+            var jump = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/jump.png"),
+                1, 0.1, 1, groundPoints, collisionBox, true);
+
+            groundPoints = [{ x: 464, y: 51 }];
+            collisionBox = [{ x: 464, y: 235, width: 70, height: 186 }];
+            var attack = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack.png"),
+                10, 0.1, 20, groundPoints, collisionBox, false);
+            attack.subAction[9] = function (that) {
+                for (var i = 0; i < 4; i++) {
+                    castSkill(that.game, that.unit.x - 136 * i, groundLevel - 50, that.unit, "e0013", 1);
+                }
+            };
+
+            groundPoints = [{ x: 680, y: 580 }];
+            collisionBox = [{ x: 680, y: 394, width: 70, height: 186 }];
+            var attack2 = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/attack.png"),
+                8, 0.1, 24, groundPoints, collisionBox, false, 15);
+            attack2.subAction[9] = function (that) {
+                for (var i = 0; i < 4; i++) {
+                    castSkill(that.game, that.unit.x - 136 * i, groundLevel - 50, that.unit, "e0013", 2);
+                }
+            };
+
+            groundPoints = [{ x: 146, y: 237 }];
+            collisionBox = [{ x: 146, y: 52, width: 70, height: 186 }];
+            var skill = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/skill.png"),
+                9, 0.1, 18, groundPoints, collisionBox, false, 10);
+            skill.subAction[4] = function (that) {
+                castSkill(that.game, that.unit.x - 300, that.unit.y - 200, that.unit, "e0000", 1,
+                    undefined, 600, 250, 0.3, true, true, function (that, otherUnit) { 
+                        otherUnit.takePassiveEffect("def", 0.4) 
+                    });
+            };
+
+
+            groundPoints = [{ x: 116, y: 227 }];
+            collisionBox = [{ x: 0, y: 0, width: 0, height: 0 }];
+            var die = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/die.png"),
+                9, 0.1, 18, groundPoints, collisionBox, false, -1);
+            die.endAction = function () {
+                this.unit.removeFromWorld = true
+            };
+
+            unit.actions["walk"] = walk;
+            unit.actions["jump"] = jump;
+            unit.actions["attack"] = attack;
+            unit.actions["attack"] = attack;
+            unit.actions["skill"] = skill;
+            unit.actions["die"] = die;
+            unit.actions["stand"] = stand;
+            unit.defaultAction = stand;
+            unit.currentAction = walk;
+            unit.actionHandler = function (that) {
+                if (!that.gravity) {
+                    if (that.currentAction.interruptible || that.currentAction.isDone()) {
+                        if (skill.checkCooldown()) {
+                            that.changeAction("skill");
+                        } else {
+                            var collisedEnemy = that.checkEnemyInRange();
+                            if (collisedEnemy.has(1) && skill2.checkCooldown()) {
+                                    that.changeAction("attack2");
+                            } else if (collisedEnemy.has(1)) {
+                                that.changeAction("attack");
+                            } else {
+                                that.changeAction("walk");
+                            }
+                        }
+                    }
+                } else
+                    that.changeAction("jump");
+            }
+            break;
 
         case "m105":
             unit = new Unit(game, x, y, unitcode, side);
