@@ -11,7 +11,6 @@ Battle.prototype.constructor = Battle;
 
 Battle.prototype.create = function() {
     console.log('battle created');
-
     this.gameover = false;
 	this.loadCharacter();
     this.buildingBackground();

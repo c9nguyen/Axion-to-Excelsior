@@ -201,10 +201,11 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             action = function(that, otherUnit) {};
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/effect.png"),
                                 5, 0.1, 25, collisionBox, action, percentAtt, true);
-            skill.subEffects[2] = function(that) {
+            skill.subEffects[3] = function(that) {
                 castMeteor(5, 0);
+                castRandomMeteor();
             };
-            for (var i = 3; i < 26; i += 3) {
+            for (var i = 4; i < 17; i += 2) {
                 skill.subEffects[i] = function(that) { castRandomMeteor();};
 
             }
