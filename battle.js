@@ -3,6 +3,7 @@ function Battle(game)
 	// this.game = game;
     Scene.call(this, game);
     this.background = mapType[mapType['curr']].background;// "./img/map/01/back.png";
+    this.gameover = false;
 }
 
 Battle.prototype = Object.create(Scene.prototype);
@@ -11,7 +12,7 @@ Battle.prototype.constructor = Battle;
 Battle.prototype.create = function() {
     console.log('battle created');
 
-
+    this.gameover = false;
 	this.loadCharacter();
     this.buildingBackground();
 
@@ -269,26 +270,29 @@ Battle.prototype.endGame = function(playerWon, extraAction = undefined){
 
     //-ADJUST: put more things here if you want extra end game stuff...
     //- or use the extraAction function
-    if(playerWon){
-        this.game.soundPlayer.removeAllSound();
-        this.game.soundPlayer.randomTrackInQueue = false;
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-won.mp3", undefined, undefined, 0.4);
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/mappedstoryUpbeat.mp3", true, undefined, 0.3);
-        this.enableSound = false;
-    } else {
-        this.game.soundPlayer.removeAllSound();
-        this.game.soundPlayer.randomTrackInQueue = false;
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-lost.mp3", undefined, undefined, 0.4);
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-end-of-the-world.mp3", true, undefined, 0.3);
-        this.enableSound = false;
-    }
-    if(extraAction !== undefined){
-        extraAction();
-    }
-    //-end ADJUST
+    if(!this.gameover){
+        this.gameover = true;
+        if(playerWon){
+            this.game.soundPlayer.removeAllSound();
+            this.game.soundPlayer.randomTrackInQueue = false;
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-won.mp3", undefined, undefined, 0.4);
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/mappedstoryUpbeat.mp3", true, undefined, 0.3);
+            this.enableSound = false;
+        } else {
+            this.game.soundPlayer.removeAllSound();
+            this.game.soundPlayer.randomTrackInQueue = false;
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-lost.mp3", undefined, undefined, 0.4);
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-end-of-the-world.mp3", true, undefined, 0.3);
+            this.enableSound = false;
+        }
+        if(extraAction !== undefined){
+            extraAction();
+        }
+        //-end ADJUST
 
-    //-Adding logo
-    var endGameEntity = new EndGame(this.game, playerWon);
-    this.game.addEntity(endGameEntity);
+        //-Adding logo
+        var endGameEntity = new EndGame(this.game, playerWon);
+        this.game.addEntity(endGameEntity);
+    }
 }
 //--- end endGame

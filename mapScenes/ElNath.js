@@ -1,12 +1,12 @@
-function MapMenu(game) {
-    Scene.call(this, game);
-    
+function ElNath(game) {
+  Scene.call(this, game);
+
 }
 
-MapMenu.prototype = Object.create(Scene.prototype);
-MapMenu.prototype.constructor = MapMenu;
+ElNath.prototype = Object.create(Scene.prototype);
+ElNath.prototype.constructor = ElNath;
 
-MapMenu.prototype.create = function () {
+ElNath.prototype.create = function () {
     var canvasHeight = this.game.ctx.canvas.clientHeight;
 	  var canvasWidth = this.game.ctx.canvas.clientWidth;
 
@@ -41,48 +41,15 @@ MapMenu.prototype.create = function () {
     });
     this.game.addEntity(ice);
 
-    var ice1 = new Button(this.game, AM.getAsset("./img/ui/numbers/1.png"), mapXLocation + 255, mapYLocation + 155);
-    ice1.addSheet( AM.getAsset("./img/ui/numbers/1_1.png"),'press');
-    ice1.addSheet( AM.getAsset("./img/ui/numbers/1_2.png"),'mouseover');
+    var ice1 = new Button(this.game, AM.getAsset("./img/ui/1.png"), mapXLocation + 240, mapYLocation + 150);
+    ice1.addSheet( AM.getAsset("./img/ui/1_1.png"),'press');
+    ice1.addSheet( AM.getAsset("./img/ui/1_2.png"),'mouseover');
     ice1.addEventListener('click', function(that){
         mapType['curr'] = 'map1_1';
         that.game.clearEntities();
         that.game.sceneManager.startScene('mainmenu');
     });
     this.game.addEntity(ice1);
-
-    var ice2 = new Button(this.game, AM.getAsset("./img/ui/numbers/2.png"), mapXLocation + 370, mapYLocation + 250);
-    ice2.addSheet( AM.getAsset("./img/ui/numbers/2_1.png"),'press');
-    ice2.addSheet( AM.getAsset("./img/ui/numbers/2_2.png"),'mouseover');
-    ice2.addEventListener('click', function(that){
-        mapType['curr'] = 'map1_2';
-        that.game.clearEntities();
-        that.game.sceneManager.startScene('mainmenu');
-    });
-    this.game.addEntity(ice2);
-
-    var ice3 = new Button(this.game, AM.getAsset("./img/ui/numbers/3.png"), mapXLocation + 430, mapYLocation + 180);
-    ice3.addSheet( AM.getAsset("./img/ui/numbers/3_1.png"),'press');
-    ice3.addSheet( AM.getAsset("./img/ui/numbers/3_2.png"),'mouseover');
-    ice3.addEventListener('click', function(that){
-        mapType['curr'] = 'map1_3';
-        that.game.clearEntities();
-        that.game.sceneManager.startScene('mainmenu');
-    });
-    this.game.addEntity(ice3);
-
-    
-
-    var earth = new Button(this.game, AM.getAsset("./img/effect/e1001/mob_1.png"), mapXLocation + 503, mapYLocation + 253);
-    earth.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'press');
-    earth.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'mouseover');
-    earth.addEventListener('click', function(that) {
-      mapType['curr'] = 'map2';
-      that.game.clearEntities();
-      that.game.sceneManager.startScene('mainmenu');
-    });
-    this.game.addEntity(earth);
-    
     
 
 
@@ -97,6 +64,6 @@ MapMenu.prototype.create = function () {
 
     this.game.addEntity(exit_button);
 };
-MapMenu.prototype.addMusic = function(){
+ElNath.prototype.addMusic = function(){
   this.game.soundPlayer.addToMusic("./sound/music/mappedstoryMainTheme.mp3", true, undefined, 0.5);
 }

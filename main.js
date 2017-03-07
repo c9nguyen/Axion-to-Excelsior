@@ -327,6 +327,12 @@ AM.queueDownload("./img/effect/e1001/mob_6.png");
 for(var i = 0; i < 10; i++){
     AM.queueDownload("./img/ui/numbers/" + i +".png");
 }
+AM.queueDownload("./img/ui/numbers/1_1.png");
+AM.queueDownload("./img/ui/numbers/1_2.png");
+AM.queueDownload("./img/ui/numbers/2_1.png");
+AM.queueDownload("./img/ui/numbers/2_2.png");
+AM.queueDownload("./img/ui/numbers/3_1.png");
+AM.queueDownload("./img/ui/numbers/3_2.png");
 AM.queueDownload("./img/ui/numbers/minusnormal.png");
 AM.queueDownload("./img/ui/numbers/minushover.png");
 AM.queueDownload("./img/ui/numbers/minuspress.png");
