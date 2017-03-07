@@ -184,7 +184,7 @@ var unitData = {
     m012: { //minion skeleton
         groundWidth: 40,
         groundHeight: 10,
-        health: 40,
+        health: 50,
         movementspeed: -100,
         att: 15,
         def: 0,
@@ -230,7 +230,7 @@ var unitData = {
     m105: { //creepy one
         groundWidth: 300,
         groundHeight: 10,
-        health: 1500,
+        health: 2000,
         movementspeed: -180,
         att: 30,
         def: 0.4,

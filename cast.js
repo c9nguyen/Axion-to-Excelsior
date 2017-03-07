@@ -225,7 +225,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
             };
-            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_bigsheet0.png"),
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_all.png"),
                                 11, 0.05, 22, collisionBox, action, percentAtt, true);
             skill.setFrameSize(239, 177);
             break;
@@ -244,7 +244,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
             };
-            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_bigsheet0.png"),
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_all.png"),
                                 11, 0.05, 22, collisionBox, action, percentAtt, true);
             skill.setFrameSize(299, 236);
             skill.setSpritesheetOffset(0, 354);
@@ -264,9 +264,10 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
             };
-            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_bigsheet1.png"),
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_all.png"),
                                 11, 0.05, 22, collisionBox, action, percentAtt, true);
             skill.setFrameSize(394, 306);
+            skill.setSpritesheetOffset(0, 826);
             break;
 
         case "e1002_3": //meteor shower tile 3 (player)
@@ -283,10 +284,10 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
             };
-            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_bigsheet1.png"),
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_all.png"),
                                 11, 0.05, 22, collisionBox, action, percentAtt, true);
             skill.setFrameSize(367, 340);
-            skill.setSpritesheetOffset(0, 612);
+            skill.setSpritesheetOffset(0, 1438);
             break;
 
         case "e1002_4": //meteor shower tile 4 (player)
@@ -303,9 +304,10 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
             };
-            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_bigsheet2.png"),
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_all.png"),
                                 11, 0.05, 22, collisionBox, action, percentAtt, true);
             skill.setFrameSize(451, 423);
+            skill.setSpritesheetOffset(0, 2118);
             break;
 
         case "e1002_5": //meteor shower tile 5 (player)
@@ -323,10 +325,10 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
             };
-            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_bigsheet2.png"),
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_all.png"),
                                 11, 0.05, 22, collisionBox, action, percentAtt, true);
             skill.setFrameSize(490, 421);
-            skill.setSpritesheetOffset(0, 846);
+            skill.setSpritesheetOffset(0, 2964);
             break;
 
         case "e1002_6": //meteor shower tile 6 (player)
@@ -343,9 +345,10 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
             };
-            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_bigsheet3.png"),
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_all.png"),
                                 5, 0.05, 25, collisionBox, action, percentAtt, true);
             skill.setFrameSize(465, 469);
+            skill.setSpritesheetOffset(0, 3806);
             break;
 
         case "e1002_7": //meteor shower tile 7 (player)
@@ -362,10 +365,10 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
             };
-            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_bigsheet3.png"),
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_all.png"),
                                 5, 0.05, 25, collisionBox, action, percentAtt, true);
             skill.setFrameSize(586, 599);
-            skill.setSpritesheetOffset(0, 2345);
+            skill.setSpritesheetOffset(0, 6151);
             break;
 
         case "e1002_8": //meteor shower tile 8 (player)
@@ -382,8 +385,10 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
             };
-            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile8.png"),
+            skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1002/tile_all.png"),
                                 5, 0.05, 25, collisionBox, action, percentAtt, true);
+            skill.setFrameSize(771, 797);
+            skill.setSpritesheetOffset(2930, 3806);
             break;
 
         case "t0000": //main tower first skill

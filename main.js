@@ -297,7 +297,7 @@ AM.queueDownload("./img/effect/e1002/card.png");
 AM.queueDownload("./img/effect/e1002/card_disable.png");
 AM.queueDownload("./img/effect/e1002/card_mouseover.png");
 AM.queueDownload("./img/effect/e1002/card_click.png");
-AM.queueDownload("./img/effect/e1002/tile_bigsheet0.png");
+AM.queueDownload("./img/effect/e1002/tile_all.png");
 AM.queueDownload("./img/effect/e1002/tile_bigsheet1.png");
 AM.queueDownload("./img/effect/e1002/tile_bigsheet2.png");
 AM.queueDownload("./img/effect/e1002/tile_bigsheet3.png");
