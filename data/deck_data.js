@@ -11,8 +11,11 @@ var PLAYERDECK = {
                   {code: "h100", ticket: 1}
                 ],
 
-     spellCards:[
+     spellCards:[ //Limit 2
                   {code: "e1001", ticket: 1},
                   {code: "e1002", ticket: 1},
+                ],
+     summonCards:[  //Limit 3
+                  {code: "s000", ticket: 2},
                 ]
 };

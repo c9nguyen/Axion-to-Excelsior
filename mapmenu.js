@@ -11,16 +11,18 @@ MapMenu.prototype.create = function () {
 	  var canvasWidth = this.game.ctx.canvas.clientWidth;
 
     // Background
-    var backGroundColor = new Entity(this.game);
-    backGroundColor.update = function(){ /* Empty*/ };
-    backGroundColor.draw = function(){
-      this.game.ctx.beginPath();
-      this.game.ctx.fillStyle="#00cccc"; // Light-Blue
-      this.game.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-      this.game.ctx.stroke();
-    };
+    var backGroundColor = new NonAnimatedObject(this.game, AM.getAsset("./img/back/mapselect.jpg"),0, 0);
+    backGroundColor.setSize(canvasWidth, canvasHeight);
+    // backGroundColor.update = function(){ /* Empty*/ };
+    // backGroundColor.draw = function(){
+    //   this.game.ctx.beginPath();
+    //   this.game.ctx.fillStyle="#00cccc"; // Light-Blue
+    //   this.game.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    //   this.game.ctx.stroke();
+    // };
     this.game.addEntity(backGroundColor);
     // -- background
+    
 
     var mapAsset = AM.getAsset('./img/map/01/map.png');
     var mapXLocation = (canvasWidth - mapAsset.width) / 2;
@@ -30,15 +32,19 @@ MapMenu.prototype.create = function () {
     //back.setSize(canvasWidth, canvasHeight);
     this.game.addEntity(back);
 
-
-    var ice = new Button(this.game, AM.getAsset("./img/effect/e1001/mob_1.png"), mapXLocation + 338, mapYLocation + 175);
-    ice.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'press');
-    ice.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'mouseover');
+    var portal = new AnimatedObject(this.game, AM.getAsset("./img/effect/portal/portal.png"), mapXLocation + 338, mapYLocation + 175, 7, 0.1, 7, true);
+    var portal_mouseover = new AnimatedObject(this.game, AM.getAsset("./img/effect/portal/portal_mouseover.png"), mapXLocation + 338, mapYLocation + 175, 7, 0.1, 7, true);
+    var ice = new Button(this.game, AM.getAsset("./img/effect/portal/portal.png"), mapXLocation + 338, mapYLocation + 175);
     ice.addEventListener('click', function(that) {
       mapType['curr'] = 'map1';
       that.game.clearEntities();
       that.game.sceneManager.startScene('mainmenu');
     });
+    ice.mouseover = portal_mouseover;
+    ice.press = ice.mouseover;
+    ice.disable = ice.press;
+    ice.normal = portal;
+    ice.colliseBox = {x: ice.x, y: ice.y, width: 41, height: 49};
     this.game.addEntity(ice);
 
     var ice1 = new Button(this.game, AM.getAsset("./img/ui/numbers/1.png"), mapXLocation + 255, mapYLocation + 155);

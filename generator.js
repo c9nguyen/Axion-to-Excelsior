@@ -223,11 +223,11 @@ EnemyGenerator.prototype.update = function() {
             }
             if (this.frequency > 2){
                 if(this.frequency > 4){
-                    this.frequency -= 0.02 * this.game.clockTick;
-                } else if (this.frequency > 3){
                     this.frequency -= 0.01 * this.game.clockTick;
-                } else {
+                } else if (this.frequency > 3){
                     this.frequency -= 0.005 * this.game.clockTick;
+                } else {
+                    this.frequency -= 0.0025 * this.game.clockTick;
                 }
             }
 
@@ -246,7 +246,7 @@ EnemyGenerator.prototype.update = function() {
 
 /* ================================================================================================= */
 
-CardGenerator = function(game, x, y, numOfCard, unitList = [], spellList = []) {
+CardGenerator = function(game, x, y, numOfCard, unitList = [], spellList = [], summonList = []) {
     this.onHand = [];
     this.onHandLocation = [];
     this.onHandCooldown = [];
@@ -266,7 +266,11 @@ CardGenerator = function(game, x, y, numOfCard, unitList = [], spellList = []) {
     });
 
     spellList.map(function(unit) {
-        for (var i = 0; i < unit.ticket; i++) that.onDeck.push({code: unit.code, type: "effect"});
+        for (var i = 0; i < unit.ticket; i++) that.onDeck.push({code: unit.code, type: "spell"});
+    });
+
+    summonList.map(function(unit) {
+        for (var i = 0; i < unit.ticket; i++) that.onDeck.push({code: unit.code, type: "summon"});
     });
 
     for (var i = 0; i < numOfCard; i++) {
@@ -346,7 +350,7 @@ CardGenerator.prototype.drawCard = function(index) {
         var location = this.onHandLocation[index];
         var newCard = new UnitCard(this, card.code, card.type,  location.x, location.y, this.x, this.y, index);
         this.onHand[index] = newCard;
-        this.game.addEntity(newCard);
+        this.game.addHeadEntity(newCard);
     }
 }
 
@@ -425,10 +429,14 @@ CardGenerator.prototype.update = function() {
                 }
             }
         }
+        if (this.mouseSpell) 
+            if (this.mouseSpell.removeFromWorld) this.mouseSpell = undefined;
+            else this.mouseSpell.update();
     }
 }
 
 CardGenerator.prototype.draw = function() {
+    if (this.mouseSpell) this.mouseSpell.draw();
     var x = this.numOfCard * 60 + 100;
         var ctx = this.game.ctx;
     var energyPercent = this.energy / 10;

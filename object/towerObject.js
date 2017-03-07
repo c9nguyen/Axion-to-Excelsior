@@ -195,7 +195,7 @@ function MainTower(game) {
         if (that.currentAction.interruptible || that.currentAction.isDone()) {
             that.changeAction("attack");
         }
-        var target = that.getClosestEnemy();
+        var target = getClosestUnit(that.game, ENEMY, 1400);
         castSkill(that.game, target.x + target.velocity.x - 50, -140 , that, "t0000", 1.5);
 
     });
@@ -208,7 +208,8 @@ function MainTower(game) {
         if (that.currentAction.interruptible || that.currentAction.isDone()) {
             that.changeAction("attack2");
         }
-        var target = that.getClosestEnemy();
+     //   var target = that.getClosestEnemy();
+        var target = getClosestUnit(that.game, ENEMY, 1400);
         castSkill(that.game, target.x + target.velocity.x - 100, 50, that, "t0001", 1);
     });
     this.skill2.setCooldown(30);
