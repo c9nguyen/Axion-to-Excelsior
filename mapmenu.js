@@ -61,16 +61,6 @@ MapMenu.prototype.create = function () {
     });
     this.game.addEntity(ice2);
 
-    var ice3 = new Button(this.game, AM.getAsset("./img/ui/numbers/3.png"), mapXLocation + 430, mapYLocation + 180);
-    ice3.addSheet( AM.getAsset("./img/ui/numbers/3_1.png"),'press');
-    ice3.addSheet( AM.getAsset("./img/ui/numbers/3_2.png"),'mouseover');
-    ice3.addEventListener('click', function(that){
-        mapType['curr'] = 'map1_3';
-        that.game.clearEntities();
-        that.game.sceneManager.startScene('mainmenu');
-    });
-    this.game.addEntity(ice3);
-
     
 
     var earth = new Button(this.game, AM.getAsset("./img/effect/e1001/mob_1.png"), mapXLocation + 503, mapYLocation + 253);

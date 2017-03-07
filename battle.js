@@ -137,6 +137,8 @@ Battle.prototype.create = function() {
     this.addAllMusic();
 
     // HARD CODE BATTLES
+    castSkill(this.game, 0, 0,
+                    playerBoss, "e1002");
     // gen.active = true;
     // spawnUnit(this.game, 100, 400, "h000", PLAYER);
     // spawnUnit(this.game, 250, 400, "h000", PLAYER);
