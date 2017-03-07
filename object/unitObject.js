@@ -218,7 +218,7 @@ function Unit(game, x = 0, y = 0, unitcode, side) {
     this.takingEffect = [];
     this.passiveEffectInit();
     this.getHit = function(that, damage) {  //default get hit action: lose hp
-        that.health -= Math.max(damage - (that.def * damage), 1);
+        that.loseHealth(Math.max(damage - (that.def * damage), 1));
         that.takingEffect.map(function(effect) {
             effect(that);
         });
@@ -234,21 +234,18 @@ Unit.prototype.passiveEffectInit = function() {
     this.passiveEffect = {};
     this.passiveEffectImage = {};
     this.passiveEffect["att"] = {amount: 0, duration: 0};
-    this.passiveEffectImage["att"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/att.png"));
-    this.passiveEffectImage["att"].setSize(20, 20);
+    // this.passiveEffectImage["att"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/att.png"));
+    // this.passiveEffectImage["att"].setSize(20, 20);
     this.passiveEffect["def"] = {amount: 0, duration: 0};
-    this.passiveEffectImage["def"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/def.png"));
-    this.passiveEffectImage["def"].setSize(20, 20);
-    this.passiveEffect["heal"] = {amount: 0, duration: 0};
-    this.passiveEffectImage["heal"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/heal.png"));
-    this.passiveEffectImage["heal"].setSize(20, 20);
+    // this.passiveEffectImage["def"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/def.png"));
+    // this.passiveEffectImage["def"].setSize(20, 20);
     this.passiveEffect["poison"] = {amount: 0, duration: 0}; 
     this.passiveEffectImage["poison"] = new AnimatedObject(this.game, AM.getAsset("./img/effect/passive/poison.png"), 
                                                         this.x, this.y, 5, 0.15, 5, true);
     this.passiveEffectImage["poison"].setSize(20, 20); 
     this.passiveEffect["speed"] = {amount: 0, duration: 0};  
-    this.passiveEffectImage["speed"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/speed.png"));
-    this.passiveEffectImage["speed"].setSize(20, 20);
+    // this.passiveEffectImage["speed"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/speed.png"));
+    // this.passiveEffectImage["speed"].setSize(20, 20);
     // this.passiveEffect["stun"] = {amount: 0, duration: 0};
     // this.passiveEffectImage["stun"] = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/stun.png"));
     // this.passiveEffectImage["stun"].setSize(20, 20);
@@ -280,7 +277,6 @@ Unit.prototype.applyPassiveEffect = function() {
     this.att = this.data.att + this.data.att * this.passiveEffect.att.amount;
     this.def = this.data.def + this.passiveEffect.def.amount;
     this.health = Math.max(this.health - this.passiveEffect.poison.amount * this.game.clockTick, 1);
-    this.health = Math.min(this.health + this.passiveEffect.heal.amount * this.game.clockTick, this.data.health);
     this.speedPercent = this.baseSpeedPercent + this.passiveEffect.speed.amount;
     for (var i in this.passiveEffect) {
         var effect = this.passiveEffect[i];
@@ -325,6 +321,12 @@ Unit.prototype.heal = function(amount) {
 
 Unit.prototype.takeDamage = function(amount) {
     this.takingDamage += amount;
+}
+
+Unit.prototype.loseHealth = function(amount) {
+    this.health -= amount;
+    var height = this.getCollisionBox().y;
+    this.game.addEntity(new Number(this.game, this.x, height - 20, amount));
 }
 
 Unit.prototype.takeEffect = function(effect) {
@@ -502,8 +504,15 @@ Unit.prototype.draw = function() {
     var dis = 0;
     for (var effect in this.passiveEffect) {
         
-        if (this.passiveEffect[effect].amount > 0) {
-            var passiveEffect = this.passiveEffectImage[effect];
+        if (this.passiveEffect[effect].amount != 0) {
+            if (effect === "poison")
+            var passiveEffect = new AnimatedObject(this.game, AM.getAsset("./img/effect/passive/poison.png"), 
+                                                        this.x, this.y, 5, 0.15, 5, true);
+            else
+            var passiveEffect   = this.passiveEffect[effect].amount > 0 ? new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/" + effect +  ".png"))
+                                                                        : new NonAnimatedObject(this.game, AM.getAsset("./img/effect/passive/" + effect +  "_down.png"));
+            
+            passiveEffect.setSize(20, 20);
             passiveEffect.x = this.x - 10 + dis;
             passiveEffect.y = this.y + this.height/2;
             passiveEffect.draw();
@@ -542,3 +551,56 @@ Unit.prototype.draw = function() {
     
 }
 
+function SummonUnit(game, x = 0, y = 0, unitcode, side, time) {
+    Unit.call(this, game, x, y, unitcode, side);
+    this.time = time;   //expiration time
+}
+
+SummonUnit.prototype = Object.create(Unit.prototype);
+SummonUnit.prototype.constructor = SummonUnit;
+
+SummonUnit.prototype.update = function() {
+    this.time -= this.game.clockTick;
+    if (this.time <= 0) this.health = 0;
+    Unit.prototype.update.call(this);
+}
+
+/**
+ * Get the closest unit
+ */
+var getClosestUnit = function(game, side, inRange) {
+    var unit = side === PLAYER ? game.playerList : game.enemyList ;
+    var closest;
+    if (inRange) closest = {x: inRange, velocity: {x: 0}};
+    for (var i in unit) {
+        if (unit[i].removeFromWorld){
+            unit.splice(i, 1);
+            i--;
+        } else {
+            if (!closest || closest.x > unit[i].x)
+                closest = unit[i];
+        }
+    }
+
+    return closest;
+}
+
+/**
+ * Get the furthest unit
+ */
+var getFurthestUnit = function(game, side, inRange) {
+    var unit = side === PLAYER ? game.playerList : game.enemyList ;
+    var closest;
+    if (inRange) closest = {x: inRange, velocity: {x: 0}};
+    for (var i in unit) {
+        if (unit[i].removeFromWorld){
+            unit.splice(i, 1);
+            i--;
+        } else {
+            if (!closest || closest.x < unit[i].x)
+                closest = unit[i];
+        }
+    }
+
+    return closest;
+}

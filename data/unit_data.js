@@ -77,7 +77,7 @@ var unitData = {
         energy: 2,
         health: 80,
         movementspeed: 100,
-        att: 10,
+        att: 20,
         def: 0,
         flying: false,
         pushResist: 0,
@@ -97,6 +97,24 @@ var unitData = {
         //Attacking with x and y are offset from unit's ground hit box
         range: [{x: 0, y: -200, width: 200, height: 250}, {x: 0, y: -200, width: 300, height: 250}],
     },
+
+/* ===================== Summon unit ======================== */
+
+    s000: { //Ice guardian 
+        groundWidth: 130,
+        groundHeight: 10,
+        energy: 4,
+        health: 500,
+        movementspeed: 100,
+        att: 60,
+        def: 0.3,
+        flying: false,
+        pushResist: 0.2,
+        range: [{x: 0, y: -210, width: 300, height: 210}],
+    },
+
+/* ===================== Monster unit ======================== */
+
     m000: {
         groundWidth: 55,
         groundHeight: 10,
@@ -145,6 +163,18 @@ var unitData = {
         //Attacking with x and y are offset from unit's ground hit box
         range: [{x: -220, y: -140, width: 280, height: 160}],
     },
+    m004: {
+        groundWidth: 55,
+        groundHeight: 10,
+        health: 85,
+        movementspeed: -100,
+        att: 40,
+        def: 0.4,
+        flying: false,
+        pushResist: 0.1,
+        //Attacking with x and y are offset from unit's ground hit box
+        range: [{x: -50, y: -90, width: 100, height: 100}],
+    },
     m005: {
         groundWidth: 50,
         groundHeight: 10,
@@ -169,6 +199,18 @@ var unitData = {
         //Attacking with x and y are offset from unit's ground hit box
         range: [{x: -340, y: -100, width: 340, height: 110}],
     },
+    m007: {
+        groundWidth: 40,
+        groundHeight: 10,
+        health: 100,
+        movementspeed: -100,
+        att: 10,
+        def: 0,
+        flying: false,
+        pushResist: 0,
+        //Attacking with x and y are offset from unit's ground hit box
+        range: [{x: -100, y: -70, width: 150, height: 80}, {x: -350, y: -70, width: 122, height: 80}],
+    },
     m010: {
         groundWidth: 120,
         groundHeight: 10,
@@ -184,7 +226,7 @@ var unitData = {
     m012: { //minion skeleton
         groundWidth: 40,
         groundHeight: 10,
-        health: 50,
+        health: 40,
         movementspeed: -100,
         att: 15,
         def: 0,
@@ -224,7 +266,7 @@ var unitData = {
         att: 10,
         def: 0.1,
         flying: false,
-        pushResist: 0.3, 
+        pushResist: 0.2, 
         range: [{x: -300, y: -200, width: 600, height: 200}, {x: -285, y: -200, width: 320, height: 220}],
     },
     m105: { //creepy one
@@ -237,5 +279,5 @@ var unitData = {
         flying: false,
         pushResist: 0.3,
         range: [{x: -230, y: -250, width: 365, height: 266}, {x: -375, y: -171, width: 60, height: 200}],
-    }
+    },
 }

@@ -146,19 +146,24 @@ function UnitCard(generator, unitcode, type, x, y, unitX, unitY, index) {
     this.movable = false;
     this.unitcode = unitcode;
     this.active = this.generator.checkEnergy(this.energy);
-    if (this.type === "unit") this.energy = unitData[this.unitcode].energy;
-    else if (this.type === "effect") this.energy = spellCastData[this.unitcode].energy;
+    if (this.type === "unit" || this.type === "summon") {
+        this.energy = unitData[this.unitcode].energy;
+        var path = "unit";
+    } else if (this.type === "spell") {
+         this.energy = spellCastData[this.unitcode].energy;
+         var path = "effect";
+    }
     this.status = this.NORMAL;
-    var animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + this.type + "/" + unitcode + "/card.png"), x, y);
+    var animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + path + "/" + unitcode + "/card.png"), x, y);
     animatedObject.movable = false;
     this.normal = animatedObject;
-    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + this.type + "/" + unitcode + "/card_click.png"), x, y);
+    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + path + "/" + unitcode + "/card_click.png"), x, y);
     animatedObject.movable = false;
     this.press = animatedObject;
-    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + this.type + "/" + unitcode + "/card_mouseover.png"), x, y);
+    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + path + "/" + unitcode + "/card_mouseover.png"), x, y);
     animatedObject.movable = false;
     this.mouseover = animatedObject;
-    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + this.type + "/" + unitcode + "/card_disable.png"), x, y);
+    animatedObject = new NonAnimatedObject(this.game, AM.getAsset("./img/" + path + "/" + unitcode + "/card_disable.png"), x, y);
     animatedObject.movable = false;
     this.disable = animatedObject;
 
@@ -202,7 +207,6 @@ UnitCard.prototype.draw = function() {
     }
 
     drawObj.draw();
-
 }
 
 UnitCard.prototype.update = function() {
@@ -210,21 +214,26 @@ UnitCard.prototype.update = function() {
     if (this.active) {
         if (collise(this.colliseBox, this.game.mouse) || (this.numberListener && this.numberListener.stopIm)) {
             if (this.game.mouse.click || this.numberListener.stopIm) {
-                if (this.generator.checkEnergy(this.energy)) {               
-                    if (this.type === "unit") {
-                        spawnUnit(this.game, this.unitX, this.unitY, this.unitcode, PLAYER);
-                        this.play();
-                    }
-                    else if (this.type === "effect") {
-                        if (!this.mouseSpell || this.mouseSpell.removeFromWorld) {
-                            this.mouseSpell = new SpellCast(this.game, this.unitcode, this);
-                            this.game.addEntity(this.mouseSpell);
+                if (this.generator.checkEnergy(this.energy)) {
+                    if (this.type === "spell") {
+                        if (!this.generator.mouseSpell || this.generator.mouseSpell.card !== this) {
+                            this.generator.mouseSpell = new SpellCast(this.game, this.unitcode, this);
                         } else {
-                            this.mouseSpell.removeFromWorld = true;
-                            this.mouseSpell = undefined;
+                            this.generator.mouseSpell = undefined;
                         } 
-                    }
-                }   
+                    } else {
+                        this.generator.mouseSpell = undefined;
+                        if (this.type === "unit") {
+                            spawnUnit(this.game, this.unitX, this.unitY, this.unitcode, PLAYER);
+                            this.play();
+                        } else if (this.type === "summon") {
+                            var unit = getFurthestUnit(this.game, PLAYER, 0);
+                            spawnUnit(this.game, unit.x - 200, unit.y, this.unitcode, PLAYER);
+                            this.play();
+                        }
+                    }        
+
+                }
                 this.game.mouse.click = false;
             } else if (this.game.mouse.pressed) {
                 this.status = this.PRESS;
