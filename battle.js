@@ -3,6 +3,7 @@ function Battle(game)
 	// this.game = game;
     Scene.call(this, game);
     this.background = mapType[mapType['curr']].background;// "./img/map/01/back.png";
+    this.gameover = false;
 }
 
 Battle.prototype = Object.create(Scene.prototype);
@@ -11,7 +12,7 @@ Battle.prototype.constructor = Battle;
 Battle.prototype.create = function() {
     console.log('battle created');
 
-
+    this.gameover = false;
 	this.loadCharacter();
     this.buildingBackground();
 
@@ -36,45 +37,59 @@ Battle.prototype.create = function() {
     gen.setFrequency(mapType[mapType['curr']].enemyGenFrequency);
     gen.assignCurrentBoss(enemyBoss);
     gen.setBossesDiedAction(this.endGame);
-    gen.addToBossQueue("m105");
-    gen.addConditionAndAction(
-        function() {
-            return enemyBoss.health / enemyBoss.data.health < 0.25;
-        },
-        function() {
-            enemyBoss.leftG.changeAction("attack3");
-            enemyBoss.rightG.changeAction("attack3");
-            gen.boostSpawnRate(3);
-            gen.generateDeck();
-            spawnUnit(gen.game, 2400, 500, "m101", ENEMY);
-        },
-        false
-    );
-    gen.addConditionAndAction(
-        function() {
-            return enemyBoss.health / enemyBoss.data.health < 0.5;
-        },
-        function() {
-            enemyBoss.leftG.changeAction("attack3");
-            enemyBoss.rightG.changeAction("attack3");
-            gen.boostSpawnRate(2);
-            gen.generateDeck();
-            spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
-        },
-        false
-    );
-    gen.addConditionAndAction(
-        function() {
-            return enemyBoss.health / enemyBoss.data.health < 0.75;
-        },
-        function() {
-            enemyBoss.leftG.changeAction("attack3");
-            enemyBoss.rightG.changeAction("attack3");
-            gen.boostSpawnRate(1);
-            gen.generateDeck();
-        },
-        false
-    );
+    for(var i = 0; i < mapType[mapType['curr']].bossQueue.length; i++){
+        gen.addToBossQueue(mapType[mapType['curr']].bossQueue[i]);
+    }
+    // gen.addToBossQueue("m105");
+    if(mapType[mapType['curr']].mapEffect1 !== undefined){
+        gen.addConditionAndAction(mapType[mapType['curr']].mapEffect1[0], mapType[mapType['curr']].mapEffect1[1], mapType[mapType['curr']].mapEffect1[2]);
+    }
+    if(mapType[mapType['curr']].mapEffect2 !== undefined){
+        gen.addConditionAndAction(mapType[mapType['curr']].mapEffect2[0], mapType[mapType['curr']].mapEffect2[1], mapType[mapType['curr']].mapEffect2[2]);
+    }
+    if(mapType[mapType['curr']].mapEffect3 !== undefined){
+        gen.addConditionAndAction(mapType[mapType['curr']].mapEffect3[0], mapType[mapType['curr']].mapEffect3[1], mapType[mapType['curr']].mapEffect3[2]);
+    }
+    
+    
+    // gen.addConditionAndAction(
+    //     function(gen) {
+    //         return gen.currentBoss.health / gen.currentBoss.data.health < 0.25;
+    //     },
+    //     function(gen) {
+    //         gen.currentBoss.leftG.changeAction("attack3");
+    //         gen.currentBoss.rightG.changeAction("attack3");
+    //         gen.boostSpawnRate(3);
+    //         gen.generateDeck();
+    //         spawnUnit(gen.game, 2400, 500, "m101", ENEMY);
+    //     },
+    //     false
+    // );
+    // gen.addConditionAndAction(
+    //     function(gen) {
+    //         return gen.currentBoss.health / gen.currentBoss.data.health < 0.5;
+    //     },
+    //     function(gen) {
+    //         gen.currentBoss.leftG.changeAction("attack3");
+    //         gen.currentBoss.rightG.changeAction("attack3");
+    //         gen.boostSpawnRate(2);
+    //         gen.generateDeck();
+    //         spawnUnit(gen.game, 2400, 500, "m100", ENEMY);
+    //     },
+    //     false
+    // );
+    // gen.addConditionAndAction(
+    //     function(gen) {
+    //         return gen.currentBoss.health / gen.currentBoss.data.health < 0.75;
+    //     },
+    //     function(gen) {
+    //         gen.currentBoss.leftG.changeAction("attack3");
+    //         gen.currentBoss.rightG.changeAction("attack3");
+    //         gen.boostSpawnRate(1);
+    //         gen.generateDeck();
+    //     },
+    //     false
+    // );
 
     this.game.addEntity(gen);
 
@@ -122,9 +137,42 @@ Battle.prototype.create = function() {
     // SOUND
     this.addAllMusic();
 
-    //spawnUnit(this.game, 100, 400, "h004", PLAYER);
-    // spawnUnit(this.game, 1100, 400, "m105", ENEMY);
-    // spawnUnit(this.game, 1100, 400, "m100", ENEMY);
+    // HARD CODE BATTLES
+    // gen.active = true;
+    // spawnUnit(this.game, 100, 400, "h000", PLAYER);
+    // spawnUnit(this.game, 250, 400, "h000", PLAYER);
+    // spawnUnit(this.game, 0, 400, "h001", PLAYER);
+    // spawnUnit(this.game, 150, 400, "h002", PLAYER);
+    // spawnUnit(this.game, 200, 400, "h003", PLAYER);
+    // spawnUnit(this.game, 600, 400, "h004", PLAYER);
+    // spawnUnit(this.game, 500, 400, "h004", PLAYER);
+    // for(var i = 0; i < 3; i++){
+    //     spawnUnit(this.game, i * 50, 400, "h005", PLAYER);
+    // }
+    // for(var i = 0; i < 5; i++){
+    //     spawnUnit(this.game, 300 + i * 50, 400, "h004", PLAYER);
+    // }
+    // spawnUnit(this.game, 100, 400, "h005", PLAYER);
+    // spawnUnit(this.game, 160, 400, "h100", PLAYER);
+    // spawnUnit(this.game, 210, 400, "h100", PLAYER);
+
+    // spawnUnit(this.game, 2200, 400, "m000", ENEMY);
+    // spawnUnit(this.game, 2300, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 2200, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 2100, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 2000, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 1900, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 1800, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 2220, 400, "m002", ENEMY);
+    // spawnUnit(this.game, 2230, 400, "m003", ENEMY);
+    // spawnUnit(this.game, 2240, 400, "m004", ENEMY);
+    // spawnUnit(this.game, 2250, 400, "m005", ENEMY);
+    // spawnUnit(this.game, 2260, 400, "m006", ENEMY);
+    // spawnUnit(this.game, 2270, 400, "m013", ENEMY);
+
+    // spawnUnit(this.game, 2270, 400, "m105", ENEMY);
+    // spawnUnit(this.game, 2270, 400, "m100", ENEMY);
+    // spawnUnit(this.game, 2270, 400, "m101", ENEMY);
 
 
     //Enemy button for debugging
@@ -222,26 +270,29 @@ Battle.prototype.endGame = function(playerWon, extraAction = undefined){
 
     //-ADJUST: put more things here if you want extra end game stuff...
     //- or use the extraAction function
-    if(playerWon){
-        this.game.soundPlayer.removeAllSound();
-        this.game.soundPlayer.randomTrackInQueue = false;
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-won.mp3", undefined, undefined, 0.4);
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/mappedstoryUpbeat.mp3", true, undefined, 0.3);
-        this.enableSound = false;
-    } else {
-        this.game.soundPlayer.removeAllSound();
-        this.game.soundPlayer.randomTrackInQueue = false;
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-lost.mp3", undefined, undefined, 0.4);
-        this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-end-of-the-world.mp3", true, undefined, 0.3);
-        this.enableSound = false;
-    }
-    if(extraAction !== undefined){
-        extraAction();
-    }
-    //-end ADJUST
+    if(!this.gameover){
+        this.gameover = true;
+        if(playerWon){
+            this.game.soundPlayer.removeAllSound();
+            this.game.soundPlayer.randomTrackInQueue = false;
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-won.mp3", undefined, undefined, 0.4);
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/mappedstoryUpbeat.mp3", true, undefined, 0.3);
+            this.enableSound = false;
+        } else {
+            this.game.soundPlayer.removeAllSound();
+            this.game.soundPlayer.randomTrackInQueue = false;
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/YGO-duel-lost.mp3", undefined, undefined, 0.4);
+            this.game.soundPlayer.addToQueue("./sound/music/gameover/KH-end-of-the-world.mp3", true, undefined, 0.3);
+            this.enableSound = false;
+        }
+        if(extraAction !== undefined){
+            extraAction();
+        }
+        //-end ADJUST
 
-    //-Adding logo
-    var endGameEntity = new EndGame(this.game, playerWon);
-    this.game.addEntity(endGameEntity);
+        //-Adding logo
+        var endGameEntity = new EndGame(this.game, playerWon);
+        this.game.addEntity(endGameEntity);
+    }
 }
 //--- end endGame
