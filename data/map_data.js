@@ -11,7 +11,7 @@ var mapType = {
                 {code: "m004", ticket: 0},  // horn spear
                 {code: "m005", ticket: 2},  //fast
                 {code: "m006", ticket: -1},  //mage
-                {code: "m006", ticket: 1},  //fish bone
+                {code: "m007", ticket: 1},  //fish bone
                 {code: "m013", ticket: -2}
                 ],
     enemyGenFrequency: 5,
