@@ -132,8 +132,8 @@ Battle.prototype.create = function() {
     this.addAllMusic();
 
     // HARD CODE BATTLES
-    castSkill(this.game, 0, 0,
-                    playerBoss, "e1002");
+    // castSkill(this.game, 0, 0,
+    //                 playerBoss, "e1002");
     // gen.active = true;
     //spawnUnit(this.game, 550, 400, "h100", PLAYER);
     //var preload = new AnimatedObject(this.game, AM.getAsset("./img/unit/s000/attack_effect.png"), 0, 300, 8, 0.1, 8, true);
