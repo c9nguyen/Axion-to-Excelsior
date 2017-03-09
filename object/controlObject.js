@@ -254,7 +254,7 @@ UnitCard.prototype.update = function() {
 
 var spellCastData = {
     e1001: {
-        spritesheet: AM.getAsset("./img/effect/e1001/mouse.png"),
+        spritesheet: "./img/effect/e1001/mouse.png",
         energy: 5,
         sheetWidth: 6,
         frames: 6,
@@ -262,7 +262,7 @@ var spellCastData = {
         yOffset: -430    //from the ground
     },
     e1002: {
-        spritesheet: AM.getAsset("./img/effect/e1002/mouse.png"),
+        spritesheet: "./img/effect/e1002/mouse.png",
         energy: 5,
         sheetWidth: 6,
         frames: 6,
@@ -275,7 +275,8 @@ function SpellCast(game, spellCode, theCard) {
     this.data = spellCastData[spellCode];
     this.spellCode = spellCode;
     this.card = theCard;
-    AnimatedObject.call(this, game, this.data.spritesheet, game.mouse.x + this.data.spritesheet.width / 2, game.mouse.y + this.data.spritesheet.height / 2,
+    this.spritesheet = AM.getAsset(this.data.spritesheet);
+    AnimatedObject.call(this, game, this.spritesheet, game.mouse.x + this.spritesheet.width / 2, game.mouse.y + this.spritesheet.height / 2,
                         this.data.sheetWidth, 0.1, this.data.frames, true);
     this.movable = false;
     this.side = UI;

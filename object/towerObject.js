@@ -231,7 +231,7 @@ function MainTower(game) {
 }
 
 MainTower.prototype = Object.create(Tower.prototype);
-MainTower.prototype.constructor = Unit;
+MainTower.prototype.constructor = MainTower;
 
 /**
  * Get the closest enemy
