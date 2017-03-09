@@ -12,7 +12,8 @@ var mapType = {
                 {code: "m005", ticket: 2},  //fast
                 {code: "m006", ticket: -1},  //mage
                 {code: "m007", ticket: 1},  //fish bone
-                {code: "m013", ticket: -2}
+                {code: "m009", ticket: -2}  //yeti
+
                 ],
     enemyGenFrequency: 5,
     energyRate: 0.4,

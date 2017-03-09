@@ -8,6 +8,10 @@ function AssetManager() {
     this.downloadMusicQueue = [];
 }
 
+AssetManager.prototype.setCanvas = function(ctx) {
+    this.ctx = ctx;
+}
+
 AssetManager.prototype.queueDownload = function (path, music = false) {
     console.log("Queueing " + path);
     if(music){
@@ -18,10 +22,25 @@ AssetManager.prototype.queueDownload = function (path, music = false) {
 }
 
 AssetManager.prototype.isDone = function () {
+    //loading bar
+    var fill = (this.successCount + this.errorCount) / (this.downloadQueue.length + this.downloadMusicQueue.length);
+    this.ctx.beginPath();
+    this.ctx.fillStyle = 'black';
+    this.ctx.fillRect(400, 450, 400, 20);
+    this.ctx.fillStyle = 'red';
+    this.ctx.fillRect(400, 450, fill * 400, 20);
+    this.ctx.strokeStyle = 'black';
+    this.ctx.rect(400, 450, 400, 20);
+    this.ctx.stroke();
     return this.downloadQueue.length + this.downloadMusicQueue.length === this.successCount + this.errorCount;
 }
 
 AssetManager.prototype.downloadAll = function (callback) {
+    var canvas = document.getElementById("gameWorld");
+    //var ctx = canvas.getContext("2d");
+    // ctx.drawImage("./img/back/intro.png", 0 ,0);
+    // ctx.fillText("Loading", 400, 350);
+    
 
     //Music
     for(var i = 0; i < this.downloadMusicQueue.length; i++){

@@ -3,13 +3,23 @@ var AM = new AssetManager();
 /*===============================================================*/
 
 
+
+var startLoading = function() {
+        //     var canvas = document.getElementById("gameWorld");
+        // var ctx = canvas.getContext("2d");
+        // var img = new Image();
+        // img.src = "./img/back/intro.png";
+        // ctx.drawImage(img, 0 ,0);
+        // console.log("I did that");
+        // ctx.fillText("Loading", 400, 350);
+    
+
 AM.queueDownload("./img/back/cloud.png");
 AM.queueDownload("./img/back/sky.png");
 AM.queueDownload("./img/back/back.png");
 AM.queueDownload("./img/back/intro.png");
 AM.queueDownload("./img/back/mapselect.jpg");
 AM.queueDownload("./img/back/cardselect.jpg");
-AM.queueDownload("./img/back/cardselect_blackpanel.png");
 
 AM.queueDownload("./img/map/01/back.png");
 
@@ -83,13 +93,6 @@ for (var i = 0; i < 10; i++) {
     AM.queueDownload("./img/unit/m00" + i + "/die.png");
 }
 
-for (var i = 10; i < 14; i++) {
-    AM.queueDownload("./img/unit/m0" + i + "/stand.png");
-    AM.queueDownload("./img/unit/m0" + i + "/walk.png");
-    AM.queueDownload("./img/unit/m0" + i + "/jump.png");
-    AM.queueDownload("./img/unit/m0" + i + "/attack.png");
-    AM.queueDownload("./img/unit/m0" + i + "/die.png");
-}
 
 AM.queueDownload("./img/unit/m000/card.png");
 AM.queueDownload("./img/unit/m000/card_mouseover.png");
@@ -99,13 +102,14 @@ AM.queueDownload("./img/unit/m003/skill.png");
 
 AM.queueDownload("./img/unit/m006/attack_effect.png");
 
+
 AM.queueDownload("./img/unit/m007/skill.png");
 
-AM.queueDownload("./img/unit/m012/regen.png");
+AM.queueDownload("./img/unit/m008/regen.png");
 
-AM.queueDownload("./img/unit/m013/skill.png");
+AM.queueDownload("./img/unit/m009/skill.png");
 
-
+// Loading bosses
 AM.queueDownload("./img/unit/m100/stand.png");
 AM.queueDownload("./img/unit/m100/walk.png");
 AM.queueDownload("./img/unit/m100/jump.png");
@@ -127,6 +131,14 @@ AM.queueDownload("./img/unit/m101/skill2.png");
 AM.queueDownload("./img/unit/m101/skill3.png");
 AM.queueDownload("./img/unit/m101/skill4.png");
 AM.queueDownload("./img/unit/m101/die.png");
+
+AM.queueDownload("./img/unit/m102/stand.png");
+AM.queueDownload("./img/unit/m102/walk.png");
+AM.queueDownload("./img/unit/m102/jump.png");
+AM.queueDownload("./img/unit/m102/attack.png");
+AM.queueDownload("./img/unit/m102/attack2.png");
+AM.queueDownload("./img/unit/m102/skill.png");
+AM.queueDownload("./img/unit/m102/die.png");
 
 AM.queueDownload("./img/unit/m105/stand.png");
 AM.queueDownload("./img/unit/m105/walk.png");
@@ -165,16 +177,6 @@ AM.queueDownload("./img/unit/tower3/attack.png");
 AM.queueDownload("./img/unit/tower3/attack_effect.png");
 AM.queueDownload("./img/unit/tower3/attack3.png");
 
-
-
-AM.queueDownload("./img/character/warrior/stand_right.png");
-AM.queueDownload("./img/character/warrior/walk_right.png");
-AM.queueDownload("./img/character/warrior/jump_right.png");
-AM.queueDownload("./img/character/warrior/swing_right.png");
-
-AM.queueDownload("./img/back/portal.png");
-AM.queueDownload("./img/food/spritesheet.png");
-AM.queueDownload("./img/tomb.png");
 
 AM.queueDownload("./img/ui/start_button_disable.png");
 AM.queueDownload("./img/ui/start_button_pressed.png");
@@ -263,7 +265,10 @@ AM.queueDownload("./img/effect/portal/portal_mouseover.png");
 for(var i = 0; i < 10; i++){
     AM.queueDownload("./img/ui/numbers/" + i +".png");
     AM.queueDownload("./img/ui/numbers/" + i +"_0.png");
+    AM.queueDownload("./img/effect/number/" + i +".png");
 }
+AM.queueDownload("./img/effect/number/miss.png");
+
 AM.queueDownload("./img/ui/numbers/1_1.png");
 AM.queueDownload("./img/ui/numbers/1_2.png");
 AM.queueDownload("./img/ui/numbers/2_1.png");
@@ -385,3 +390,4 @@ AM.downloadAll(function () {
 
     gameEngine.sceneManager.startScene('mainmenu');
 });
+}

@@ -8,7 +8,7 @@ MapMenu.prototype.constructor = MapMenu;
 
 MapMenu.prototype.create = function () {
     var canvasHeight = this.game.ctx.canvas.clientHeight;
-	  var canvasWidth = this.game.ctx.canvas.clientWidth;
+	var canvasWidth = this.game.ctx.canvas.clientWidth;
 
     // Background
     var backGroundColor = new NonAnimatedObject(this.game, AM.getAsset("./img/back/mapselect.jpg"),0, 0);
@@ -32,13 +32,23 @@ MapMenu.prototype.create = function () {
     //back.setSize(canvasWidth, canvasHeight);
     this.game.addEntity(back);
 
+    var buttonScale = 0.4
+    var cardbutton =  new Button(this.game, AM.getAsset("./img/ui/cards_button.png"), 550, 10, buttonScale);
+    cardbutton.addSheet( AM.getAsset("./img/ui/cards_hoverbutton.png"),'mouseover');
+    cardbutton.addSheet( AM.getAsset("./img/ui/cards_pressbutton.png"),'press');
+    cardbutton.addEventListener('click', function() {
+        this.game.sceneManager.startScene('deckbuilding');
+    });
+    this.game.addEntity(cardbutton);
+
+
     var portal = new AnimatedObject(this.game, AM.getAsset("./img/effect/portal/portal.png"), mapXLocation + 338, mapYLocation + 175, 7, 0.1, 7, true);
     var portal_mouseover = new AnimatedObject(this.game, AM.getAsset("./img/effect/portal/portal_mouseover.png"), mapXLocation + 338, mapYLocation + 175, 7, 0.1, 7, true);
     var ice = new Button(this.game, AM.getAsset("./img/effect/portal/portal.png"), mapXLocation + 338, mapYLocation + 175);
     ice.addEventListener('click', function(that) {
       mapType['curr'] = 'map1';
       that.game.clearEntities();
-      that.game.sceneManager.startScene('mainmenu');
+      that.game.sceneManager.startScene('battle');
     });
     ice.mouseover = portal_mouseover;
     ice.press = ice.mouseover;
@@ -53,7 +63,7 @@ MapMenu.prototype.create = function () {
     ice1.addEventListener('click', function(that){
         mapType['curr'] = 'map1_1';
         that.game.clearEntities();
-        that.game.sceneManager.startScene('mainmenu');
+        that.game.sceneManager.startScene('battle');
     });
     this.game.addEntity(ice1);
 
@@ -63,21 +73,33 @@ MapMenu.prototype.create = function () {
     ice2.addEventListener('click', function(that){
         mapType['curr'] = 'map1_2';
         that.game.clearEntities();
-        that.game.sceneManager.startScene('mainmenu');
+        that.game.sceneManager.startScene('battle');
     });
     this.game.addEntity(ice2);
 
-    
 
-    var earth = new Button(this.game, AM.getAsset("./img/effect/e1001/mob_1.png"), mapXLocation + 503, mapYLocation + 253);
-    earth.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'press');
-    earth.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'mouseover');
-    earth.addEventListener('click', function(that) {
-      mapType['curr'] = 'map2';
-      that.game.clearEntities();
-      that.game.sceneManager.startScene('mainmenu');
-    });
-    this.game.addEntity(earth);
+    // var ice3 = new Button(this.game, AM.getAsset("./img/ui/numbers/3.png"), mapXLocation + 430, mapYLocation + 180);
+    // ice3.addSheet( AM.getAsset("./img/ui/numbers/3_1.png"),'press');
+    // ice3.addSheet( AM.getAsset("./img/ui/numbers/3_2.png"),'mouseover');
+    // ice3.addEventListener('click', function(that){
+    //     mapType['curr'] = 'map1_3';
+    //     that.game.clearEntities();
+    //     that.game.sceneManager.startScene('battle');
+    // });
+    // this.game.addEntity(ice3);
+
+
+    
+    //No new map for now
+    // var earth = new Button(this.game, AM.getAsset("./img/effect/e1001/mob_1.png"), mapXLocation + 503, mapYLocation + 253);
+    // earth.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'press');
+    // earth.addSheet( AM.getAsset("./img/effect/e1001/mob_6.png"),'mouseover');
+    // earth.addEventListener('click', function(that) {
+    //   mapType['curr'] = 'map2';
+    //   that.game.clearEntities();
+    //   that.game.sceneManager.startScene('mainmenu');
+    // });
+    // this.game.addEntity(earth);
     
     
 

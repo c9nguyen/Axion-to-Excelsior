@@ -223,7 +223,7 @@ var unitData = {
         //Attacking with x and y are offset from unit's ground hit box
         range: [{x: -40, y: -120, width: 150, height: 120}],
     },
-    m012: { //minion skeleton
+    m008: { //minion skeleton
         groundWidth: 40,
         groundHeight: 10,
         health: 40,
@@ -235,7 +235,7 @@ var unitData = {
         //Attacking with x and y are offset from unit's ground hit box
         range: [{x: -54, y: -80, width: 70, height: 90}],
     },
-    m013: {
+    m009: {
         groundWidth: 85,
         groundHeight: 10,
         health: 400,
@@ -269,12 +269,24 @@ var unitData = {
         pushResist: 0.2, 
         range: [{x: -300, y: -200, width: 600, height: 200}, {x: -285, y: -200, width: 320, height: 220}],
     },
+    m102: { //skeleton captain
+        groundWidth: 121,
+        groundHeight: 10,
+        health: 800,
+        movementspeed: -100,
+        att: 80,
+        def: 0.1,
+        flying: false,
+        pushResist: 0.2, 
+        range: [{x: -400, y: -227, width: 465, height: 230}, {x: -575, y: -420, width: 267, height: 430}],
+
+    },
     m105: { //creepy one
         groundWidth: 300,
         groundHeight: 10,
         health: 2000,
         movementspeed: -180,
-        att: 30,
+        att: 40,
         def: 0.4,
         flying: false,
         pushResist: 0.3,

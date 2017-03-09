@@ -214,7 +214,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             action = function(that, otherUnit) {
                 var damage = that.percent * that.unit.att;
                 if (otherUnit.constructor.name === "EnemyTower") {
-                    damage /= 2;
+                    damage /= 4;
                 }
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
@@ -232,7 +232,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[19] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
                 if (otherUnit.constructor.name === "EnemyTower") {
-                    damage /= 2;
+                    damage /= 4;
                 }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
@@ -252,7 +252,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[20] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
                 if (otherUnit.constructor.name === "EnemyTower") {
-                    damage /= 2;
+                    damage /= 4;
                 }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
@@ -272,7 +272,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[21] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
                 if (otherUnit.constructor.name === "EnemyTower") {
-                    damage /= 2;
+                    damage /= 4;
                 }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
@@ -292,7 +292,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[21] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
                 if (otherUnit.constructor.name === "EnemyTower") {
-                    damage /= 2;
+                    damage /= 4;
                 }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
@@ -313,7 +313,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[20] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
                 if (otherUnit.constructor.name === "EnemyTower") {
-                    damage /= 2;
+                    damage /= 4;
                 }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
@@ -333,7 +333,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[22] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
                 if (otherUnit.constructor.name === "EnemyTower") {
-                    damage /= 2;
+                    damage /= 4;
                 }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
@@ -353,7 +353,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[22] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
                 if (otherUnit.constructor.name === "EnemyTower") {
-                    damage /= 2;
+                    damage /= 4;
                 }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);
@@ -373,7 +373,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[22] = {x: 0, y: 0, width: 0, height: 0};
             action = function(that, otherUnit) {
                 if (otherUnit.constructor.name === "EnemyTower") {
-                    damage /= 2;
+                    damage /= 4;
                 }
                 var damage = that.percent * that.unit.att;
                 otherUnit.takeDamage(damage);

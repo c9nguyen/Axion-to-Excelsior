@@ -1,17 +1,20 @@
 function Tile(game, x, y, numOfTile, type) {
     var tileInfo = tileType[type];
+    var topSheet = AM.getAsset(tileInfo.topSheet);
+    var midSheet = AM.getAsset(tileInfo.midSheet);
+    var botSheet = AM.getAsset(tileInfo.botSheet);
     this.tileList = [];
     var groundOffset = 0;
     for (var i = 0; i < numOfTile; i++) {
-        this.tileList.push(new NonAnimatedObject(game, tileInfo.topSheet,
+        this.tileList.push(new NonAnimatedObject(game, topSheet,
                                                     x + groundOffset, y, 
                                                     tileInfo.width, tileInfo.topHeight, 
                                                     tileInfo.topSheetWidth, tileInfo.topFrame, -1));
-        this.tileList.push(new NonAnimatedObject(game, tileInfo.midSheet,
+        this.tileList.push(new NonAnimatedObject(game, midSheet,
                                                     x + groundOffset, y + tileInfo.topHeight,
                                                     tileInfo.width, tileInfo.midHeight, 
                                                     tileInfo.midSheetWidth, tileInfo.midFrame, -1));
-        this.tileList.push(new NonAnimatedObject(game,tileInfo.botSheet,
+        this.tileList.push(new NonAnimatedObject(game, botSheet,
                                                     x + groundOffset, y + tileInfo.topHeight + tileInfo.midHeight,
                                                     tileInfo.width, tileInfo.botHeight, 
                                                     tileInfo.botSheetWidth, tileInfo.botFrame, -1));                                 

@@ -252,7 +252,7 @@ Unit.prototype.passiveEffectInit = function() {
 }
 
 Unit.prototype.takePassiveEffect = function(effectType, amount) {
-    this.passiveEffect[effectType] = {amount: amount, duration: 5}; 
+    this.passiveEffect[effectType] = {amount: amount, duration: 7}; 
 }
 
 Unit.prototype.getCollisionBox = function() {
@@ -326,7 +326,8 @@ Unit.prototype.takeDamage = function(amount) {
 Unit.prototype.loseHealth = function(amount) {
     this.health -= amount;
     var height = this.getCollisionBox().y;
-    this.game.addEntity(new Number(this.game, this.x, height - 20, amount));
+
+    this.game.addEntity(new Number(this.game, this.x, height - 20, amount, this.side));
 }
 
 Unit.prototype.takeEffect = function(effect) {
@@ -535,16 +536,16 @@ Unit.prototype.draw = function() {
     // }
     // }
 
-
-    // var rangeBox = this.rangeBox[0];
-    // var box = {};
-    // box.x = this.x + rangeBox.x + this.game.mapX;;
-    // box.y = this.y + rangeBox.y;
-    // box.width = rangeBox.width;
-    // box.height = rangeBox.height;
-    // this.game.ctx.strokeStyle = "red";
-    // this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
-
+// if (this.side === ENEMY) {
+//     var rangeBox = this.rangeBox[0];
+//     var box = {};
+//     box.x = this.x + rangeBox.x + this.game.mapX;;
+//     box.y = this.y + rangeBox.y;
+//     box.width = rangeBox.width;
+//     box.height = rangeBox.height;
+//     this.game.ctx.strokeStyle = "red";
+//     this.game.ctx.fillRect(box.x, box.y, box.width, box.height);
+// }
 
     //this.game.ctx.fillRect(rangeBox.x, rangeBox.y, rangeBox.width, rangeBox.height);
 

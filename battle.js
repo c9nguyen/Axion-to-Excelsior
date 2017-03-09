@@ -15,6 +15,7 @@ Battle.prototype.create = function() {
     this.preloadHeavyImage();
 	this.loadCharacter();
     this.buildingBackground();
+    this.buildTiles();
 
     //Two main towers:
     var playerBoss = new MainTower(this.game);
@@ -22,7 +23,6 @@ Battle.prototype.create = function() {
     var enemyBoss = new EnemyTower(this.game);
     this.game.addEntity(enemyBoss);
 
-    this.buildTiles();
 
     //Initializing enemy generator
     var list = mapType[mapType['curr']].enemyList;
@@ -175,6 +175,7 @@ Battle.prototype.create = function() {
     // spawnUnit(this.game, 2270, 400, "m105", ENEMY);
     // spawnUnit(this.game, 2270, 400, "m100", ENEMY);
     // spawnUnit(this.game, 2270, 400, "m101", ENEMY);
+     //spawnUnit(this.game, 2270, 400, "m102", ENEMY);
 
 
     //Enemy button for debugging

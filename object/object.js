@@ -328,7 +328,9 @@ Effect.prototype.isDone = function () {
 
 /*=========================================================================*/
 
-function Number(game, x, y, value) {
+
+function Number(game, x, y, value, side) {
+
     Entity.call(this, game, x, y, UI);
     this.numberList = [];
     value = Math.floor(value);
@@ -336,9 +338,15 @@ function Number(game, x, y, value) {
     while (value > 0) {
         var mod = value % 10;
         value = Math.floor(value / 10);
+
+        if (side === ENEMY)
         this.numberList.push(new NonAnimatedObject(game, AM.getAsset("./img/ui/numbers/" + mod + "_0.png"), x - 17 * counter, y));
+        else
+        this.numberList.push(new NonAnimatedObject(game, AM.getAsset("./img/effect/number/" + mod + ".png"), x - 17 * counter, y));
         counter++;
     }
+    if (value === -1) this.numberList.push(new NonAnimatedObject(game, AM.getAsset("./img/effect/number/miss.png"), x - 17 * counter, y));
+
     this.time = 5;
     this.velocity.y = -20;
 }
