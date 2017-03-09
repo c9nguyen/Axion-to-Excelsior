@@ -279,6 +279,7 @@ var unitData = {
         flying: false,
         pushResist: 0.2, 
         range: [{x: -400, y: -227, width: 465, height: 230}, {x: -575, y: -420, width: 267, height: 430}],
+
     },
     m105: { //creepy one
         groundWidth: 300,

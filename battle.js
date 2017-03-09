@@ -24,7 +24,6 @@ Battle.prototype.create = function() {
     this.game.addEntity(enemyBoss);
 
 
-
     //Initializing enemy generator
     var list = mapType[mapType['curr']].enemyList;
     var gen = new EnemyGenerator(this.game, 2400, 500, list);

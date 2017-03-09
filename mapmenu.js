@@ -41,6 +41,7 @@ MapMenu.prototype.create = function () {
     });
     this.game.addEntity(cardbutton);
 
+
     var portal = new AnimatedObject(this.game, AM.getAsset("./img/effect/portal/portal.png"), mapXLocation + 338, mapYLocation + 175, 7, 0.1, 7, true);
     var portal_mouseover = new AnimatedObject(this.game, AM.getAsset("./img/effect/portal/portal_mouseover.png"), mapXLocation + 338, mapYLocation + 175, 7, 0.1, 7, true);
     var ice = new Button(this.game, AM.getAsset("./img/effect/portal/portal.png"), mapXLocation + 338, mapYLocation + 175);

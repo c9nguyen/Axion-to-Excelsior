@@ -326,8 +326,9 @@ Unit.prototype.takeDamage = function(amount) {
 Unit.prototype.loseHealth = function(amount) {
     this.health -= amount;
     var height = this.getCollisionBox().y;
+
     this.game.addEntity(new Number(this.game, this.x, height - 20, amount, this.side));
-}
+
 
 Unit.prototype.takeEffect = function(effect) {
     this.takingEffect.push(effect);

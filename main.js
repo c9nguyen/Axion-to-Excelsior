@@ -93,6 +93,16 @@ for (var i = 0; i < 10; i++) {
     AM.queueDownload("./img/unit/m00" + i + "/die.png");
 }
 
+<<<<<<< HEAD
+=======
+for (var i = 10; i < 14; i++) {
+    AM.queueDownload("./img/unit/m0" + i + "/stand.png");
+    AM.queueDownload("./img/unit/m0" + i + "/walk.png");
+    AM.queueDownload("./img/unit/m0" + i + "/jump.png");
+    AM.queueDownload("./img/unit/m0" + i + "/attack.png");
+    AM.queueDownload("./img/unit/m0" + i + "/die.png");
+}
+>>>>>>> fe54391579de2c68cf33df7fa6fa362795f8a18f
 
 AM.queueDownload("./img/unit/m000/card.png");
 AM.queueDownload("./img/unit/m000/card_mouseover.png");
@@ -101,6 +111,16 @@ AM.queueDownload("./img/unit/m000/card_click.png");
 AM.queueDownload("./img/unit/m003/skill.png");
 
 AM.queueDownload("./img/unit/m006/attack_effect.png");
+<<<<<<< HEAD
+=======
+
+AM.queueDownload("./img/unit/m007/skill.png");
+
+AM.queueDownload("./img/unit/m012/regen.png");
+
+AM.queueDownload("./img/unit/m013/skill.png");
+
+>>>>>>> fe54391579de2c68cf33df7fa6fa362795f8a18f
 
 AM.queueDownload("./img/unit/m007/skill.png");
 
@@ -264,7 +284,10 @@ AM.queueDownload("./img/effect/portal/portal_mouseover.png");
 for(var i = 0; i < 10; i++){
     AM.queueDownload("./img/ui/numbers/" + i +".png");
     AM.queueDownload("./img/ui/numbers/" + i +"_0.png");
+<<<<<<< HEAD
     AM.queueDownload("./img/effect/number/" + i +".png");
+=======
+>>>>>>> fe54391579de2c68cf33df7fa6fa362795f8a18f
 }
 AM.queueDownload("./img/effect/number/miss.png");
 
