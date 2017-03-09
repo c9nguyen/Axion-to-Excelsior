@@ -326,94 +326,40 @@ Effect.prototype.isDone = function () {
 
 /*===============================================================*/
 
-//Move to object/controlObject
-
-// function Button(game, spritesheet, x, y, scale = 1) {
-//     this.NORMAL = 0;
-//     this.PRESS = 1;
-//     this.MOUSEOVER = 2;
-
-//     Entity.call(this, game, x, y);
-//     this.movable = false;
-
-//     this.status = this.NORMAL;
-//     var animatedObject = new NonAnimatedObject(game, spritesheet, x, y);
-//     animatedObject.movable = false;
-//     this.normal = animatedObject;
-//     this.press = animatedObject;
-//     this.mouseover = animatedObject;
-
-//     this.colliseBox = {x: x, y: y, width: this.normal.width, height: this.normal.height};
-
-//     this.clickAction = function() {};
-//     this.pressAction = function() {};
-//     this.mouseoverAction = function() {};
-    
-// }
-
-// Button.prototype = Object.create (Entity.prototype);
-// Button.prototype.constructor = Button;
-
-// Button.prototype.addSheet = function(spritesheet, sheetType) {
-//     switch (sheetType) {
-//         case "click":
-//         case "press":
-//             this.press = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
-//             this.press.movable = false;
-//             break;
-//         case "mouseover":
-//             this.mouseover = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
-//            this.mouseover.movable = false;
-//             break;
-//         case "normal":
-//             this.normal = new NonAnimatedObject(this.game, spritesheet, this.x, this.y);
-//             this.normal.movable = false;
-//             break;
-//     }
-// }
-
-// Button.prototype.addEventListener = function(eventType, action) {
-//     if (eventType === "click") this.clickAction = action;
-//     else if (eventType === "press") this.pressAction = action;
-//     else if (eventType === "mouseover") this.mouseoverAction = action;
-// }
-
-// Button.prototype.draw = function() {
-//     var drawObj;
-//     if (this.status === this.NORMAL) {
-//         drawObj = this.normal;
-//     } else if (this.status === this.PRESS) {
-//         drawObj = this.press;
-//     } else if (this.status === this.MOUSEOVER) {
-//         drawObj = this.mouseover;
-//     }
-
-//     if (drawObj !== undefined) {
-//         drawObj.x = this.x;
-//         drawObj.y = this.y;
-//     }
-//     drawObj.draw();
-
-// }
-
-// Button.prototype.update = function() {
-//     if (collise(this.colliseBox, this.game.mouse)) {
-//         if (this.game.mouse.click) {      
-//             this.clickAction(this);
-//             // SOUND
-//             this.game.soundPlayer.addToEffect("./sound/effects/smb_stomp.wav", false, 2.0);
-
-//             this.game.mouse.click = false;
-//         } else if (this.game.mouse.pressed) {
-//             this.status = this.PRESS;
-//             this.pressAction(this);
-//         } else {
-//             this.status = this.MOUSEOVER;
-//             this.mouseoverAction(this);
-//         }
-//     } else this.status = this.NORMAL;
-
-//     Entity.prototype.update.call(this);
-// }
-
 /*=========================================================================*/
+
+function Number(game, x, y, value, side) {
+    Entity.call(this, game, x, y, UI);
+    this.numberList = [];
+    value = Math.floor(value);
+    var counter = 0;
+    while (value > 0) {
+        var mod = value % 10;
+        value = Math.floor(value / 10);
+        if (side === ENEMY)
+        this.numberList.push(new NonAnimatedObject(game, AM.getAsset("./img/ui/numbers/" + mod + "_0.png"), x - 17 * counter, y));
+        else
+        this.numberList.push(new NonAnimatedObject(game, AM.getAsset("./img/effect/number/" + mod + ".png"), x - 17 * counter, y));
+        counter++;
+    }
+    if (value === -1) this.numberList.push(new NonAnimatedObject(game, AM.getAsset("./img/effect/number/miss.png"), x - 17 * counter, y));
+    this.time = 5;
+    this.velocity.y = -20;
+}
+
+Number.prototype = Object.create(Entity.prototype);
+Number.prototype.create = Number;
+
+Number.prototype.draw = function() {
+    var that = this;
+    this.numberList.map(function(number) {
+        number.y = that.y;
+        number.draw();
+    });
+}
+
+Number.prototype.update = function() {
+    Entity.prototype.update.call(this);
+    this.time -= this.game.clockTick;
+    if (this.time < 0) this.removeFromWorld = true;
+}

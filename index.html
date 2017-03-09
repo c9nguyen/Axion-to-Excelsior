@@ -32,8 +32,23 @@
     <script type="text/javascript" src="./object/towerObject.js"></script>
 </head>
 
-<body>
+<body onload="loadingScreen()">
     <canvas id="gameWorld" tabindex="1" width="1200" height="600" style="border: 1px solid brown; background: black"></canvas>
+    <script> function loadingScreen() {
+            var canvas = document.getElementById("gameWorld");
+        var ctx = canvas.getContext("2d");
+        AM.setCanvas(ctx);
+        var img = new Image();
+        img.src = "./img/back/intro.png";
+        img.addEventListener("load", function () {
+                ctx.drawImage(img, 0 ,0);
+               // console.log("I did that");
+                //ctx.fillText("Loading", 400, 350);
+                startLoading();
+        });
+       
+    }
+    </script>
 </body>
 
 </html>

@@ -11,10 +11,11 @@ Battle.prototype.constructor = Battle;
 
 Battle.prototype.create = function() {
     console.log('battle created');
-
     this.gameover = false;
+    this.preloadHeavyImage();
 	this.loadCharacter();
     this.buildingBackground();
+    this.buildTiles();
 
     //Two main towers:
     var playerBoss = new MainTower(this.game);
@@ -22,17 +23,10 @@ Battle.prototype.create = function() {
     var enemyBoss = new EnemyTower(this.game);
     this.game.addEntity(enemyBoss);
 
-    this.buildTiles();
+
 
     //Initializing enemy generator
-
     var list = mapType[mapType['curr']].enemyList;
-    // [{code: "m000", ticket: 4},
-    //             {code: "m001", ticket: 8},
-    //             {code: "m002", ticket: 6},
-    //             {code: "m003", ticket: 2},
-    //             {code: "m010", ticket: 1}];
-
     var gen = new EnemyGenerator(this.game, 2400, 500, list);
     gen.setFrequency(mapType[mapType['curr']].enemyGenFrequency);
     gen.assignCurrentBoss(enemyBoss);
@@ -99,7 +93,8 @@ Battle.prototype.create = function() {
 
     var unitCards = PLAYERDECK["unitCards"];
     var spellCards = PLAYERDECK["spellCards"];
-    var cardGen = new CardGenerator(this.game, -50, 500, mapType[mapType['curr']].numOfCard, unitCards, spellCards);
+    var summonCards = PLAYERDECK["summonCards"];
+    var cardGen = new CardGenerator(this.game, -50, 500, mapType[mapType['curr']].numOfCard, unitCards, spellCards, summonCards);
     cardGen.assignCurrentBoss(playerBoss);
     cardGen.setBossesDiedAction(this.endGame);
     var enemyTowerHealthMark = 0.75;
@@ -139,7 +134,9 @@ Battle.prototype.create = function() {
 
     // HARD CODE BATTLES
     // gen.active = true;
-    // spawnUnit(this.game, 100, 400, "h000", PLAYER);
+    //spawnUnit(this.game, 550, 400, "h100", PLAYER);
+    //var preload = new AnimatedObject(this.game, AM.getAsset("./img/unit/s000/attack_effect.png"), 0, 300, 8, 0.1, 8, true);
+    //this.game.addEntity(preload);
     // spawnUnit(this.game, 250, 400, "h000", PLAYER);
     // spawnUnit(this.game, 0, 400, "h001", PLAYER);
     // spawnUnit(this.game, 150, 400, "h002", PLAYER);
@@ -156,8 +153,12 @@ Battle.prototype.create = function() {
     // spawnUnit(this.game, 160, 400, "h100", PLAYER);
     // spawnUnit(this.game, 210, 400, "h100", PLAYER);
 
-    // spawnUnit(this.game, 2200, 400, "m000", ENEMY);
-    // spawnUnit(this.game, 2300, 400, "m001", ENEMY);
+    // spawnUnit(this.game, 2200, 400, "m007", ENEMY);
+    // spawnUnit(this.game, 2300, 400, "m007", ENEMY);
+    // spawnUnit(this.game, 2200, 400, "m007", ENEMY);
+    // spawnUnit(this.game, 2300, 400, "m004", ENEMY);
+    // spawnUnit(this.game, 2200, 400, "m004", ENEMY);
+    // spawnUnit(this.game, 2300, 400, "m004", ENEMY);
     // spawnUnit(this.game, 2200, 400, "m001", ENEMY);
     // spawnUnit(this.game, 2100, 400, "m001", ENEMY);
     // spawnUnit(this.game, 2000, 400, "m001", ENEMY);
@@ -173,6 +174,7 @@ Battle.prototype.create = function() {
     // spawnUnit(this.game, 2270, 400, "m105", ENEMY);
     // spawnUnit(this.game, 2270, 400, "m100", ENEMY);
     // spawnUnit(this.game, 2270, 400, "m101", ENEMY);
+     //spawnUnit(this.game, 2270, 400, "m102", ENEMY);
 
 
     //Enemy button for debugging
@@ -211,6 +213,23 @@ Battle.prototype.buildingBackground = function() {
     this.game.addEntity(back);
 
 };
+
+/**
+ * Draw heavy image 1 time to load into memory
+ */
+Battle.prototype.preloadHeavyImage = function() {
+    var preload = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/e1002/tile_all.png"), 0, 0);
+    preload.draw();
+    preload.removeFromWorld = true;
+
+    preload = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/tower0/attack2_effect.png"), 0, 0);
+    preload.draw();
+    preload.removeFromWorld = true;
+
+    preload = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/tower0/attack_effect.png"), 0, 0);
+    preload.draw();
+    preload.removeFromWorld = true;
+}
 
 Battle.prototype.loadCharacter = function(){
     // for (var i = 1 ; i <= 4; i++) {

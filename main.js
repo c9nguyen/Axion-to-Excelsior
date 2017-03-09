@@ -3,12 +3,23 @@ var AM = new AssetManager();
 /*===============================================================*/
 
 
+
+var startLoading = function() {
+        //     var canvas = document.getElementById("gameWorld");
+        // var ctx = canvas.getContext("2d");
+        // var img = new Image();
+        // img.src = "./img/back/intro.png";
+        // ctx.drawImage(img, 0 ,0);
+        // console.log("I did that");
+        // ctx.fillText("Loading", 400, 350);
+    
+
 AM.queueDownload("./img/back/cloud.png");
 AM.queueDownload("./img/back/sky.png");
 AM.queueDownload("./img/back/back.png");
 AM.queueDownload("./img/back/intro.png");
-AM.queueDownload("./img/back/1.png");
-AM.queueDownload("./img/back/2.png");
+AM.queueDownload("./img/back/mapselect.jpg");
+AM.queueDownload("./img/back/cardselect.jpg");
 
 AM.queueDownload("./img/map/01/back.png");
 
@@ -20,73 +31,29 @@ AM.queueDownload("./img/tiles/02/en_spritesheet.png");
 AM.queueDownload("./img/tiles/02/en1_spritesheet.png");
 AM.queueDownload("./img/tiles/02/bsc_spritesheet.png");
 
-AM.queueDownload("./img/unit/h000/card.png");
-AM.queueDownload("./img/unit/h000/card_click.png");
-AM.queueDownload("./img/unit/h000/card_mouseover.png");
-AM.queueDownload("./img/unit/h000/card_disable.png");
-AM.queueDownload("./img/unit/h000/stand_right.png");
-AM.queueDownload("./img/unit/h000/walk_right.png");
-AM.queueDownload("./img/unit/h000/jump_right.png");
-AM.queueDownload("./img/unit/h000/stab_right.png");
-AM.queueDownload("./img/unit/h000/jumpattack_right.png");
-AM.queueDownload("./img/unit/h000/die_right.png");
+//Loading player unit
+for (var i = 0; i < 6; i++) {
+    AM.queueDownload("./img/unit/h00" + i + "/card.png");
+    AM.queueDownload("./img/unit/h00" + i + "/card_click.png");
+    AM.queueDownload("./img/unit/h00" + i + "/card_mouseover.png");
+    AM.queueDownload("./img/unit/h00" + i + "/card_disable.png");
+    AM.queueDownload("./img/unit/h00" + i + "/stand.png");
+    AM.queueDownload("./img/unit/h00" + i + "/walk.png");
+    AM.queueDownload("./img/unit/h00" + i + "/jump.png");
+    AM.queueDownload("./img/unit/h00" + i + "/attack.png");
+    AM.queueDownload("./img/unit/h00" + i + "/die.png");
+}
 
-// AM.queueDownload("./img/unit/h001/card.png");
-// AM.queueDownload("./img/unit/h001/card_mouseover.png");
-// AM.queueDownload("./img/unit/h001/card_click.png");
-AM.queueDownload("./img/unit/h001/card.png");
-AM.queueDownload("./img/unit/h001/card_click.png");
-AM.queueDownload("./img/unit/h001/card_mouseover.png");
-AM.queueDownload("./img/unit/h001/card_disable.png");
-AM.queueDownload("./img/unit/h001/stand.png");
-AM.queueDownload("./img/unit/h001/walk.png");
-AM.queueDownload("./img/unit/h001/jump.png");
-AM.queueDownload("./img/unit/h001/attack.png");
+AM.queueDownload("./img/unit/h000/attack2.png");
+
 AM.queueDownload("./img/unit/h001/skill.png");
-AM.queueDownload("./img/unit/h001/die.png");
 
-AM.queueDownload("./img/unit/h002/card.png");
-AM.queueDownload("./img/unit/h002/card_click.png");
-AM.queueDownload("./img/unit/h002/card_mouseover.png");
-AM.queueDownload("./img/unit/h002/card_disable.png");
-AM.queueDownload("./img/unit/h002/stand.png");
-AM.queueDownload("./img/unit/h002/walk.png");
-AM.queueDownload("./img/unit/h002/jump.png");
-AM.queueDownload("./img/unit/h002/attack.png");
 AM.queueDownload("./img/unit/h002/attack2.png");
-AM.queueDownload("./img/unit/h002/die.png");
 
-AM.queueDownload("./img/unit/h003/card.png");
-AM.queueDownload("./img/unit/h003/card_click.png");
-AM.queueDownload("./img/unit/h003/card_mouseover.png");
-AM.queueDownload("./img/unit/h003/card_disable.png");
-AM.queueDownload("./img/unit/h003/stand.png");
-AM.queueDownload("./img/unit/h003/walk.png");
-AM.queueDownload("./img/unit/h003/jump.png");
-AM.queueDownload("./img/unit/h003/attack.png");
 AM.queueDownload("./img/unit/h003/attack2.png");
-AM.queueDownload("./img/unit/h003/die.png");
 
-AM.queueDownload("./img/unit/h004/card.png");
-AM.queueDownload("./img/unit/h004/card_click.png");
-AM.queueDownload("./img/unit/h004/card_mouseover.png");
-AM.queueDownload("./img/unit/h004/card_disable.png");
-AM.queueDownload("./img/unit/h004/stand.png");
-AM.queueDownload("./img/unit/h004/walk.png");
-AM.queueDownload("./img/unit/h004/jump.png");
-AM.queueDownload("./img/unit/h004/attack.png");
-AM.queueDownload("./img/unit/h004/die.png");
-
-AM.queueDownload("./img/unit/h005/card.png");
-AM.queueDownload("./img/unit/h005/card_click.png");
-AM.queueDownload("./img/unit/h005/card_mouseover.png");
-AM.queueDownload("./img/unit/h005/card_disable.png");
-AM.queueDownload("./img/unit/h005/stand.png");
-AM.queueDownload("./img/unit/h005/walk.png");
-AM.queueDownload("./img/unit/h005/jump.png");
-AM.queueDownload("./img/unit/h005/attack.png");
 AM.queueDownload("./img/unit/h005/attack2.png");
-AM.queueDownload("./img/unit/h005/die.png");
+
 
 AM.queueDownload("./img/unit/h100/card.png");
 AM.queueDownload("./img/unit/h100/card_click.png");
@@ -100,66 +67,48 @@ AM.queueDownload("./img/unit/h100/attack1.png");
 AM.queueDownload("./img/unit/h100/attack2.png");
 AM.queueDownload("./img/unit/h100/attack3.png");
 
+//Loading summoned unit
+for (var i = 0; i < 1; i++) {
+    AM.queueDownload("./img/unit/s00" + i + "/card.png");
+    AM.queueDownload("./img/unit/s00" + i + "/card_click.png");
+    AM.queueDownload("./img/unit/s00" + i + "/card_mouseover.png");
+    AM.queueDownload("./img/unit/s00" + i + "/card_disable.png");
+    AM.queueDownload("./img/unit/s00" + i + "/stand.png");
+    AM.queueDownload("./img/unit/s00" + i + "/walk.png");
+    AM.queueDownload("./img/unit/s00" + i + "/jump.png");
+    AM.queueDownload("./img/unit/s00" + i + "/attack.png");
+    AM.queueDownload("./img/unit/s00" + i + "/regen.png");
+    AM.queueDownload("./img/unit/s00" + i + "/die.png");
+}
+
+AM.queueDownload("./img/unit/s000/attack_effect.png");
+
+
+//Loading monsters
+for (var i = 0; i < 10; i++) {
+    AM.queueDownload("./img/unit/m00" + i + "/stand.png");
+    AM.queueDownload("./img/unit/m00" + i + "/walk.png");
+    AM.queueDownload("./img/unit/m00" + i + "/jump.png");
+    AM.queueDownload("./img/unit/m00" + i + "/attack.png");
+    AM.queueDownload("./img/unit/m00" + i + "/die.png");
+}
+
+
 AM.queueDownload("./img/unit/m000/card.png");
 AM.queueDownload("./img/unit/m000/card_mouseover.png");
 AM.queueDownload("./img/unit/m000/card_click.png");
-AM.queueDownload("./img/unit/m000/stand_left.png");
-AM.queueDownload("./img/unit/m000/walk_left.png");
-AM.queueDownload("./img/unit/m000/jump_left.png");
-AM.queueDownload("./img/unit/m000/attack_left.png");
-AM.queueDownload("./img/unit/m000/die_left.png");
 
-AM.queueDownload("./img/unit/m001/stand.png");
-AM.queueDownload("./img/unit/m001/walk.png");
-AM.queueDownload("./img/unit/m001/jump.png");
-AM.queueDownload("./img/unit/m001/attack.png");
-AM.queueDownload("./img/unit/m001/die.png");
-
-AM.queueDownload("./img/unit/m002/stand.png");
-AM.queueDownload("./img/unit/m002/walk.png");
-AM.queueDownload("./img/unit/m002/jump.png");
-AM.queueDownload("./img/unit/m002/attack.png");
-AM.queueDownload("./img/unit/m002/die.png");
-
-AM.queueDownload("./img/unit/m003/stand.png");
-AM.queueDownload("./img/unit/m003/walk.png");
-AM.queueDownload("./img/unit/m003/jump.png");
 AM.queueDownload("./img/unit/m003/skill.png");
-AM.queueDownload("./img/unit/m003/die.png");
 
-AM.queueDownload("./img/unit/m005/stand.png");
-AM.queueDownload("./img/unit/m005/walk.png");
-AM.queueDownload("./img/unit/m005/jump.png");
-AM.queueDownload("./img/unit/m005/attack.png");
-AM.queueDownload("./img/unit/m005/die.png");
-
-AM.queueDownload("./img/unit/m006/stand.png");
-AM.queueDownload("./img/unit/m006/walk.png");
-AM.queueDownload("./img/unit/m006/jump.png");
-AM.queueDownload("./img/unit/m006/attack.png");
 AM.queueDownload("./img/unit/m006/attack_effect.png");
-AM.queueDownload("./img/unit/m006/die.png");
 
-AM.queueDownload("./img/unit/m010/stand.png");
-AM.queueDownload("./img/unit/m010/walk.png");
-AM.queueDownload("./img/unit/m010/jump.png");
-AM.queueDownload("./img/unit/m010/attack.png");
-AM.queueDownload("./img/unit/m010/die.png");
+AM.queueDownload("./img/unit/m007/skill.png");
 
-AM.queueDownload("./img/unit/m012/stand.png");
-AM.queueDownload("./img/unit/m012/walk.png");
-AM.queueDownload("./img/unit/m012/jump.png");
-AM.queueDownload("./img/unit/m012/attack.png");
-AM.queueDownload("./img/unit/m012/regen.png");
-AM.queueDownload("./img/unit/m012/die.png");
+AM.queueDownload("./img/unit/m008/regen.png");
 
-AM.queueDownload("./img/unit/m013/stand.png");
-AM.queueDownload("./img/unit/m013/walk.png");
-AM.queueDownload("./img/unit/m013/jump.png");
-AM.queueDownload("./img/unit/m013/attack.png");
-AM.queueDownload("./img/unit/m013/skill.png");
-AM.queueDownload("./img/unit/m013/die.png");
+AM.queueDownload("./img/unit/m009/skill.png");
 
+// Loading bosses
 AM.queueDownload("./img/unit/m100/stand.png");
 AM.queueDownload("./img/unit/m100/walk.png");
 AM.queueDownload("./img/unit/m100/jump.png");
@@ -181,6 +130,14 @@ AM.queueDownload("./img/unit/m101/skill2.png");
 AM.queueDownload("./img/unit/m101/skill3.png");
 AM.queueDownload("./img/unit/m101/skill4.png");
 AM.queueDownload("./img/unit/m101/die.png");
+
+AM.queueDownload("./img/unit/m102/stand.png");
+AM.queueDownload("./img/unit/m102/walk.png");
+AM.queueDownload("./img/unit/m102/jump.png");
+AM.queueDownload("./img/unit/m102/attack.png");
+AM.queueDownload("./img/unit/m102/attack2.png");
+AM.queueDownload("./img/unit/m102/skill.png");
+AM.queueDownload("./img/unit/m102/die.png");
 
 AM.queueDownload("./img/unit/m105/stand.png");
 AM.queueDownload("./img/unit/m105/walk.png");
@@ -219,16 +176,6 @@ AM.queueDownload("./img/unit/tower3/attack.png");
 AM.queueDownload("./img/unit/tower3/attack_effect.png");
 AM.queueDownload("./img/unit/tower3/attack3.png");
 
-
-
-AM.queueDownload("./img/character/warrior/stand_right.png");
-AM.queueDownload("./img/character/warrior/walk_right.png");
-AM.queueDownload("./img/character/warrior/jump_right.png");
-AM.queueDownload("./img/character/warrior/swing_right.png");
-
-AM.queueDownload("./img/back/portal.png");
-AM.queueDownload("./img/food/spritesheet.png");
-AM.queueDownload("./img/tomb.png");
 
 AM.queueDownload("./img/ui/start_button_disable.png");
 AM.queueDownload("./img/ui/start_button_pressed.png");
@@ -298,35 +245,29 @@ AM.queueDownload("./img/effect/e1002/card_disable.png");
 AM.queueDownload("./img/effect/e1002/card_mouseover.png");
 AM.queueDownload("./img/effect/e1002/card_click.png");
 AM.queueDownload("./img/effect/e1002/tile_all.png");
-AM.queueDownload("./img/effect/e1002/tile_bigsheet1.png");
-AM.queueDownload("./img/effect/e1002/tile_bigsheet2.png");
-AM.queueDownload("./img/effect/e1002/tile_bigsheet3.png");
-AM.queueDownload("./img/effect/e1002/tile.png");
-AM.queueDownload("./img/effect/e1002/tile0.png");
-AM.queueDownload("./img/effect/e1002/tile1.png");
-AM.queueDownload("./img/effect/e1002/tile2.png");
-AM.queueDownload("./img/effect/e1002/tile3.png");
-AM.queueDownload("./img/effect/e1002/tile4.png");
-AM.queueDownload("./img/effect/e1002/tile5.png");
-AM.queueDownload("./img/effect/e1002/tile6.png");
-AM.queueDownload("./img/effect/e1002/tile7.png");
-AM.queueDownload("./img/effect/e1002/tile8.png");
 
 AM.queueDownload("./img/effect/passive/att.png");
 AM.queueDownload("./img/effect/passive/def.png");
 AM.queueDownload("./img/effect/passive/speed.png");
+AM.queueDownload("./img/effect/passive/att_down.png");
+AM.queueDownload("./img/effect/passive/def_down.png");
+AM.queueDownload("./img/effect/passive/speed_down.png");
 AM.queueDownload("./img/effect/passive/stun.png");
-AM.queueDownload("./img/effect/passive/ice.png");
-AM.queueDownload("./img/effect/passive/heal.png");
 AM.queueDownload("./img/effect/passive/poison.png");
-AM.queueDownload("./img/effect/passive/push.png");
 AM.queueDownload("./img/map/01/map.png");
 AM.queueDownload("./img/effect/e1001/mob_1.png");
 AM.queueDownload("./img/effect/e1001/mob_6.png");
 
+AM.queueDownload("./img/effect/portal/portal.png");
+AM.queueDownload("./img/effect/portal/portal_mouseover.png");
+
 for(var i = 0; i < 10; i++){
     AM.queueDownload("./img/ui/numbers/" + i +".png");
+    AM.queueDownload("./img/ui/numbers/" + i +"_0.png");
+    AM.queueDownload("./img/effect/number/" + i +".png");
 }
+AM.queueDownload("./img/effect/number/miss.png");
+
 AM.queueDownload("./img/ui/numbers/1_1.png");
 AM.queueDownload("./img/ui/numbers/1_2.png");
 AM.queueDownload("./img/ui/numbers/2_1.png");
@@ -339,6 +280,8 @@ AM.queueDownload("./img/ui/numbers/minuspress.png");
 AM.queueDownload("./img/ui/numbers/plusnormal.png");
 AM.queueDownload("./img/ui/numbers/plushover.png");
 AM.queueDownload("./img/ui/numbers/pluspress.png");
+
+
 
 //SOUND
 AM.queueDownload("./sound/effects/smb_stomp.wav", true);
@@ -446,3 +389,4 @@ AM.downloadAll(function () {
 
     gameEngine.sceneManager.startScene('mainmenu');
 });
+}

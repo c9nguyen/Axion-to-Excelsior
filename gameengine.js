@@ -177,7 +177,15 @@ GameEngine.prototype.addEntity = function (entity) {
     if (entity.side === PLAYER) this.playerList.push(entity);
     else if (entity.side === ENEMY) this.enemyList.push(entity);
     else if (entity.side === UI) this.uiList.push(entity);
-    this.sceneManager.addEntityToScene(entity);
+    this.entitiesList.push(entity);
+}
+
+GameEngine.prototype.addHeadEntity = function (entity) {
+ //   console.log('added entity');
+    if (entity.side === PLAYER) this.playerList.unshift(entity);
+    else if (entity.side === ENEMY) this.enemyList.unshift(entity);
+    else if (entity.side === UI) this.uiList.unshift(entity);
+    this.entitiesList.unshift(entity);
 }
 
 GameEngine.prototype.draw = function () {

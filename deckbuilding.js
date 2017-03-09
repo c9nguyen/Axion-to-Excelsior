@@ -11,14 +11,8 @@ DeckBuilding.prototype.create = function () {
 	  var canvasWidth = this.game.ctx.canvas.clientWidth;
 
     // Background
-    var backGroundColor = new Entity(this.game);
-    backGroundColor.update = function(){ /* Empty*/ };
-    backGroundColor.draw = function(){
-      this.game.ctx.beginPath();
-      this.game.ctx.fillStyle="#800080"; // Dark-Pink
-      this.game.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-      this.game.ctx.stroke();
-    };
+    var backGroundColor = new NonAnimatedObject(this.game, AM.getAsset("./img/back/cardselect.jpg"),0, 0);
+    backGroundColor.setSize(canvasWidth, canvasHeight);
     this.game.addEntity(backGroundColor);
     // -- background
 
@@ -34,6 +28,7 @@ DeckBuilding.prototype.create = function () {
     deckList.addCard("h100");
     deckList.addCard("e1001");
     deckList.addCard("e1002");
+    deckList.addCard("s000");
 
     deckList.updateCurrentCards();
     this.game.addEntity(deckList);
@@ -43,7 +38,7 @@ DeckBuilding.prototype.create = function () {
     var ticketMin = PLAYERDECK["minCard"];
     var ticketMax = PLAYERDECK["maxCard"];
     var that = this;
-    var startbutton = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 1075, 475);
+    var startbutton = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 1065, 480);
     startbutton.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
     startbutton.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
     startbutton.addEventListener('click', function() {
@@ -51,7 +46,8 @@ DeckBuilding.prototype.create = function () {
         if(deckList.totalTicket >= ticketMin && deckList.totalTicket <= ticketMax){
             PLAYERDECK["unitCards"] = deckList.getCardList("h");
             PLAYERDECK["spellCards"] = deckList.getCardList("e");
-            this.game.sceneManager.startScene('mainmenu');
+            PLAYERDECK["summonCards"] = deckList.getCardList("s");
+            this.game.sceneManager.startScene('mapmenu');
         }
     });
     this.game.addEntity(startbutton);
@@ -127,20 +123,23 @@ DeckListUI.prototype.draw = function(){
     }
     var tempfont = this.game.ctx.font;
     this.game.ctx.font = "20px Arial";
-    this.game.ctx.fillStyle = "black";
-    this.game.ctx.fillText("Min Amount of cards: " + PLAYERDECK["minCard"], 950, 400);
-    this.game.ctx.fillText("Max Amount of cards: " + PLAYERDECK["maxCard"], 950, 425);
+    this.game.ctx.fillStyle = "white";
+    this.game.ctx.fillText("Min Amount of cards: " + PLAYERDECK["minCard"], 940, 400);
+    this.game.ctx.fillText("Max Amount of cards: " + PLAYERDECK["maxCard"], 940, 425);
     this.game.ctx.fillText("# cards: " + this.totalTicket, 950, 450);
     this.game.ctx.font = tempfont;
 }
 
 DeckListUI.prototype.addCard = function(unitCode){
+
+    if (unitCode.includes)
     this.deck.push(new DeckCard(this, this.game, unitCode, this.scale, 50, 50));
 }
 DeckListUI.prototype.updateCurrentCards = function(){
     // ASSUME BOTH ARE SORTED
     var currCards = PLAYERDECK["unitCards"];
     var currSpells = PLAYERDECK["spellCards"];
+    var currSummon = PLAYERDECK["summonCards"];
     var j = 0;
     for(var i = 0; i < currCards.length && j < this.deck.length; i++){
         if(currCards[i].code === this.deck[j].unitCode){
@@ -155,6 +154,15 @@ DeckListUI.prototype.updateCurrentCards = function(){
         if(currSpells[i].code === this.deck[j].unitCode){
             this.deck[j].ticket = currSpells[i].ticket;
             this.totalTicket += currSpells[i].ticket;
+        } else {
+            i--;
+            j++;
+        }
+    }
+    for(var i = 0; i < currSummon.length && j < this.deck.length; i++){
+        if(currSummon[i].code === this.deck[j].unitCode){
+            this.deck[j].ticket = currSummon[i].ticket;
+            this.totalTicket += currSummon[i].ticket;
         } else {
             i--;
             j++;
@@ -214,7 +222,7 @@ DeckCard.prototype.draw = function(){
 DeckCard.prototype.create = function(x, y){
 
     var that = this;
-    if(this.unitCode.includes("h")){
+    if(this.unitCode.includes("h") || this.unitCode.includes("s")){
         this.icon = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/" + this.unitCode + "/card_mouseover.png"), this.x, this.y, 
                       undefined, undefined, undefined, undefined, undefined, this.scale);
     } else if(this.unitCode.includes("e")){

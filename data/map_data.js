@@ -4,15 +4,17 @@ var mapType = {
     background: "./img/map/01/back.png",
     tileType: 'snowrock',
     enemyList: [
-                {code: "m000", ticket: 2},
-                {code: "m001", ticket: 4},
-                {code: "m002", ticket: 3},
-                {code: "m003", ticket: 1},
-                {code: "m005", ticket: 1},
-                {code: "m006", ticket: 0},
-                {code: "m013", ticket: -1}
+                {code: "m000", ticket: 3},  //spear skeleton
+    //            {code: "m001", ticket: 0},  // cub skeleton
+                {code: "m002", ticket: 5},  //sword
+                {code: "m003", ticket: 1},  //horse
+                {code: "m004", ticket: 0},  // horn spear
+                {code: "m005", ticket: 2},  //fast
+                {code: "m006", ticket: -1},  //mage
+                {code: "m007", ticket: 1},  //fish bone
+                {code: "m009", ticket: -2}  //yeti
                 ],
-     enemyGenFrequency: 5,
+    enemyGenFrequency: 5,
     energyRate: 0.4,
     numOfCard: 6,
 
