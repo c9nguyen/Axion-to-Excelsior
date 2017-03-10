@@ -1,6 +1,6 @@
 var PLAYERDECK = {
     minCard: 25,
-    maxCard: 25,
+    maxCard: 30,
     unitCards: [
                   {code: "h000", ticket: 3},
                   {code: "h001", ticket: 3},

@@ -10,7 +10,7 @@ var mapType = {
                 {code: "m003", ticket: 1},  //horse
                 {code: "m004", ticket: 0},  // horn spear
                 {code: "m005", ticket: 2},  //fast
-                {code: "m006", ticket: 22},  //mage
+                {code: "m006", ticket: -1},  //mage
                 {code: "m007", ticket: 1},  //fish bone
                 {code: "m009", ticket: -2}  //yeti
 
