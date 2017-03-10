@@ -45,12 +45,14 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             attack2.addSubAction(2, function (that) {
                 var minus = that.unit.lockedTarget.velocity.x;
                 attack2.velocity.x = that.unit.movementspeed * 7 + (minus * 2);
+                that.game.soundPlayer.addToEffect("./sound/effects/swords/windsword.ogg", false,  0.7, 0.5);
             });
             attack2.addSubAction(3, function (that) {
                 attack2.velocity.x = 0;
                 // SOUND
-                that.game.soundPlayer.addToEffect("./sound/effects/swords/swordhitwood.wav", undefined, undefined, 0.4);
-                that.game.soundPlayer.addToEffect("./sound/effects/swords/swordslice.wav", undefined, undefined, 0.125);
+                // that.game.soundPlayer.addToEffect("./sound/effects/swords/swordhitwood.wav", undefined, undefined, 0.4);
+                // that.game.soundPlayer.addToEffect("./sound/effects/swords/swordslice.wav", undefined, undefined, 0.125);
+                // that.game.soundPlayer.addToEffect("./sound/effects/swords/windsword.ogg", undefined, undefined, 0.125);
                 castSkill(that.game, that.x + 34, that.y + 13, that.unit, "e0002", 3);
 
             });
@@ -332,10 +334,12 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             attack.subAction[3] = function (that) {
                 castSkill(that.game, that.x + 15, that.y, that.unit, "e0000", 1,
                     undefined, 210, 125, 0.2, true);
+                game.soundPlayer.addToEffect("./sound/effects/swords/whoosh2.wav", false, 1);
             };
             attack.subAction[6] = function (that) {
                 castSkill(that.game, that.x + 50, that.y + 105, that.unit, "e0000", 1,
                     undefined, 247, 65, 0.3, true);
+                game.soundPlayer.addToEffect("./sound/effects/swords/whoosh3.wav", false, 1);
             };
 
             groundPoints = [{ x: 22, y: 153 }];
@@ -363,7 +367,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             }
             break;
 
-        case "h005":
+        case "h005":    //archer
             unit = new Unit(game, x, y, unitcode, side);
             var groundPoints = [{ x: 22, y: 68 }];
             var collisionBox = [{ x: 24, y: 33, width: 35, height: 68 }];
@@ -391,6 +395,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             35, 16
             attack.subAction[2] = function(that) {
                 castSkill(that.game, that.x + 35, that.y + 16, that.unit, "e0011");
+                game.soundPlayer.addToEffect("./sound/effects/charge/energyshortsword5.wav", false, 1, 0.3);
             }
 
             groundPoints = [{ x: 51, y: 91 }];
@@ -401,6 +406,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 castSkill(that.game, that.x + 68, that.y + 7, that.unit, "e0000", 0.25,
                     function (unit) { unit.getKnockback(300); },
                     100, 100, 0.2, false);
+                game.soundPlayer.addToEffect("./sound/effects/swords/whoosh3.wav", false, 1);
             }
 
 
@@ -465,6 +471,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var effect = function (that) {
                 castSkill(that.game, that.x + 40, that.y, that.unit, "e0000", 0.25,
                     undefined, 502, 304, 0.1, true);
+                    that.game.soundPlayer.addToEffect("./sound/effects/swords/windsword.ogg", false,  1, 0.5);
             };
             var effect2 = function (that) {
                 var attach = new AnimatedObject(that.game, AM.getAsset("./img/unit/" + unitcode + "/attack1.png"), that.x, that.y, 7, 0.1, 14, false);
@@ -494,6 +501,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 var attach = new AnimatedObject(that.game, AM.getAsset("./img/unit/" + unitcode + "/attack3.png"), that.x, that.y, 13, 0.1, 13, false);
                 attach.setStickTo(attack3, 0, 0);
                 that.game.addEntity(attach);
+                that.game.soundPlayer.addToEffect("./sound/effects/swords/windsword2.ogg", false,  1.2, 0.5);
                 //castSkill(that.game, that.x, that.y, that.unit, 'h1001', 0);
             };
             attack3.subAction[0] = effect2;
@@ -870,7 +878,8 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 3, 0.08, 6, groundPoints, collisionBox, false);
             attack.subAction[2] = function (that) {
                 castSkill(that.game, that.x + 5, that.y + 5, that.unit, "e0000", 1,
-                    undefined, 95, 95, 0.2, false)
+                    undefined, 95, 95, 0.2, false);
+                that.game.soundPlayer.addToEffect("./sound/effects/swords/whoosh3.wav", undefined, undefined, 1);
             };
 
             groundPoints = [{ x: 12, y: 170 }];
@@ -1719,12 +1728,17 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 9, 0.15, 18, groundPoints, collisionBox, false);
             attack.subAction[9] = function (that) {
                 castSkill(that.game, that.unit.lockedTarget.x - 31 , groundLevel - 200 , that.unit, "e0014");
+                that.game.soundPlayer.addToEffect("./sound/effects/monster/ice1.wav", false, 1);
             };
+            
 
             groundPoints = [{ x: 61, y: 233 }];
             collisionBox = [{ x: 0, y: 0, width: 0, height: 0 }];
             var regen = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/regen.png"),
                 8, 0.1, 8, groundPoints, collisionBox, false);
+            regen.subAction[0] = function (that) {
+                that.game.soundPlayer.addToEffect("./sound/effects/spell/teleport.ogg", false, 1, 0.7);
+            };
 
             groundPoints = [{ x: 61, y: 212 }];
             collisionBox = [{ x: 0, y: 0, width: 0, height: 0 }];

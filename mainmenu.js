@@ -14,9 +14,7 @@ MainMenu.prototype.create = function () {
     //back.setSize(canvasWidth, canvasHeight);
 
 
-  var startbutton = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 550, 400);
-  startbutton.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
-  startbutton.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
+  var startbutton = new Button(this.game, AM.getAsset("./img/back/introClick.png"), 0, 0);
   startbutton.addEventListener('click', function() {
     this.game.sceneManager.startScene('mapmenu');
   });

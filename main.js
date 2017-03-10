@@ -20,6 +20,8 @@ AM.queueDownload("./img/back/back.png");
 AM.queueDownload("./img/back/intro.png");
 AM.queueDownload("./img/back/mapselect.jpg");
 AM.queueDownload("./img/back/cardselect.jpg");
+AM.queueDownload("./img/back/introClick.png");
+AM.queueDownload("./img/back/tutorial.png");
 
 AM.queueDownload("./img/map/01/back.png");
 
@@ -177,6 +179,21 @@ AM.queueDownload("./img/unit/tower3/attack.png");
 AM.queueDownload("./img/unit/tower3/attack_effect.png");
 AM.queueDownload("./img/unit/tower3/attack3.png");
 
+//Loading UI
+
+AM.queueDownload("./img/ui/levels.png");
+
+AM.queueDownload("./img/ui/buttons/cards.png");
+AM.queueDownload("./img/ui/buttons/cards_mouseover.png");
+AM.queueDownload("./img/ui/buttons/cards_click.png");
+
+AM.queueDownload("./img/ui/buttons/tutorial.png");
+AM.queueDownload("./img/ui/buttons/tutorial_mouseover.png");
+AM.queueDownload("./img/ui/buttons/tutorial_click.png");
+
+AM.queueDownload("./img/ui/buttons/done.png");
+AM.queueDownload("./img/ui/buttons/done_mouseover.png");
+AM.queueDownload("./img/ui/buttons/done_click.png");
 
 AM.queueDownload("./img/ui/start_button_disable.png");
 AM.queueDownload("./img/ui/start_button_pressed.png");
@@ -301,6 +318,8 @@ AM.queueDownload("./sound/effects/swords/whoosh3.wav", true);
 AM.queueDownload("./sound/effects/swords/woodhit.wav", true);
 AM.queueDownload("./sound/effects/swords/woodhit1.wav", true);
 AM.queueDownload("./sound/effects/swords/woodhit2.wav", true);
+AM.queueDownload("./sound/effects/swords/windsword.ogg", true);
+AM.queueDownload("./sound/effects/swords/windsword2.ogg", true);
 
 AM.queueDownload("./sound/effects/effects/footstep1.wav", true);
 AM.queueDownload("./sound/effects/effects/footstep2.wav", true);
@@ -317,6 +336,7 @@ AM.queueDownload("./sound/effects/swords/swordslice.wav", true);
 AM.queueDownload("./sound/effects/swords/swordslice14.wav", true);
 AM.queueDownload("./sound/effects/swords/shuriken3.wav", true);
 AM.queueDownload("./sound/effects/swords/shuriken1.wav", true);
+AM.queueDownload("./sound/effects/swords/shuriken_hit.mp3", true);
 
 // Charge
 AM.queueDownload("./sound/effects/charge/chargelasersmall.wav", true);
@@ -352,8 +372,14 @@ AM.queueDownload("./sound/effects/monster/monstercat.wav", true);
 AM.queueDownload("./sound/effects/monster/monsterroar.wav", true);
 
 //spell
+AM.queueDownload("./sound/effects/spell/casting.ogg", true);
+AM.queueDownload("./sound/effects/spell/teleport.ogg", true);
 AM.queueDownload("./sound/effects/spell/wind.mp3", true);
 AM.queueDownload("./sound/effects/spell/explosion.ogg", true);
+AM.queueDownload("./sound/effects/spell/flyingby.mp3", true);
+AM.queueDownload("./sound/effects/spell/flyingby2.ogg", true);
+AM.queueDownload("./sound/effects/spell/explosion2.mp3", true);
+
 
 // MUSIC
 AM.queueDownload("./sound/music/battle/KH-squirming-evil.mp3", true);

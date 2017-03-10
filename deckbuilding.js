@@ -38,9 +38,9 @@ DeckBuilding.prototype.create = function () {
     var ticketMin = PLAYERDECK["minCard"];
     var ticketMax = PLAYERDECK["maxCard"];
     var that = this;
-    var startbutton = new Button(this.game, AM.getAsset("./img/ui/start_button_disable.png"), 1065, 480);
-    startbutton.addSheet( AM.getAsset("./img/ui/start_button_pressed.png"),'press');
-    startbutton.addSheet( AM.getAsset("./img/ui/start_button_mouseover.png"),'mouseover');
+    var startbutton = new Button(this.game, AM.getAsset("./img/ui/buttons/done.png"), 980, 460);
+    startbutton.addSheet( AM.getAsset("./img/ui/buttons/done_click.png"),'press');
+    startbutton.addSheet( AM.getAsset("./img/ui/buttons/done_mouseover.png"),'mouseover');
     startbutton.addEventListener('click', function() {
         
         if(deckList.totalTicket >= ticketMin && deckList.totalTicket <= ticketMax){

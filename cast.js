@@ -53,6 +53,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 var effect = new AnimatedObject(that.game, AM.getAsset("./img/effect/e0000/shuriken_hit.png"),
                                             that.x + 29, that.y, 4, 0.1, 4, false);
                 that.game.addEntity(effect);
+                that.game.soundPlayer.addToEffect("./sound/effects/swords/shuriken_hit.mp3", undefined, undefined, 0.1);
             }
             break;
         case "e0010": //dummy
@@ -66,7 +67,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             var collisionBox = [{x: 0, y: 0, width: 105, height: 35}];
             action = function(that, otherUnit) {
                 //crit chance
-                var damage = Math.random() > 0.75 ? that.percent * that.unit.att : that.percent * that.unit.att * 1.5;
+                var damage = Math.random() > 0.25 ? that.percent * that.unit.att : that.percent * that.unit.att * 2;
                 otherUnit.takeDamage(damage);
                 otherUnit.takeEffect(additionalEffect);
                 that.removeFromWorld = true;
@@ -82,12 +83,13 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
                 var effect = new AnimatedObject(that.game, AM.getAsset("./img/effect/e0003/hit.png"),
                                             that.x + 50, that.y - 42, 4, 0.1, 4, false);
                 that.game.addEntity(effect);
+                game.soundPlayer.addToEffect("./sound/effects/charge/energywhip2.wav", false, 0.7, 0.5);
             }
             break;
 
         case "e0012": //m006 attack effect
             var collisionBox = [{x: 32, y: 136, width: 85, height: 70}];
-
+            game.soundPlayer.addToEffect("./sound/effects/spell/flyingby2.ogg", undefined, undefined, 0.3);
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/unit/m006/attack_effect.png"),
                                 7, 0.1, 7, collisionBox, action, percentAtt, false);
 
@@ -124,7 +126,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
 
         case "e1001": //wind (player)
             //Play sound
-            game.soundPlayer.addToEffect("./sound/effects/spell/wind.mp3", false, 0.5);
+
 
             var collisionBox = [{x: 0, y: 0, width: 659, height: 454}];
             collisionBox[14] = {x: 0, y: 0, width: 0, height: 0};
@@ -145,6 +147,9 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/effect/e1001/effect.png"),
                                 4, 0.1, 16, collisionBox, pullAction, percentAtt, true);
             var reset = false;
+            skill.subEffects[0] = function() {
+                game.soundPlayer.addToEffect("./sound/effects/spell/wind.mp3", false, 0.5);
+            };
             skill.subEffects[8] = function() {
                 if (!reset) {
                     skill.hitList = new Set();
@@ -180,6 +185,7 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             var castMeteor = function(index, offset) {
                 var meteor = meteors[index];
                 castSkill(game, center - meteor.x + offset, groundLevel - meteor.y, unit, "e1002_" + meteor.num, meteor.percent);
+                game.soundPlayer.addToEffect("./sound/effects/spell/flyingby.mp3", false, 0.8, 0.5);
                 meteors.splice(index, 1);
             };
           
@@ -391,17 +397,43 @@ function castSkill(game, x, y, unit, skillCode, percentAtt = 1,//You mostly need
             collisionBox[10] = {x: 0, y: 0, width: 0, height: 0};
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/unit/tower0/attack_effect.png"),
                                 7, 0.1, 14, collisionBox, action, percentAtt, true);
+            var sound = function() {
+                game.soundPlayer.addToEffect("./sound/effects/rock/rockfall.wav", false, 1);
+            };
+            skill.subEffects[7] = sound;
+            skill.subEffects[8] = sound;
+            skill.subEffects[9] = sound;
+
+                                
             break;
 
         case "t0001": //main tower second skill
+            // casting sound
+            game.soundPlayer.addToEffect("./sound/effects/spell/casting.ogg", false, 0.8);
+
             var collisionBox = [{x: 0, y: 0, width: 0, height: 0}];
             collisionBox[13] = {x: 25, y: 185, width: 485, height: 310};
             collisionBox[25] = {x: 0, y: 0, width: 0, height: 0};
             skill = new Effect(game, x, y, unit, AM.getAsset("./img/unit/tower0/attack2_effect.png"),
                                 7, 0.1, 28, collisionBox, action, percentAtt, true);
-            skill.subEffects[14] = function() {skill.hitList = new Set()};
-            skill.subEffects[16] = function() {skill.hitList = new Set()};
-            skill.subEffects[22] = function() {skill.hitList = new Set()};
+            var sound = function() {
+                game.soundPlayer.addToEffect("./sound/effects/spell/explosion2.mp3", false, 1.7, 0.7);
+            };
+            skill.subEffects[12] = sound;
+            skill.subEffects[14] = function() {
+                sound;
+                skill.hitList = new Set()
+            };
+            skill.subEffects[16] = function() {
+                sound();
+                skill.hitList = new Set()
+            };
+            skill.subEffects[17] = sound;
+            skill.subEffects[18] = sound;
+            skill.subEffects[21] = sound;
+            skill.subEffects[22] = function() {
+                skill.hitList = new Set()
+            };
             break;
        case "t0002":  //statue
             var collisionBox = [{x: 25, y: 0, width: 110, height: 815}];
