@@ -175,7 +175,7 @@ Battle.prototype.create = function() {
     // spawnUnit(this.game, 2270, 400, "m105", ENEMY);
     // spawnUnit(this.game, 2270, 400, "m100", ENEMY);
     // spawnUnit(this.game, 2270, 400, "m101", ENEMY);
-     //spawnUnit(this.game, 2270, 400, "m102", ENEMY);
+     //spawnUnit(this.game, 2270, 400, "m105", ENEMY);
 
 
     //Enemy button for debugging
@@ -219,17 +219,23 @@ Battle.prototype.buildingBackground = function() {
  * Draw heavy image 1 time to load into memory
  */
 Battle.prototype.preloadHeavyImage = function() {
-    var preload = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/e1002/tile_all.png"), 0, 0);
-    preload.draw();
-    preload.removeFromWorld = true;
+    var fireBall = new NonAnimatedObject(this.game, AM.getAsset("./img/effect/e1002/tile_all.png"), 0, 0);
+    fireBall.draw();
+    this.game.addPreUpdateEntity(fireBall);
+    // preload.draw();
+    // preload.removeFromWorld = true;
 
-    preload = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/tower0/attack2_effect.png"), 0, 0);
-    preload.draw();
-    preload.removeFromWorld = true;
+    var skill1 = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/tower0/attack2_effect.png"), 0, 0);
+    skill1.draw();
+    this.game.addPreUpdateEntity(skill1);
+    // preload.draw();
+    // preload.removeFromWorld = true;
 
-    preload = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/tower0/attack_effect.png"), 0, 0);
-    preload.draw();
-    preload.removeFromWorld = true;
+    var skill2 = new NonAnimatedObject(this.game, AM.getAsset("./img/unit/tower0/attack_effect.png"), 0, 0);
+    skill2.draw();
+    this.game.addPreUpdateEntity(skill2);
+    // preload.draw();
+    // preload.removeFromWorld = true;
 }
 
 Battle.prototype.loadCharacter = function(){

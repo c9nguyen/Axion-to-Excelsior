@@ -199,7 +199,7 @@ var unitData = {
         //Attacking with x and y are offset from unit's ground hit box
         range: [{x: -340, y: -100, width: 340, height: 110}],
     },
-    m007: {
+    m007: { //fish bone
         groundWidth: 40,
         groundHeight: 10,
         health: 100,
@@ -244,7 +244,6 @@ var unitData = {
         def: 0,
         flying: false,
         pushResist: 0.25,
-        //Attacking with x and y are offset from unit's ground hit box
         range: [{x: -90, y: -120, width: 110, height: 120}],
     },
     m100: { //ice guy boss
@@ -270,11 +269,11 @@ var unitData = {
         range: [{x: -300, y: -200, width: 600, height: 200}, {x: -285, y: -200, width: 320, height: 220}],
     },
     m102: { //skeleton captain
-        groundWidth: 121,
+        groundWidth: 90,
         groundHeight: 10,
         health: 800,
-        movementspeed: -100,
-        att: 80,
+        movementspeed: -80,
+        att: 70,
         def: 0.1,
         flying: false,
         pushResist: 0.2, 
@@ -289,7 +288,7 @@ var unitData = {
         att: 40,
         def: 0.4,
         flying: false,
-        pushResist: 0.3,
+        pushResist: 0.1,
         range: [{x: -230, y: -250, width: 365, height: 266}, {x: -375, y: -171, width: 60, height: 200}],
     },
 }

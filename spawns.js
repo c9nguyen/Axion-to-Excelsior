@@ -5,12 +5,6 @@
  * m: monster unit
  */
 
-// const STAND = 0;
-// const JUMP = 1;
-// const WALK = 2;
-// const ATTACK = 3;
-
-// const UNIT_0000 = 0;  
 
 
 function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
@@ -23,8 +17,6 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             var walk = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/walk.png"),
                 2, 0.1, 4, groundPoints, collisionBox, true);
             walk.velocity.x = walk.unit.movementspeed;
-            // walk.subAction[0] = function(that) {that.unit.velocity.x = that.unit.movementspeed;};
-            // walk.endAction = function(that) {that.unit.velocity.x = 0};
 
             groundPoints = [{ x: 50, y: 95 }];
             collisionBox = [{ x: 40, y: 20, width: 50, height: 75 }];
@@ -1510,7 +1502,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
                 10, 0.1, 20, groundPoints, collisionBox, false, 3);
             attack.subAction[8] = function (that) {
                 attack_effect = castSkill(that.game, that.x + 156, that.y + 26, that.unit, "e0000", 1,
-                    function(that) {that.push = -500;},
+                    function(that) {that.push = -300;},
                     490, 225, 0.3, true);
             };
             attack.subAction[9] = function (that) {
@@ -1519,7 +1511,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
 
             var pushUpEffect = function(that) {
                 that.changeAction("jump");
-                that.velocity.y = -1000;
+                that.velocity.y = -800;
             };
             groundPoints = [{ x: 680, y: 580 }];
             collisionBox = [{ x: 680, y: 394, width: 70, height: 186 }];
@@ -1549,7 +1541,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{ x: 146, y: 237 }];
             collisionBox = [{ x: 146, y: 52, width: 70, height: 186 }];
             var skill = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/skill.png"),
-                9, 0.1, 18, groundPoints, collisionBox, false, 6);
+                9, 0.1, 18, groundPoints, collisionBox, false, 15);
             skill.subAction[8] = function (that) {
                 that.unit.takePassiveEffect("def", 0.6);
             };
@@ -1702,7 +1694,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
 
         /* ================================= Summoned Unit =====================================================*/
       case "s000":
-            unit = new SummonUnit(game, x, y, unitcode, side, 20);
+            unit = new SummonUnit(game, x, y, unitcode, side, 15);
             var groundPoints = [{ x: 23, y: 172 }];
             var collisionBox = [{ x: 17, y: 15, width: 150, height: 147 }];
             var walk = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/walk.png"),

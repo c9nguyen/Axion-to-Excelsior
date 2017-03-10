@@ -6,7 +6,7 @@ var mapType = {
     enemyList: [
                 {code: "m000", ticket: 3},  //spear skeleton
     //            {code: "m001", ticket: 0},  // cub skeleton
-                {code: "m002", ticket: 5},  //sword
+                {code: "m002", ticket: 4},  //sword
                 {code: "m003", ticket: 1},  //horse
                 {code: "m004", ticket: 0},  // horn spear
                 {code: "m005", ticket: 2},  //fast

@@ -23,6 +23,7 @@ function GameEngine() {
     this.collisionBox = {
         ground: [],
     };
+    this.preUpdate = [];
     this.playerList = [];
     this.enemyList = [];
     this.entitiesList = [];
@@ -31,6 +32,8 @@ function GameEngine() {
     this.ctx = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
+    this.preUpdateFrequency = 10;
+    this.preUpdateCount = 0;
 
     //DEPRECATED
     // this.movedAmount = 0;
@@ -180,6 +183,10 @@ GameEngine.prototype.addEntity = function (entity) {
     this.entitiesList.push(entity);
 }
 
+GameEngine.prototype.addPreUpdateEntity = function (entity) {
+    this.preUpdate.push(entity);
+}
+
 GameEngine.prototype.addHeadEntity = function (entity) {
  //   console.log('added entity');
     if (entity.side === PLAYER) this.playerList.unshift(entity);
@@ -192,7 +199,12 @@ GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
     this.ctx.save();
     var that = this;
-    //var entities = this.sceneManager.getCurrentEntities();
+
+    if (this.preUpdateCount >= this.preUpdateFrequency) {
+        this.preUpdateCount = 0;
+    }
+
+
     var entities = this.entitiesList;
     for (var i = 0; i < entities.length; i++) {
         entities[i].draw(this.ctx);
@@ -210,6 +222,20 @@ GameEngine.prototype.update = function () {
     // Update Screen
     this.screenMover.update();
     this.soundPlayer.update();
+
+    this.preUpdateCount += this.clockTick;
+    if (this.preUpdateCount >= this.preUpdateFrequency) {
+        var preupdateEntities = this.preUpdate;
+        for (var i = 0; i < preupdateEntities.length; i++) {
+                var entity = preupdateEntities[i];
+                entity.update();
+                if (entity.removeFromWorld) {
+                    entities.splice(i, 1);
+                    i--;
+                }
+        }
+    }
+
 
     for (var i = 0; i < entities.length; i++) {
         //If this enetity will be removed
@@ -230,11 +256,6 @@ GameEngine.prototype.update = function () {
     for (var i = 0; i < this.uiList.length; i++) {
         //If this enetity will be removed
             var entity = this.uiList[i];
-
-            //applying gravity
-            // if (entity.gravity) entity.yVelocity += this.clockTick * 1800;
-            // else entity.yVelocity = 0;      //Will be changed
-            // entity.y += this.clockTick * entity.yVelocity;
 
             entity.update();
             if (entity.removeFromWorld) {

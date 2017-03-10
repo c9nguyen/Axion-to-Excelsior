@@ -102,7 +102,7 @@ EnemyGenerator = function(game, x, y, list = []) {
                 that.extraCounter = 0;
             }
             else {
-                that.extra += 0.05 * that.game.clockTick;
+                that.extra += 0.07 * that.game.clockTick;
                 that.extraCounter++;
             } 
             return true;
