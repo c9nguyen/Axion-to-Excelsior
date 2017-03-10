@@ -1400,7 +1400,7 @@ function spawnUnit(game, x, y, unitcode, side = NEUTRAL) {
             groundPoints = [{ x: 121, y: 271 }];
             collisionBox = [{ x: 152, y: 140, width: 82, height: 102 }];
             var skill2 = new Action(game, unit, AM.getAsset("./img/unit/" + unitcode + "/skill2.png"),
-                9, 0.1, 9, groundPoints, collisionBox, false, 8);
+                9, 0.1, 9, groundPoints, collisionBox, false, 10);
             skill2.subAction[4] = function (that) {
                 castSkill(that.game, that.unit.x - 300, that.unit.y - 200, that.unit, "e0000", 1,
                     undefined, 600, 250, 0.3, true, true, function (that, otherUnit) { 

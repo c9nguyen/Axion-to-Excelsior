@@ -252,7 +252,7 @@ Unit.prototype.passiveEffectInit = function() {
 }
 
 Unit.prototype.takePassiveEffect = function(effectType, amount) {
-    this.passiveEffect[effectType] = {amount: amount, duration: 7}; 
+    this.passiveEffect[effectType] = {amount: amount, duration: 6}; 
 }
 
 Unit.prototype.getCollisionBox = function() {
